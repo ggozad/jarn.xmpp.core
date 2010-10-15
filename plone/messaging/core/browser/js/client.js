@@ -1,7 +1,5 @@
-Orbited.settings.port = 9000;
-TCPSocket = Orbited.TCPSocket;
-
 (function() { // set up stomp client.
+
 	stomp = new STOMPClient();
 	stomp.onconnectedframe = function() {  // Run on initial connection to STOMP (comet) server
 		stomp.ready = true;

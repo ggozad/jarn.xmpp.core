@@ -6,7 +6,7 @@
   <browser:viewlet
       name="plone.messaging.core.orbited"
       manager="plone.app.layout.viewlets.interfaces.IPortalTop"
-      class=".viewlets.OrbitedLoader"
+      class=".orbitedloader.OrbitedLoader"
       permission="zope2.View"
       />
 
