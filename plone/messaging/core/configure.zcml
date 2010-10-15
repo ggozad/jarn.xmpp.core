@@ -1,0 +1,19 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="plone.messaging.core">
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <include package=".browser" />
+  
+  <genericsetup:registerProfile
+    name="default"
+    title="plone.messaging.core"
+    directory="profiles/default"
+    description="Plone messaging"
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+
+</configure>
