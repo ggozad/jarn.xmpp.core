@@ -6,7 +6,7 @@
   <browser:viewlet
       name="plone.messaging.core.orbited"
       manager="plone.app.layout.viewlets.interfaces.IPortalTop"
-      class=".orbitedloader.OrbitedLoader"
+      class=".xmpplogger.XMPPLogger"
       permission="zope2.View"
       />
 

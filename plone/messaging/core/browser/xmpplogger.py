@@ -1,7 +1,7 @@
 from plone.app.layout.viewlets.common import ViewletBase
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-class OrbitedLoader(ViewletBase):
+class XMPPLogger(ViewletBase):
     """
     """
-    index = ViewPageTemplateFile('orbitedloader.pt')
+    index = ViewPageTemplateFile('xmpplogger.pt')
