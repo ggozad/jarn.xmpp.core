@@ -2,7 +2,7 @@
 
 </script>
 <script src="++resource++plone.messaging.core.js/strophe.js"></script>
-<script src="++resource++plone.messaging.core.js/xmpplogger.js"></script>
+<script src="++resource++plone.messaging.core.js/logger.js"></script>
 
 <div id='login' style='text-align: center'>
   <form name='cred'>

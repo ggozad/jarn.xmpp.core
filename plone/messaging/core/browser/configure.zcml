@@ -4,9 +4,9 @@
   i18n_domain="plone.messaging.core">
 
   <browser:viewlet
-      name="plone.messaging.core.orbited"
-      manager="plone.app.layout.viewlets.interfaces.IPortalTop"
-      class=".xmpplogger.XMPPLogger"
+      name="plone.messaging.core.logger"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+      class=".logger.XMPPLogger"
       permission="zope2.View"
       />
 

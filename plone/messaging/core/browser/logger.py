@@ -4,4 +4,4 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 class XMPPLogger(ViewletBase):
     """
     """
-    index = ViewPageTemplateFile('xmpplogger.pt')
+    index = ViewPageTemplateFile('logger.pt')
