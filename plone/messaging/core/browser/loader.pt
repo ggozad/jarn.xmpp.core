@@ -1,0 +1,4 @@
+<script>
+</script>
+<script src="++resource++plone.messaging.core.js/strophe.js"></script>
+<script src="++resource++plone.messaging.core.js/loader.js"></script>

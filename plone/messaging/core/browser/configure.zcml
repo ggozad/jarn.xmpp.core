@@ -4,6 +4,14 @@
   i18n_domain="plone.messaging.core">
 
   <browser:viewlet
+      name="plone.messaging.core.loader"
+      manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+      class=".loader.XMPPLoader"
+      permission="zope2.View"
+      />
+
+
+  <browser:viewlet
       name="plone.messaging.core.logger"
       manager="plone.app.layout.viewlets.interfaces.IBelowContent"
       class=".logger.XMPPLogger"
