@@ -7,8 +7,19 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
+  <include package="plone.messaging.twisted" />
+
   <include package=".browser" />
-  
+
+  <subscriber
+    for="plone.messaging.twisted.interfaces.ReactorStarted"
+    handler=".subscribers.connectAdminAccount"
+    />
+
+  <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
+    handler=".subscribers.onUserCreation"
+    />
+
   <genericsetup:registerProfile
     name="default"
     title="plone.messaging.core"
