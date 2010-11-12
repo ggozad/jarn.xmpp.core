@@ -1,14 +1,34 @@
 from zope.component import getUtility
-from twisted.words.protocols.jabber.jid import JID
-from plone.messaging.twisted import clients
+from zope.component import getSiteManager
+from plone.messaging.core.jabberadmin import JabberAdmin
+from plone.messaging.core.interfaces import IJabberAdmin
 
-def connectAdminAccount(event):
+
+def initJabberAdmin(event):
     reactor = event.object
-    jid = JID("admin@localhost")
-    password = 'admin'
-    admin = clients.adminClientFactory(jid, password)
-    factory = admin.factory
-    reactor.connectTCP("localhost", 5222, factory)
+    sm = getSiteManager()
+    jabber_admin = JabberAdmin(reactor)
+    sm.registerUtility(jabber_admin, IJabberAdmin)
 
 def onUserCreation(event):
+    """Create a jabber account for new user
+    """
     principal = event.principal
+    jabber_admin = getUtility(IJabberAdmin).getAdminClient()
+
+    def genPasswd():
+        import string
+        import random
+        chars = string.letters + string.digits
+        return ''.join([random.choice(chars) for i in range(12)])
+
+    jid = u'%s@%s' % (principal.getUserId(), jabber_admin.parent.jid.host)
+    jabber_admin.addUser(jid, genPasswd())
+
+def onUserDeletion(event):
+    principal = event.principal
+    jabber_admin = getUtility(IJabberAdmin).getAdminClient()
+    jid = u'%s@%s' % (principal, jabber_admin.parent.jid.host)
+    jabber_admin.deleteUsers([jid])
+    import pdb; pdb.set_trace( )
+

@@ -13,11 +13,15 @@
 
   <subscriber
     for="plone.messaging.twisted.interfaces.ReactorStarted"
-    handler=".subscribers.connectAdminAccount"
+    handler=".subscribers.initJabberAdmin"
     />
 
   <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
     handler=".subscribers.onUserCreation"
+    />
+
+  <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
+    handler=".subscribers.onUserDeletion"
     />
 
   <genericsetup:registerProfile

@@ -24,6 +24,9 @@ setup(name='plone.messaging.core',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'plone.messaging.twisted',
+          'pas.plugins.userdeletedevent',
+
           # -*- Extra requirements: -*-
       ],
       entry_points="""
