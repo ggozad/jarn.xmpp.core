@@ -6,7 +6,9 @@ from plone.app.testing import applyProfile
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.messaging.twisted.testing import REACTOR_FIXTURE
-
+from plone.app.testing import ploneSite
+from plone.app.testing import pushGlobalRegistry
+from plone.app.testing import popGlobalRegistry
 
 class EJabberdLayer(Layer):
 
@@ -57,15 +59,22 @@ EJABBERD_LAYER = EJabberdLayer()
 
 class PMCoreFixture(PloneSandboxLayer):
 
-    defaultBases = (EJABBERD_LAYER, REACTOR_FIXTURE, PLONE_FIXTURE)
+    defaultBases = (REACTOR_FIXTURE,)
+
+    def setUp(self):
+        from plone.app.testing import ploneSite
+        with ploneSite() as portal:
+            pushGlobalRegistry(portal)
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        print "CORE context: %s" %configurationContext
         import plone.messaging.core
         import pas.plugins.userdeletedevent
         xmlconfig.file('configure.zcml', plone.messaging.core, context=configurationContext)
         xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent, context=configurationContext)
         z2.installProduct(app, 'pas.plugins.userdeletedevent')
+
 
     def setUpPloneSite(self, portal):
             # Install into Plone site using portal_setup
@@ -75,6 +84,10 @@ class PMCoreFixture(PloneSandboxLayer):
             # Uninstall product
             z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
 
+    def tearDown(self):
+
+           with ploneSite() as portal:
+               popGlobalRegistry(portal)
 PMCORE_FIXTURE = PMCoreFixture()
 
 PMCORE_INTEGRATION_TESTING = IntegrationTesting(bases=(PMCORE_FIXTURE,), name="PMCoreFixture:Integration")

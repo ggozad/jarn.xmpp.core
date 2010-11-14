@@ -9,3 +9,4 @@ class SubscriberTests(unittest.TestCase):
 
     def test_add_user(self):
         portal = self.layer['portal']
+        d = portal.portal_membership.addMember('joebar', 'secret', ['Member'], [])
