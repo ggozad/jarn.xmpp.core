@@ -10,7 +10,6 @@ def initJabberAdmin(event):
     jabber_admin = JabberAdmin(reactor)
     sm.registerUtility(jabber_admin, IJabberAdmin)
 
-
 def onUserCreation(event):
     """Create a jabber account for new user
     """
@@ -26,9 +25,10 @@ def onUserCreation(event):
     jid = u'%s@%s' % (principal.getUserId(), jabber_admin.parent.jid.host)
     jabber_admin.addUser(jid, genPasswd())
 
-
 def onUserDeletion(event):
     principal = event.principal
     jabber_admin = getUtility(IJabberAdmin).getAdminClient()
     jid = u'%s@%s' % (principal, jabber_admin.parent.jid.host)
     jabber_admin.deleteUsers([jid])
+    import pdb; pdb.set_trace( )
+
