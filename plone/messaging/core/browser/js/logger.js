@@ -1,20 +1,19 @@
-
-function log(msg) 
+pmcxmpp.log = function (msg) 
 {
     $('#log').append('<div></div>').append(document.createTextNode(msg));
 }
 
-function rawInput(data)
+pmcxmpp.rawInput = function(data)
 {
-    log('RECV: ' + data);
+    pmcxmpp.log('RECV: ' + data);
 }
 
-function rawOutput(data)
+pmcxmpp.rawOutput = function (data)
 {
-    log('SENT: ' + data);
+    pmcxmpp.log('SENT: ' + data);
 }
 
-$(document).ready(function () {
-    pmcxmpp.connection.rawInput = rawInput;
-    pmcxmpp.connection.rawOutput = rawOutput;
+$(document).bind('pmcxmpp.connected', function () {
+    pmcxmpp.connection.rawInput = pmcxmpp.rawInput;
+    pmcxmpp.connection.rawOutput = pmcxmpp.rawOutput;
 });
