@@ -1,5 +1,3 @@
-var BOSH_SERVICE = 'http://localhost:8080/http-bind/'
-var connection = null;
 
 function log(msg) 
 {
@@ -17,9 +15,6 @@ function rawOutput(data)
 }
 
 $(document).ready(function () {
-    //connection = new Strophe.Connection(BOSH_SERVICE);
-    connection.rawInput = rawInput;
-    connection.rawOutput = rawOutput;
-
-
+    pmcxmpp.connection.rawInput = rawInput;
+    pmcxmpp.connection.rawOutput = rawOutput;
 });
