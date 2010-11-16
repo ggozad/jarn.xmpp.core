@@ -10,7 +10,3 @@ $(document).ready(function () {
 	pmcxmpp.connection = new Strophe.Connection(pmcxmpp.BOSH_SERVICE);
 	pmcxmpp.connection.connect(pmcxmpp.jid, pmcxmpp.password, pmcxmpp.onConnect);
 });
-
-$(document).bind('pmcxmpp.connected', function () {
-	alert('Connected');
-});

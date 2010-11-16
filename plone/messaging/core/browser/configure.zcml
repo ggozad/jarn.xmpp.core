@@ -12,6 +12,13 @@
       permission="zope2.View"
       />
 
+  <browser:viewlet
+      name="plone.messaging.core.messages"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      class=".messages.Messages"
+      permission="zope2.View"
+      />
+
   <browser:resourceDirectory
     name="plone.messaging.core.js"
     directory="js"
