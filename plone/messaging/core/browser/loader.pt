@@ -11,5 +11,7 @@ var pmcxmpp = {
 <script src="++resource++plone.messaging.core.js/loader.js"></script>
 <script src="++resource++plone.messaging.core.js/roster.js"></script>
 <script src="++resource++plone.messaging.core.js/logger.js"></script>
+<script src="++resource++plone.messaging.core.js/presence.js"></script>
+<script src="++resource++plone.messaging.core.js/messages.js"></script>
 
 <div id='log'></div>
