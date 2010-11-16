@@ -1,6 +1,6 @@
 pmcxmpp.log = function (msg) 
 {
-    $('#log').append('<div></div>').append(document.createTextNode(msg));
+    $('#log').append('<div></div><br/>').append(document.createTextNode(msg));
 }
 
 pmcxmpp.rawInput = function(data)

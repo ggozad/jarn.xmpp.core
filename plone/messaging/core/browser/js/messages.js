@@ -1,5 +1,4 @@
 pmcxmpp.Messages = {
-
     gotMessage: function (message) {
         var body = $(message).find('body').contents();
         var div = $("<div></div>");
@@ -11,15 +10,10 @@ pmcxmpp.Messages = {
                 div.append(this.xml);
             }
         });
-
         div.prependTo('#pcmxmpp-messages');
-
-        pmcxmpp.connection.addHandler(pmcxmpp.Messages.gotMessage,
-                                      null, 'message', 'chat');
-
+        return true;
     }
 };
-
 $(document).bind('pmcxmpp.connected', function () {
     pmcxmpp.connection.addHandler(pmcxmpp.Messages.gotMessage,
                                   null, 'message', 'chat');

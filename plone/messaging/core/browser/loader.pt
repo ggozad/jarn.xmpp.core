@@ -1,10 +1,9 @@
 <script>
 var pmcxmpp = {
-	connection : null,
-	BOSH_SERVICE : 'http://localhost:8080/http-bind/',
-	jid : 'admin@localhost',
-	password : 'admin',
-	
+  connection : null,
+  BOSH_SERVICE : 'http://localhost:8080/http-bind/',
+  jid : 'admin@localhost',
+  password : 'admin',
 };
 </script>
 <script src="++resource++plone.messaging.core.js/strophe.js"></script>
@@ -12,6 +11,7 @@ var pmcxmpp = {
 <script src="++resource++plone.messaging.core.js/roster.js"></script>
 <script src="++resource++plone.messaging.core.js/logger.js"></script>
 <script src="++resource++plone.messaging.core.js/presence.js"></script>
+<script src="++resource++plone.messaging.core.js/roster.js"></script>
 <script src="++resource++plone.messaging.core.js/messages.js"></script>
 
 <div id='log'></div>
