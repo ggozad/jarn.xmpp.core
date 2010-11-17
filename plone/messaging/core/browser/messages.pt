@@ -1,2 +1,3 @@
+<script src="++resource++plone.messaging.core.js/messages.js"></script>
 <div id="pcmxmpp-messages">
 </div>
