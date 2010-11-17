@@ -1,6 +1,7 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="plone.messaging.core">
 
 
@@ -17,6 +18,14 @@
       manager="plone.app.layout.viewlets.interfaces.IAboveContent"
       class=".messages.Messages"
       permission="zope2.View"
+      />
+
+  <plone:portlet
+      name="plone.messaging.core.onlineusers"
+      interface=".onlineusers.IOnlineUsers"
+      assignment=".onlineusers.Assignment"
+      renderer=".onlineusers.Renderer"
+      addview=".onlineusers.AddForm"
       />
 
   <browser:resourceDirectory

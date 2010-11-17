@@ -45,7 +45,8 @@ pmcxmpp.Presence = {
 				} else {
 					status = 'away'
 				}
-			} 
+			}
+			$(document).trigger('pmcxmpp.presence', [from, status]);
 		}
 		return true;
 	}

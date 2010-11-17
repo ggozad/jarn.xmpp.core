@@ -1,0 +1,9 @@
+<dl id="online-users" class="portlet"
+    tal:condition="view/available">
+    <script src="++resource++plone.messaging.core.js/onlineusers.js"></script>
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <span>Online Users</span>
+        <span class="portletTopRight"></span>
+    </dt>
+</dl>
