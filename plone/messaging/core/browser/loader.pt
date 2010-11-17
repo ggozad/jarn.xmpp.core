@@ -1,10 +1,4 @@
-<script>
-var pmcxmpp = {
-  connection : null,
-  BOSH_SERVICE : 'http://localhost:8080/http-bind/',
-  jid : 'admin@localhost',
-  password : 'admin',
-};
+<script tal:content="view/settings">
 </script>
 <script src="++resource++plone.messaging.core.js/strophe.js"></script>
 <script src="++resource++plone.messaging.core.js/loader.js"></script>
