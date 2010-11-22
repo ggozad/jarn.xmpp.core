@@ -17,9 +17,13 @@ logger = logging.getLogger('plone.messaging.core')
 class Admin(AdminClient):
 
     def connectionInitialized(self):
-        logger.info("Admin user %s has logged in." % self.parent.jid.full())
-        self.send(AvailablePresence(priority=-10))
+        logger.info("Admin user %s has logged in." %
+            self.xmlstream.factory.authenticator.jid.full())
+        #self.send(AvailablePresence(priority=-10))
 
+    def connectionLost(self, reason):
+        logger.info("Admin user %s has logged out." %
+            self.xmlstream.factory.authenticator.jid.full())
 
 class PubSub(PubSubClient):
 
@@ -36,11 +40,15 @@ class JabberAdmin(object):
         jid = JID("admin@localhost")
         password = 'admin'
         self._reactor = reactor
-        self._client = client.XMPPClient(jid, password)
-        self._adminHandler = Admin()
-        self._adminHandler.setHandlerParent(self._client)
-        factory = self._client.factory
-        self._reactor.connectTCP("localhost", 5222, factory)
+        self._factory = client.DeferredClientFactory(jid, password)
 
-    def getAdminClient(self):
-        return self._adminHandler
+    def getAdminClientDeferred(self):
+        d = client.clientCreator(self._factory)
+        adminHandler = Admin()
+        adminHandler.setHandlerParent(self._factory.streamManager)
+        connector = self._reactor.connectTCP("localhost", 5222, self._factory)
+        def disconnect(xmlstream):
+            connector.disconnect()
+        d.addCallback(disconnect)
+        d.addErrback(logger.error)
+        return (d, adminHandler)

@@ -9,8 +9,17 @@ def initJabberAdmin(event):
     sm = getSiteManager()
     jabber_admin = JabberAdmin(reactor)
     sm.registerUtility(jabber_admin, IJabberAdmin)
+    d, admin = jabber_admin.getAdminClientDeferred()
+    from twisted.internet import reactor, defer
+    pd = defer.Deferred()
+    from wokkel.xmppim import AvailablePresence
 
-
+    def sendPresence(res):
+        admin.send(AvailablePresence(priority=-10))
+        admin.addUser('asd@localhost', 'asdasd')
+    pd.addCallback(sendPresence)
+    d.chainDeferred(pd)
+    #import pdb; pdb.set_trace( )
 def onUserCreation(event):
     """Create a jabber account for new user
     """
