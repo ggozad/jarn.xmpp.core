@@ -47,13 +47,15 @@ class JabberAdmin(object):
         adminHandler.setHandlerParent(factory.streamManager)
 
         d = client.clientCreator(factory)
-        result = d.addCallback(callback)
+        d.addCallback(callback)
+
         connector = self._reactor.connectTCP("localhost", 5222, factory)
-
-        def disconnect(xmlstream):
-            connector.disconnect()
-        result.addCallback(disconnect)
-
+        def disconnect(result):
+            import pdb; pdb.set_trace( )
+            factory.streamManager.xmlstream.sendFooter()
+            #connector.disconnect()
+            return result
+        d.addCallback(disconnect)
         if errback:
             d.addErrback(errback)
         else:

@@ -57,7 +57,7 @@ EJABBERD_LAYER = EJabberdLayer()
 
 class PMCoreFixture(PloneSandboxLayer):
 
-    defaultBases = (EJABBERD_LAYER, REACTOR_FIXTURE, PLONE_FIXTURE)
+    defaultBases = (EJABBERD_LAYER, REACTOR_FIXTURE)
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
