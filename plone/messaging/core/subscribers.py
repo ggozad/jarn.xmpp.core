@@ -9,22 +9,19 @@ def initJabberAdmin(event):
     sm = getSiteManager()
     jabber_admin = JabberAdmin(reactor)
     sm.registerUtility(jabber_admin, IJabberAdmin)
-    d, admin = jabber_admin.getAdminClientDeferred()
-    from twisted.internet import reactor, defer
-    pd = defer.Deferred()
-    from wokkel.xmppim import AvailablePresence
 
-    def sendPresence(res):
-        admin.send(AvailablePresence(priority=-10))
-        admin.addUser('asd@localhost', 'asdasd')
-    pd.addCallback(sendPresence)
-    d.chainDeferred(pd)
-    #import pdb; pdb.set_trace( )
+    def announceStart(xmlstream):
+        d = xmlstream.factory.streamManager. \
+            handlers[0].sendAnnouncement("Instance started.")
+        return d
+    jabber_admin.execute(announceStart)
+
+
 def onUserCreation(event):
     """Create a jabber account for new user
     """
     principal = event.principal
-    jabber_admin = getUtility(IJabberAdmin).getAdminClient()
+    jid = u'%s@%s' % (principal.getUserId(), 'localhost')
 
     def genPasswd():
         import string
@@ -32,12 +29,23 @@ def onUserCreation(event):
         chars = string.letters + string.digits
         return ''.join([random.choice(chars) for i in range(12)])
 
-    jid = u'%s@%s' % (principal.getUserId(), jabber_admin.parent.jid.host)
-    jabber_admin.addUser(jid, genPasswd())
+    def addUser(xmlstream):
+        d = xmlstream.factory.streamManager. \
+            handlers[0].addUser(jid, genPasswd())
+        return d
+
+    jabber_admin = getUtility(IJabberAdmin)
+    jabber_admin.execute(addUser)
 
 
 def onUserDeletion(event):
     principal = event.principal
-    jabber_admin = getUtility(IJabberAdmin).getAdminClient()
-    jid = u'%s@%s' % (principal, jabber_admin.parent.jid.host)
-    jabber_admin.deleteUsers([jid])
+    jabber_admin = getUtility(IJabberAdmin)
+    jid = u'%s@%s' % (principal, 'localhost')
+
+    def deleteUser(xmlstream):
+        d = xmlstream.factory.streamManager. \
+            handlers[0].deleteUsers([jid])
+        return d
+
+    jabber_admin.execute(deleteUser)

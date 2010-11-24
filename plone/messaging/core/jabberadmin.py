@@ -19,11 +19,11 @@ class Admin(AdminClient):
     def connectionInitialized(self):
         logger.info("Admin user %s has logged in." %
             self.xmlstream.factory.authenticator.jid.full())
-        #self.send(AvailablePresence(priority=-10))
 
     def connectionLost(self, reason):
         logger.info("Admin user %s has logged out." %
             self.xmlstream.factory.authenticator.jid.full())
+
 
 class PubSub(PubSubClient):
 
@@ -37,18 +37,25 @@ class JabberAdmin(object):
     implements(IJabberAdmin)
 
     def __init__(self, reactor):
+        self._reactor = reactor
+
+    def execute(self, callback, errback=None):
         jid = JID("admin@localhost")
         password = 'admin'
-        self._reactor = reactor
-        self._factory = client.DeferredClientFactory(jid, password)
-
-    def getAdminClientDeferred(self):
-        d = client.clientCreator(self._factory)
+        factory = client.DeferredClientFactory(jid, password)
         adminHandler = Admin()
-        adminHandler.setHandlerParent(self._factory.streamManager)
-        connector = self._reactor.connectTCP("localhost", 5222, self._factory)
+        adminHandler.setHandlerParent(factory.streamManager)
+
+        d = client.clientCreator(factory)
+        result = d.addCallback(callback)
+        connector = self._reactor.connectTCP("localhost", 5222, factory)
+
         def disconnect(xmlstream):
             connector.disconnect()
-        d.addCallback(disconnect)
-        d.addErrback(logger.error)
-        return (d, adminHandler)
+        result.addCallback(disconnect)
+
+        if errback:
+            d.addErrback(errback)
+        else:
+            d.addErrback(logger.error)
+        return d
