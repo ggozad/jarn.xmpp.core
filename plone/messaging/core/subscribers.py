@@ -14,8 +14,8 @@ def initJabberAdmin(event):
         result = xmlstream.factory.streamManager. \
             handlers[0].sendAnnouncement("Instance started.")
         return result
-    #d = jabber_admin.execute(announceStart)
-    #return d
+    d = jabber_admin.execute(announceStart)
+    return d
 
 def onUserCreation(event):
     """Create a jabber account for new user
@@ -40,12 +40,13 @@ def onUserCreation(event):
 
 def onUserDeletion(event):
     principal = event.principal
-    jabber_admin = getUtility(IJabberAdmin)
     jid = u'%s@%s' % (principal, 'localhost')
 
     def deleteUser(xmlstream):
-        d = xmlstream.factory.streamManager. \
+        result = xmlstream.factory.streamManager. \
             handlers[0].deleteUsers([jid])
-        return d
+        return result
 
-    jabber_admin.execute(deleteUser)
+    jabber_admin = getUtility(IJabberAdmin)
+    d = jabber_admin.execute(deleteUser)
+    return d

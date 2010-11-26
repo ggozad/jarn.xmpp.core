@@ -16,8 +16,10 @@ class SubscriberTests(unittest.TestCase):
         user = getSecurityManager().getUser()
         ev = PrincipalCreated(user)
         from plone.messaging.core.subscribers import onUserCreation
+
         def res(result):
             self.assertEqual(result, True)
+
         d = onUserCreation(ev)
         d.addCallback(res)
         return d

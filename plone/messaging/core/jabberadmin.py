@@ -49,15 +49,17 @@ class JabberAdmin(object):
         d = client.clientCreator(factory)
         d.addCallback(callback)
 
-        connector = self._reactor.connectTCP("localhost", 5222, factory)
         def disconnect(result):
-            import pdb; pdb.set_trace( )
             factory.streamManager.xmlstream.sendFooter()
-            #connector.disconnect()
+            factory.streamManager.xmlstream.transport.connector.disconnect()
             return result
+
         d.addCallback(disconnect)
+
         if errback:
             d.addErrback(errback)
         else:
             d.addErrback(logger.error)
+
+        self._reactor.connectTCP("localhost", 5222, factory)
         return d
