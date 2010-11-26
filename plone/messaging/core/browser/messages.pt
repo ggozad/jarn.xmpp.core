@@ -1,3 +1,11 @@
 <script src="++resource++plone.messaging.core.js/messages.js"></script>
-<div id="pcmxmpp-messages">
+<div id="pcmxmpp-messages-container" class="overlay overlay-ajax" i18n:domain="plone.messaging.core">
+  <div class="close">
+    <span>Close</span>
+  </div>
+  <div class="pb-ajax">
+    <div><h3 i18n:translate="">Messages</h3></div>
+    <div id="pcmxmpp-messages">
+    </div>
+  </div>
 </div>

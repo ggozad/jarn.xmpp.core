@@ -9,4 +9,8 @@ $(document).bind('pmcxmpp.message', function (event, message) {
         }
     });
     $(div).prependTo('#pcmxmpp-messages');
+	$('#pcmxmpp-messages-container').overlay({
+		load: true,
+		closeOnClick: true
+	});
 });
