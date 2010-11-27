@@ -1,16 +1,13 @@
 $(document).bind('pmcxmpp.message', function (event, message) {
     var div = $('<div></div>');
     $(message).each(function () {
-        if (document.importNode) {
-            $(document.importNode(this, true)).appendTo(div);
-        } else {
-            // IE workaround
-            div.append(this.xml);
-        }
+		$("#pcmxmpp-messages").notify("create", {
+		    title: 'Notification',
+		    text: this.data
+		});
     });
-    $(div).prependTo('#pcmxmpp-messages');
-	$('#pcmxmpp-messages-container').overlay({
-		load: true,
-		closeOnClick: true
-	});
+});
+
+$(document).ready(function () {
+	$('#pcmxmpp-messages').notify();
 });
