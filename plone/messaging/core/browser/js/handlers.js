@@ -16,7 +16,11 @@ pmcxmpp.rawOutput = function (data)
 pmcxmpp.Messages = {
 	gotMessage: function (message) {
 		var body = $(message).find('body').contents();
-		$(document).trigger('pmcxmpp.message', body);
+		var from = $(message).attr('from');
+		event = jQuery.Event('pmcxmpp.message');
+		event.from = from;
+		event.body = body;
+		$(document).trigger(event);
 		return true;
 	}
 };
