@@ -14,12 +14,22 @@ pmcxmpp.rawOutput = function (data)
 }
 
 pmcxmpp.Messages = {
-	gotMessage: function (message) {
-		var body = $(message).find('body').contents();
-		var from = $(message).attr('from');
+	messageReceived: function (message) {
+		var body = $(message).children('body').text();
+		if (body=="") {
+			return true; // This is a typing notification, we do not handle it here...
+		}
+		var xhtml_body = $(message).find('html > body').contents();
 		event = jQuery.Event('pmcxmpp.message');
-		event.from = from;
-		event.body = body;
+
+		if (xhtml_body.length>0) {
+			event.mtype = 'xhtml';
+			event.body = xhtml_body.html();
+		} else {
+			event.body = body;
+			event.mtype = 'text'
+		}
+		event.from = $(message).attr('from');
 		$(document).trigger(event);
 		return true;
 	}
@@ -64,7 +74,7 @@ $(document).bind('pmcxmpp.connected', function () {
 	pmcxmpp.connection.rawOutput = pmcxmpp.rawOutput;
 
 	// Messages
-	pmcxmpp.connection.addHandler(pmcxmpp.Messages.gotMessage,
+	pmcxmpp.connection.addHandler(pmcxmpp.Messages.messageReceived,
 								  null, 'message', 'chat');
 	//Roster
 	pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
