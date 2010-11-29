@@ -8,13 +8,13 @@ from twisted.words.protocols.jabber.jid import JID
 from wokkel import client
 from wokkel.xmppim import AvailablePresence
 from wokkel.pubsub import PubSubClient
-from plone.messaging.twisted.protocols import AdminClient
+from plone.messaging.twisted.protocols import AdminHandler
 from plone.messaging.core.interfaces import IJabberAdmin
 
 logger = logging.getLogger('plone.messaging.core')
 
 
-class Admin(AdminClient):
+class Admin(AdminHandler):
 
     def connectionInitialized(self):
         logger.info("Admin user %s has logged in." %
