@@ -1,20 +1,25 @@
 from zope.component import getUtility
 from zope.component import getSiteManager
-from plone.messaging.core.jabberadmin import JabberAdmin
-from plone.messaging.core.interfaces import IJabberAdmin
+from twisted.words.protocols.jabber.jid import JID
+from plone.messaging.core.jabberclient import JabberClient, Admin
+from plone.messaging.core.interfaces import IJabberClient
 
 
-def initJabberAdmin(event):
+def initJabberClient(event):
     reactor = event.object
     sm = getSiteManager()
-    jabber_admin = JabberAdmin(reactor)
-    sm.registerUtility(jabber_admin, IJabberAdmin)
+    jabber_client = JabberClient(reactor)
+    sm.registerUtility(jabber_client, IJabberClient)
 
     def announceStart(xmlstream):
         result = xmlstream.factory.streamManager. \
             handlers[0].sendAnnouncement("Instance started.")
         return result
-    d = jabber_admin.execute(announceStart)
+
+    admin_jid = JID("admin@localhost")
+    admin_password = 'admin'
+    d = jabber_client.execute(admin_jid, admin_password,
+                              announceStart, extra_handlers=[Admin()])
     return d
 
 def onUserCreation(event):
@@ -34,8 +39,11 @@ def onUserCreation(event):
             handlers[0].addUser(jid, genPasswd())
         return result
 
-    jabber_admin = getUtility(IJabberAdmin)
-    d = jabber_admin.execute(addUser)
+    jabber_client = getUtility(IJabberClient)
+    admin_jid = JID("admin@localhost")
+    admin_password = 'admin'
+    d = jabber_client.execute(admin_jid, admin_password,
+                              addUser, extra_handlers=[Admin()])
     return d
 
 def onUserDeletion(event):
@@ -47,6 +55,9 @@ def onUserDeletion(event):
             handlers[0].deleteUsers([jid])
         return result
 
-    jabber_admin = getUtility(IJabberAdmin)
-    d = jabber_admin.execute(deleteUser)
+    jabber_client = getUtility(IJabberClient)
+    admin_jid = JID("admin@localhost")
+    admin_password = 'admin'
+    d = jabber_client.execute(admin_jid, admin_password,
+                              deleteUser, extra_handlers=[Admin()])
     return d

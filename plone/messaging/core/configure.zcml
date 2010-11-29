@@ -11,7 +11,7 @@
 
   <subscriber
     for="plone.messaging.twisted.interfaces.ReactorStarted"
-    handler=".subscribers.initJabberAdmin"
+    handler=".subscribers.initJabberClient"
     />
 
   <subscriber for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"

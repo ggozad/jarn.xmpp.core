@@ -4,12 +4,11 @@ XMPP subprotocol handler that for:
 """
 import logging
 from zope.interface import implements
-from twisted.words.protocols.jabber.jid import JID
 from wokkel import client
 from wokkel.xmppim import AvailablePresence
 from wokkel.pubsub import PubSubClient
 from plone.messaging.twisted.protocols import AdminHandler
-from plone.messaging.core.interfaces import IJabberAdmin
+from plone.messaging.core.interfaces import IJabberClient
 
 logger = logging.getLogger('plone.messaging.core')
 
@@ -32,19 +31,17 @@ class PubSub(PubSubClient):
         self.send(AvailablePresence(priority=-10))
 
 
-class JabberAdmin(object):
+class JabberClient(object):
 
-    implements(IJabberAdmin)
+    implements(IJabberClient)
 
     def __init__(self, reactor):
         self._reactor = reactor
 
-    def execute(self, callback, errback=None):
-        jid = JID("admin@localhost")
-        password = 'admin'
+    def execute(self, jid, password, callback, extra_handlers=[], errback=None):
         factory = client.DeferredClientFactory(jid, password)
-        adminHandler = Admin()
-        adminHandler.setHandlerParent(factory.streamManager)
+        for handler in extra_handlers:
+            handler.setHandlerParent(factory.streamManager)
 
         d = client.clientCreator(factory)
         d.addCallback(callback)
