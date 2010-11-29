@@ -7,6 +7,7 @@
     handler=".startup.initJabberClient"
     />
 
+  <!-- User Management -->
   <subscriber 
     for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
     handler=".user_management.onUserCreation"
@@ -15,6 +16,13 @@
   <subscriber
     for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
     handler=".user_management.onUserDeletion"
+    />
+
+  <!-- Workflow Changes -->
+  
+  <subscriber
+    for="Products.CMFCore.interfaces.IActionSucceededEvent"
+    handler=".workflow.onWorkflowChange"
     />
 
 </configure>
