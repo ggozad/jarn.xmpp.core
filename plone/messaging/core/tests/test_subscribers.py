@@ -15,7 +15,7 @@ class SubscriberTests(unittest.TestCase):
         from AccessControl import getSecurityManager
         user = getSecurityManager().getUser()
         ev = PrincipalCreated(user)
-        from plone.messaging.core.subscribers import onUserCreation
+        from plone.messaging.core.subscribers.user_management import onUserCreation
 
         def res(result):
             self.assertEqual(result, True)

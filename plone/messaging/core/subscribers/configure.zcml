@@ -1,0 +1,20 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="plone.messaging.core">
+
+  <subscriber
+    for="plone.messaging.twisted.interfaces.ReactorStarted"
+    handler=".startup.initJabberClient"
+    />
+
+  <subscriber 
+    for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
+    handler=".user_management.onUserCreation"
+    />
+
+  <subscriber
+    for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
+    handler=".user_management.onUserDeletion"
+    />
+
+</configure>
