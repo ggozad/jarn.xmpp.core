@@ -25,7 +25,10 @@ class XMPPLoader(ViewletBase):
     @property
     def jpassword(self):
         # XXX: Should go to registry
-        return 'admin'
+        if self.jid=="admin@localhost":
+            return 'admin'
+        else:
+            return 'secret'
 
     def settings(self):
         script = """

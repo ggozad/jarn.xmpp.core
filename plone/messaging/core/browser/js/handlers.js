@@ -21,7 +21,6 @@ pmcxmpp.Messages = {
 		}
 		var xhtml_body = $(message).find('html > body').contents();
 		event = jQuery.Event('pmcxmpp.message');
-
 		if (xhtml_body.length>0) {
 			event.mtype = 'xhtml';
 			event.body = xhtml_body.html();

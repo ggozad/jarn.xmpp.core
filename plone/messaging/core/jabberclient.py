@@ -7,7 +7,7 @@ from zope.interface import implements
 from wokkel import client
 from wokkel.xmppim import AvailablePresence
 from wokkel.pubsub import PubSubClient
-from plone.messaging.twisted.protocols import AdminHandler
+from plone.messaging.twisted.protocols import AdminHandler, ChatHandler
 from plone.messaging.core.interfaces import IJabberClient
 
 logger = logging.getLogger('plone.messaging.core')
@@ -22,6 +22,10 @@ class Admin(AdminHandler):
     def connectionLost(self, reason):
         logger.info("Admin user %s has logged out." %
             self.xmlstream.factory.authenticator.jid.full())
+
+
+class Chatter(ChatHandler):
+    pass
 
 
 class PubSub(PubSubClient):
@@ -39,6 +43,7 @@ class JabberClient(object):
         self._reactor = reactor
 
     def execute(self, jid, password, callback, extra_handlers=[], errback=None):
+        jid.resource='auto'
         factory = client.DeferredClientFactory(jid, password)
         for handler in extra_handlers:
             handler.setHandlerParent(factory.streamManager)
