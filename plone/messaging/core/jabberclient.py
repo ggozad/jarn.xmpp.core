@@ -2,6 +2,8 @@
 XMPP subprotocol handler that for:
     * XMPP admin.
 """
+import random
+import string
 import logging
 from zope.interface import implements
 from wokkel import client
@@ -50,7 +52,9 @@ class JabberClient(object):
         self._reactor = reactor
 
     def execute(self, jid, password, callback, extra_handlers=[], errback=None):
-        jid.resource='auto'
+        chars = string.letters + string.digits
+        resource = 'auto-' + ''.join([random.choice(chars) for i in range(10)])
+        jid.resource=resource
         factory = client.DeferredClientFactory(jid, password)
         for handler in extra_handlers:
             handler.setHandlerParent(factory.streamManager)
