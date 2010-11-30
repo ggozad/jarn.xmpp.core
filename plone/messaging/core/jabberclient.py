@@ -25,7 +25,14 @@ class Admin(AdminHandler):
 
 
 class Chatter(ChatHandler):
-    pass
+
+    def connectionInitialized(self):
+        logger.info("User %s has logged in." %
+            self.xmlstream.factory.authenticator.jid.full())
+
+    def connectionLost(self, reason):
+        logger.info("User %s has logged out." %
+            self.xmlstream.factory.authenticator.jid.full())
 
 
 class PubSub(PubSubClient):
