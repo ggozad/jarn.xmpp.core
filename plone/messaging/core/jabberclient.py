@@ -59,7 +59,6 @@ class JabberClient(object):
         factory = client.DeferredClientFactory(jid, password)
         for handler in extra_handlers:
             handler.setHandlerParent(factory.streamManager)
-
         d = client.clientCreator(factory)
         d.addCallback(callback)
 
@@ -67,7 +66,6 @@ class JabberClient(object):
             factory.streamManager.xmlstream.sendFooter()
             factory.streamManager.xmlstream.transport.connector.disconnect()
             return result
-
         d.addCallback(disconnect)
 
         if errback:
@@ -75,5 +73,5 @@ class JabberClient(object):
         else:
             d.addErrback(logger.error)
 
-        self._reactor.connectTCP("localhost", 5222, factory)
+        self._reactor.callFromThread(self._reactor.connectTCP, "localhost", 5222, factory)
         return d
