@@ -8,6 +8,8 @@
   <include package=".subscribers" />
   <include package=".browser" />
 
+  <utility factory=".settings.XMPPSettings" />
+
   <genericsetup:registerProfile
     name="default"
     title="plone.messaging.core"

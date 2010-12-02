@@ -44,11 +44,6 @@ class PubSub(PubSubClient):
         self.send(AvailablePresence(priority=-10))
 
 
-from punjab.httpb_client import HTTPBindingStream
-class BoshClientFactory(client.DeferredClientFactory):
-    protocol = HTTPBindingStream
-
-
 class JabberClient(object):
 
     implements(IJabberClient)
@@ -56,11 +51,12 @@ class JabberClient(object):
     def __init__(self, reactor):
         self._reactor = reactor
 
-    def execute(self, jid, password, callback, extra_handlers=[], errback=None):
+    def execute(self, jid, password,
+                callback, extra_handlers=[], errback=None):
         chars = string.letters + string.digits
         resource = 'auto-' + ''.join([random.choice(chars) for i in range(10)])
         jid.resource=resource
-        factory = BoshClientFactory(jid, password)
+        factory = client.DeferredClientFactory(jid, password)
         for handler in extra_handlers:
             handler.setHandlerParent(factory.streamManager)
 

@@ -1,4 +1,4 @@
-<script tal:content="view/settings">
+<script tal:content="view/boshSettings">
 </script>
 <script src="++resource++plone.messaging.core.js/strophe.js"></script>
 <script src="++resource++plone.messaging.core.js/loader.js"></script>

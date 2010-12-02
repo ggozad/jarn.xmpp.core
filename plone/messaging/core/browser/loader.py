@@ -1,36 +1,38 @@
+from zope.component import getUtility
 from plone.app.layout.viewlets.common import ViewletBase
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
+from plone.messaging.core.interfaces import IXMPPSettings
+
+
 class XMPPLoader(ViewletBase):
     """
     """
     index = ViewPageTemplateFile('loader.pt')
 
+    def update(self):
+        super(XMPPLoader, self).update()
+        self.settings = getUtility(IXMPPSettings)
+        pm = getToolByName(self.context, 'portal_membership')
+        self.user_id = pm.getAuthenticatedMember().getId()
+
     @property
     def bosh(self):
-        # XXX: Should go to registry
-        return 'http://localhost:8080/http-bind/'
+        return self.settings.BOSHUrl()
 
     @property
     def jdomain(self):
-        # XXX: Should go to registry
-        return 'localhost'
+        return self.settings.XMPPDomain()
 
     @property
     def jid(self):
-        pm = getToolByName(self.context, 'portal_membership')
-        user = pm.getAuthenticatedMember().getId()
-        return "%s@%s" % (user, self.jdomain)
+        return "%s@%s" % (self.user_id, self.jdomain)
 
     @property
     def jpassword(self):
-        # XXX: Should go to registry
-        if self.jid=="admin@localhost":
-            return 'admin'
-        else:
-            return 'secret'
+        return self.settings.getUserPassword(self.user_id)
 
-    def settings(self):
+    def boshSettings(self):
         script = """
         var pmcxmpp = {
           connection : null,
