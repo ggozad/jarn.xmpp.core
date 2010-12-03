@@ -1,7 +1,7 @@
 from zope.component import getUtility
 from twisted.words.protocols.jabber.jid import JID
-from plone.messaging.core.jabberclient import Admin
-from plone.messaging.core.interfaces import IJabberClient
+from plone.messaging.twisted.client import Admin
+from plone.messaging.twisted.interfaces import IJabberClient
 
 
 def onUserCreation(event):

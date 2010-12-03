@@ -4,7 +4,7 @@
 
   <subscriber
     for="plone.messaging.twisted.interfaces.ReactorStarted"
-    handler=".startup.initJabberClient"
+    handler=".startup.announceStart"
     />
 
   <!-- User Management -->

@@ -2,8 +2,8 @@ from zope.component import getUtility
 from twisted.words.protocols.jabber.jid import JID
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _mergedLocalRoles
-from plone.messaging.core.interfaces import IJabberClient
-from plone.messaging.core.jabberclient import Chatter
+from plone.messaging.twisted.interfaces import IJabberClient
+from plone.messaging.twisted.client import Chatter
 
 
 def onWorkflowChange(event):
