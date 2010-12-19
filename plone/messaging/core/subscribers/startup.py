@@ -5,7 +5,6 @@ from plone.messaging.twisted.interfaces import IJabberClient
 
 
 def announceStart(event):
-
     client = getUtility(IJabberClient)
 
     def announceStart(xmlstream):

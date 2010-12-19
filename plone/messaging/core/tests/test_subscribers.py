@@ -1,25 +1,32 @@
+from twisted.internet import reactor
 from twisted.trial import unittest
+from Products.PluggableAuthService.events import PrincipalCreated
+from AccessControl import getSecurityManager
+from plone.messaging.core.subscribers.user_management import onUserCreation
 from plone.messaging.core.testing import PMCORE_INTEGRATION_TESTING
-import twisted
-twisted.internet.base.DelayedCall.debug = True
+
 
 class SubscriberTests(unittest.TestCase):
 
     layer = PMCORE_INTEGRATION_TESTING
 
+    def cleanup(self):
+        # XXX
+        # Clean up hanging DelayedCalls that originate from twisted.
+        # <bound method Resolver.maybeParseConfig of <twisted.names.client.Resolver instance at ...>>
+        # Go figure...
+        for delayed_call in reactor.getDelayedCalls():
+            delayed_call.cancel()
+
     def test_add_user(self):
-        portal = self.layer['portal']
-        #portal.portal_membership.addMember('joe', 'secret', ('Member',), [])
-        from zope.event import notify
-        from Products.PluggableAuthService.events import PrincipalCreated
-        from AccessControl import getSecurityManager
+        self.addCleanup(self.cleanup)
+
         user = getSecurityManager().getUser()
         ev = PrincipalCreated(user)
-        from plone.messaging.core.subscribers.user_management import onUserCreation
+        d = onUserCreation(ev)
 
         def res(result):
             self.assertEqual(result, True)
 
-        d = onUserCreation(ev)
         d.addCallback(res)
         return d
