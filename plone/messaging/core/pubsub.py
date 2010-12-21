@@ -53,3 +53,28 @@ def deleteNode(identifier):
                               deleteChannel, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
     return d
+
+
+def subscribeUserToNode(identifier, subscriber_id):
+    jsettings = getUtility(IXMPPSettings)
+    subscriber_jid = jsettings.getUserJID(subscriber_id)
+    password = jsettings.getUserPassword(subscriber_id)
+
+    def subscribeUserToChannel(xmlstream):
+        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
+        result = pubsub_handler.subscribe(jsettings.PubSubJID,
+                                          identifier,
+                                          subscriber_jid)
+        return result
+
+    def resultCb(result):
+        if result:
+            logger.info("Successfully subscribed user %s to pubsub node %s" % (subscriber_jid, identifier))
+        else:
+            logger.error("Failure in subscribing user %s to pubsub node %s" % (subscriber_jid, identifier))
+
+    jabber_client = getUtility(IJabberClient)
+    d = jabber_client.execute(subscriber_jid, password,
+                              subscribeUserToChannel, extra_handlers=[PubSub()])
+    d.addCallback(resultCb)
+    return d

@@ -1,6 +1,7 @@
 <script tal:content="view/boshSettings">
 </script>
 <script src="++resource++plone.messaging.core.js/strophe.js"></script>
+<script src="++resource++plone.messaging.core.js/strophe.pubsub.js"></script>
 <script src="++resource++plone.messaging.core.js/loader.js"></script>
 <script src="++resource++plone.messaging.core.js/handlers.js"></script>
 <script src="++resource++plone.messaging.core.js/logger.js"></script>

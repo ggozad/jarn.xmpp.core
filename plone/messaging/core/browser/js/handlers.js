@@ -78,8 +78,6 @@ $(document).bind('pmcxmpp.connected', function () {
 	//Roster
 	pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
 	pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');
-	//var roster_iq = $iq({type: 'get'}).c('query', {xmlns: Strophe.NS.ROSTER});
-	//pmcxmpp.connection.sendIQ(roster_iq);
 	// Presence
 	pmcxmpp.connection.addHandler(pmcxmpp.Presence.presenceReceived, null, 'presence', null);
 	pmcxmpp.connection.send($pres());
