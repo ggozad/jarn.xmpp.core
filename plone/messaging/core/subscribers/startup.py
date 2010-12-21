@@ -5,6 +5,10 @@ from plone.messaging.core.interfaces import IXMPPSettings
 
 
 def announceStart(event):
+    from plone.messaging.core.pubsub import createNode, deleteNode
+    #test = createNode('testing123', access_model='open')
+    test = deleteNode('testing123')
+    return
     client = getUtility(IJabberClient)
     jsettings = getUtility(IXMPPSettings)
     jid = jsettings.getUserJID('admin')

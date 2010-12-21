@@ -21,5 +21,9 @@ class XMPPSettings(object):
         return 'localhost'
 
     @property
+    def PubSubJID(self):
+        return JID('pubsub.localhost')
+
+    @property
     def BOSHUrl(self):
         return 'http://localhost:8080/http-bind/'
