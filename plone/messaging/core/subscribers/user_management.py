@@ -1,14 +1,18 @@
 from zope.component import getUtility
-from twisted.words.protocols.jabber.jid import JID
 from plone.messaging.twisted.client import Admin
 from plone.messaging.twisted.interfaces import IJabberClient
+from plone.messaging.core.interfaces import IXMPPSettings
 
 
 def onUserCreation(event):
-    """Create a jabber account for new user
+    """Create a jabber account for new user.
     """
+
     principal = event.principal
-    jid = u'%s@%s' % (principal.getUserId(), 'localhost')
+    jsettings = getUtility(IXMPPSettings)
+    jid = u'%s@%s' % (principal.getUserId(), jsettings.XMPPDomain)
+    admin_jid = jsettings.getUserJID('admin')
+    admin_password = jsettings.getUserPassword('admin')
 
     def genPasswd():
         import string
@@ -22,16 +26,20 @@ def onUserCreation(event):
         return result
 
     jabber_client = getUtility(IJabberClient)
-    admin_jid = JID("admin@localhost")
-    admin_password = 'admin'
     d = jabber_client.execute(admin_jid, admin_password,
                               addUser, extra_handlers=[Admin()])
     return d
 
 
 def onUserDeletion(event):
+    """Delete jabber account when a user is removed.
+    """
+
     principal = event.principal
-    jid = u'%s@%s' % (principal, 'localhost')
+    jsettings = getUtility(IXMPPSettings)
+    jid = u'%s@%s' % (principal, jsettings.XMPPDomain)
+    admin_jid = jsettings.getUserJID('admin')
+    admin_password = jsettings.getUserPassword('admin')
 
     def deleteUser(xmlstream):
         result = xmlstream.factory.streamManager. \
@@ -39,8 +47,6 @@ def onUserDeletion(event):
         return result
 
     jabber_client = getUtility(IJabberClient)
-    admin_jid = JID("admin@localhost")
-    admin_password = 'admin'
     d = jabber_client.execute(admin_jid, admin_password,
                               deleteUser, extra_handlers=[Admin()])
     return d

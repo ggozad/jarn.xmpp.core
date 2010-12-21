@@ -18,11 +18,11 @@ class XMPPLoader(ViewletBase):
 
     @property
     def bosh(self):
-        return self.settings.BOSHUrl()
+        return self.settings.BOSHUrl
 
     @property
     def jdomain(self):
-        return self.settings.XMPPDomain()
+        return self.settings.XMPPDomain
 
     @property
     def jid(self):
