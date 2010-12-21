@@ -7,7 +7,7 @@ $(document).bind('pmcxmpp.message', function (event) {
 	},
 	{
 		expires: false
-	});		
+	});
 });
 
 $(document).ready(function () {
