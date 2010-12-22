@@ -17,7 +17,7 @@ def createNode(identifier, access_model='whitelist'):
     def createChannel(xmlstream):
         pubsub_handler = xmlstream.factory.streamManager.handlers[0]
         result = pubsub_handler.createNode(jsettings.PubSubJID,
-            nodeIdentifier=identifier, options={'access_model': access_model})
+            identifier, options={'access_model': access_model})
         return result
 
     def resultCb(result):
@@ -33,6 +33,48 @@ def createNode(identifier, access_model='whitelist'):
     return d
 
 
+def getNodeAffiliations(identifier):
+    jsettings = getUtility(IXMPPSettings)
+    admin_jid = jsettings.getUserJID('admin')
+    admin_password = jsettings.getUserPassword('admin')
+
+    def getAffiliations(xmlstream):
+        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
+        result = pubsub_handler.getAffiliations(jsettings.PubSubJID,
+            identifier)
+        return result
+
+    def resultCb(result):
+        return result
+
+    jabber_client = getUtility(IJabberClient)
+    d = jabber_client.execute(admin_jid, admin_password,
+                              getAffiliations, extra_handlers=[PubSub()])
+    d.addCallback(resultCb)
+    return d
+
+
+def setNodeAffiliations(identifier, affiliations):
+    jsettings = getUtility(IXMPPSettings)
+    admin_jid = jsettings.getUserJID('admin')
+    admin_password = jsettings.getUserPassword('admin')
+
+    def setAffiliations(xmlstream):
+        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
+        result = pubsub_handler.modifyAffiliations(jsettings.PubSubJID,
+            identifier, affiliations)
+        return result
+
+    def resultCb(result):
+        return result
+
+    jabber_client = getUtility(IJabberClient)
+    d = jabber_client.execute(admin_jid, admin_password,
+                              setAffiliations, extra_handlers=[PubSub()])
+    d.addCallback(resultCb)
+    return d
+
+
 def deleteNode(identifier):
     jsettings = getUtility(IXMPPSettings)
     admin_jid = jsettings.getUserJID('admin')
@@ -41,7 +83,7 @@ def deleteNode(identifier):
     def deleteChannel(xmlstream):
         pubsub_handler = xmlstream.factory.streamManager.handlers[0]
         result = pubsub_handler.deleteNode(jsettings.PubSubJID,
-            nodeIdentifier=identifier)
+            identifier)
         return result
 
     def resultCb(result):
