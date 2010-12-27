@@ -4,7 +4,7 @@
   xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="plone.messaging.core">
 
-
+  <include package=".portlets" />
 
   <browser:viewlet
       name="plone.messaging.core.loader"
@@ -18,14 +18,6 @@
       manager="plone.app.layout.viewlets.interfaces.IAboveContent"
       class=".messages.Messages"
       permission="zope2.View"
-      />
-
-  <plone:portlet
-      name="plone.messaging.core.onlineusers"
-      interface=".onlineusers.IOnlineUsers"
-      assignment=".onlineusers.Assignment"
-      renderer=".onlineusers.Renderer"
-      addview=".onlineusers.AddForm"
       />
 
   <browser:resourceDirectory

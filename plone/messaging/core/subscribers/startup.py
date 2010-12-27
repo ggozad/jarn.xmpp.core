@@ -7,18 +7,19 @@ from twisted.words.protocols.jabber.jid import JID
 
 def announceStart(event):
     from plone.messaging.core.pubsub import createNode, deleteNode, \
-    subscribeUserToNode, publishItemToNode, getNodeAffiliations, setNodeAffiliations
+    subscribeUserToNode, publishItemToNode, getNodeAffiliations, \
+    setNodeAffiliations, getNodeItems
     #test = deleteNode('testing')
-    #test = createNode('testing', access_model='open')
+    #test = createNode('/testing', access_model='open')
     #test = subscribeUserToNode('testing', 'areviewer')
-    publishItemToNode('testing', 'Hello world!', 'areviewer')
+    #publishItemToNode('testing', 'Hello world!', 'areviewer')
+    #getNodeItems('testing', 'areviewer')
     return
 
     def cb2(res):
-        import pdb; pdb.set_trace( )
+        return
 
     def cb(res):
-        import pdb; pdb.set_trace( )
         res2 = setNodeAffiliations('testing',
             [(JID(u'areviewer@localhost'), u'publisher')])
         res2.addCallback(cb2)

@@ -1,13 +1,23 @@
 import logging
-from zope.component import getUtility
+from datetime import datetime
+
 from twisted.words.xish.domish import Element
+from zope.component import getUtility
 from wokkel.pubsub import Item
+
 from plone.messaging.twisted.client import PubSub
 from plone.messaging.twisted.interfaces import IJabberClient
 from plone.messaging.core.interfaces import IXMPPSettings
 
 logger = logging.getLogger('plone.messaging.core')
 
+
+class PubSubItem(object):
+
+    def __init__(self, text, author, date):
+        self.text = text
+        self.author = author
+        self.date = date
 
 def createNode(identifier, access_model='whitelist'):
     jsettings = getUtility(IXMPPSettings)
@@ -132,6 +142,9 @@ def publishItemToNode(identifier, content, user_id):
 
     entry = Element(('http://www.w3.org/2005/Atom', 'entry'))
     entry.addElement('content', content=content)
+    entry.addElement('author', content=user_id)
+    now = datetime.now()
+    entry.addElement('updated', content=now.isoformat())
     item = Item(payload=entry)
 
     def publishItem(xmlstream):
@@ -150,5 +163,35 @@ def publishItemToNode(identifier, content, user_id):
     jabber_client = getUtility(IJabberClient)
     d = jabber_client.execute(user_jid, password,
                               publishItem, extra_handlers=[PubSub()])
+    d.addCallback(resultCb)
+    return d
+
+
+def getNodeItems(identifier, user_id, maxItems=10):
+
+    jsettings = getUtility(IXMPPSettings)
+    user_jid = jsettings.getUserJID(user_id)
+    password = jsettings.getUserPassword(user_id)
+
+    def getItems(xmlstream):
+        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
+        result = pubsub_handler.items(jsettings.PubSubJID,
+                                      identifier,
+                                      maxItems=10)
+        return result
+
+    def resultCb(result):
+        items = []
+        for item in result:
+            entry = item.entry
+            content = entry.content.children[0]
+            updated = entry.updated.children[0]
+            author = entry.author.children[0]
+            items.append(PubSubItem(content, author, updated))
+        return items
+
+    jabber_client = getUtility(IJabberClient)
+    d = jabber_client.execute(user_jid, password,
+                              getItems, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
     return d

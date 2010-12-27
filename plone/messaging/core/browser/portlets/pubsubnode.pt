@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:omit-tag="">
+<dl class="portlet portletPubSubNode"
+    i18n:domain="plone.messaging.core">
+
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <span tal:content="view/title">A node</span>
+        <span class="portletTopRight"></span>
+    </dt>
+
+    <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
+                                plone_view context/@@plone;"
+                    tal:repeat="obj view/items">
+    <dd tal:define="oddrow repeat/obj/odd;"
+         tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+      
+         <span tal:content="obj/text">xmpp ftw!</span>
+         <span class="portletItemDetails"
+            tal:content="python:toLocalizedTime(obj.date)">May 5</span>
+    </dd>
+    </tal:pubsubitems>
+
+    <dd class="portletFooter">
+        <span class="portletBottomLeft"></span>
+        <span class="portletBottomRight"></span>
+    </dd>
+</dl>
+</html>
