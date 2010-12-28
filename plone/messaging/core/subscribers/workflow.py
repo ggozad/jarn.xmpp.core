@@ -1,7 +1,7 @@
 from zope.component import getUtility
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _mergedLocalRoles
-from plone.messaging.twisted.interfaces import IJabberClient
+from plone.messaging.twisted.interfaces import IDeferredXMPPClient
 from plone.messaging.twisted.client import Chatter
 from plone.messaging.core.interfaces import IXMPPSettings
 
@@ -37,7 +37,7 @@ def onWorkflowChange(event):
             xmlstream.factory.streamManager.handlers[0].sendXHTMLMessage(jid_to, text, xhtml)
             return True
 
-        jabber_client = getUtility(IJabberClient)
+        jabber_client = getUtility(IDeferredXMPPClient)
         d = jabber_client.execute(jid_from, from_password,
                                   sendNotification, [Chatter()])
         return d
@@ -65,7 +65,7 @@ def onWorkflowChange(event):
                 xmlstream.factory.streamManager.handlers[0].sendXHTMLMessage(jid_to, text, xhtml)
             return True
 
-        jabber_client = getUtility(IJabberClient)
+        jabber_client = getUtility(IDeferredXMPPClient)
         d = jabber_client.execute(jid_from, from_password,
                                   sendNotification, [Chatter()])
         return d

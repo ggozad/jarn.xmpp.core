@@ -7,6 +7,11 @@
     handler=".startup.announceStart"
     />
 
+  <subscriber
+    for="plone.messaging.twisted.interfaces.ReactorStarted"
+    handler=".startup.setupPubSubClient"
+    />
+
   <!-- User Management -->
   <subscriber 
     for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"

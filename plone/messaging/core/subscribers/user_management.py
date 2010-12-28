@@ -1,6 +1,6 @@
 from zope.component import getUtility
 from plone.messaging.twisted.client import Admin
-from plone.messaging.twisted.interfaces import IJabberClient
+from plone.messaging.twisted.interfaces import IDeferredXMPPClient
 from plone.messaging.core.interfaces import IXMPPSettings
 
 
@@ -25,7 +25,7 @@ def onUserCreation(event):
             handlers[0].addUser(jid, genPasswd())
         return result
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(admin_jid, admin_password,
                               addUser, extra_handlers=[Admin()])
     return d
@@ -46,7 +46,7 @@ def onUserDeletion(event):
             handlers[0].deleteUsers([jid])
         return result
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(admin_jid, admin_password,
                               deleteUser, extra_handlers=[Admin()])
     return d

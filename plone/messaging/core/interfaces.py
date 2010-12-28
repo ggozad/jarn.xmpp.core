@@ -13,3 +13,8 @@ class IXMPPSettings(Interface):
 
     def BOSHUrl():
         pass
+
+
+class IPubSubClient(Interface):
+    """Marker interface for the PubSub twisted client.
+    """

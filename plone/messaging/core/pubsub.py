@@ -1,13 +1,18 @@
-import logging
 from datetime import datetime
+import logging
+import random
+import string
 
 from twisted.words.xish.domish import Element
 from zope.component import getUtility
+from zope.interface import implements
+from wokkel import client
 from wokkel.pubsub import Item
 
 from plone.messaging.twisted.client import PubSub
-from plone.messaging.twisted.interfaces import IJabberClient
+from plone.messaging.twisted.interfaces import IDeferredXMPPClient
 from plone.messaging.core.interfaces import IXMPPSettings
+from plone.messaging.core.interfaces import IPubSubClient
 
 logger = logging.getLogger('plone.messaging.core')
 
@@ -36,7 +41,7 @@ def createNode(identifier, access_model='whitelist'):
         else:
             logger.error("Failure in creating pubsub node %s" % identifier)
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(admin_jid, admin_password,
                               createChannel, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
@@ -57,7 +62,7 @@ def getNodeAffiliations(identifier):
     def resultCb(result):
         return result
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(admin_jid, admin_password,
                               getAffiliations, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
@@ -78,7 +83,7 @@ def setNodeAffiliations(identifier, affiliations):
     def resultCb(result):
         return result
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(admin_jid, admin_password,
                               setAffiliations, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
@@ -102,7 +107,7 @@ def deleteNode(identifier):
         else:
             logger.error("Failure in deleting pubsub node %s" % identifier)
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(admin_jid, admin_password,
                               deleteChannel, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
@@ -127,7 +132,7 @@ def subscribeUserToNode(identifier, subscriber_id):
         else:
             logger.error("Failure in subscribing user %s to pubsub node %s" % (subscriber_jid, identifier))
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(subscriber_jid, password,
                               subscribeUser, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
@@ -160,7 +165,7 @@ def publishItemToNode(identifier, content, user_id):
         else:
             logger.error("Failure in publishing item to pubsub node %s" % identifier)
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(user_jid, password,
                               publishItem, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
@@ -190,7 +195,7 @@ def getNodeItems(identifier, user_id, maxItems=10):
             items.append(PubSubItem(content, author, updated))
         return items
 
-    jabber_client = getUtility(IJabberClient)
+    jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(user_jid, password,
                               getItems, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
