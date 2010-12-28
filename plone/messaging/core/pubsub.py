@@ -1,18 +1,17 @@
 from datetime import datetime
 import logging
-import random
-import string
 
 from twisted.words.xish.domish import Element
 from zope.component import getUtility
+from zope.event import notify
 from zope.interface import implements
-from wokkel import client
 from wokkel.pubsub import Item
 
-from plone.messaging.twisted.client import PubSub
+from plone.messaging.twisted.client import PubSub, XMPPClient
 from plone.messaging.twisted.interfaces import IDeferredXMPPClient
 from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.interfaces import IPubSubClient
+from plone.messaging.core.interfaces import PubSubClientConnected
 
 logger = logging.getLogger('plone.messaging.core')
 
@@ -24,94 +23,83 @@ class PubSubItem(object):
         self.author = author
         self.date = date
 
-def createNode(identifier, access_model='whitelist'):
-    jsettings = getUtility(IXMPPSettings)
-    admin_jid = jsettings.getUserJID('admin')
-    admin_password = jsettings.getUserPassword('admin')
 
-    def createChannel(xmlstream):
-        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
-        result = pubsub_handler.createNode(jsettings.PubSubJID,
-            identifier, options={'access_model': access_model})
-        return result
+class PubSubClient(XMPPClient):
 
-    def resultCb(result):
-        if result == identifier:
-            logger.info("Successfully created pubsub node %s" % identifier)
-        else:
-            logger.error("Failure in creating pubsub node %s" % identifier)
+    implements(IPubSubClient)
 
-    jabber_client = getUtility(IDeferredXMPPClient)
-    d = jabber_client.execute(admin_jid, admin_password,
-                              createChannel, extra_handlers=[PubSub()])
-    d.addCallback(resultCb)
-    return d
+    def __init__(self):
+        jsettings = getUtility(IXMPPSettings)
+        jid = jsettings.getUserJID('admin')
+        jdomain = jsettings.XMPPDomain
+        password = jsettings.getUserPassword('admin')
 
+        super(PubSubClient, self).__init__(jid,
+                                           password,
+                                           extra_handlers=[PubSub()],
+                                           host=jdomain)
+        self.pubsub = self.handlers[0]
+        self.pubsub_jid = jsettings.PubSubJID
 
-def getNodeAffiliations(identifier):
-    jsettings = getUtility(IXMPPSettings)
-    admin_jid = jsettings.getUserJID('admin')
-    admin_password = jsettings.getUserPassword('admin')
+    def _authd(self, xs):
+        super(PubSubClient, self)._authd(xs)
+        ev = PubSubClientConnected(self)
+        notify(ev)
 
-    def getAffiliations(xmlstream):
-        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
-        result = pubsub_handler.getAffiliations(jsettings.PubSubJID,
-            identifier)
-        return result
+    def createNode(self, identifier, access_model='whitelist'):
 
-    def resultCb(result):
-        return result
+        def cb(result):
+            if result == identifier:
+                logger.info("Successfully created pubsub node %s" % identifier)
+            else:
+                logger.error("Failure in creating pubsub node %s" % identifier)
 
-    jabber_client = getUtility(IDeferredXMPPClient)
-    d = jabber_client.execute(admin_jid, admin_password,
-                              getAffiliations, extra_handlers=[PubSub()])
-    d.addCallback(resultCb)
-    return d
+        d = self.pubsub.createNode(self.pubsub_jid,
+                                   identifier,
+                                   options={'access_model': access_model})
+        d.addCallback(cb)
+        return d
 
+    def deleteNode(self, identifier):
 
-def setNodeAffiliations(identifier, affiliations):
-    jsettings = getUtility(IXMPPSettings)
-    admin_jid = jsettings.getUserJID('admin')
-    admin_password = jsettings.getUserPassword('admin')
+        def cb(result):
+            if result:
+                logger.info("Successfully deleted pubsub node %s" % identifier)
+            else:
+                logger.error("Failure in deleting pubsub node %s" % identifier)
 
-    def setAffiliations(xmlstream):
-        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
-        result = pubsub_handler.modifyAffiliations(jsettings.PubSubJID,
-            identifier, affiliations)
-        return result
+        d = self.pubsub.deleteNode(self.pubsub_jid, identifier)
+        d.addCallback(cb)
+        return d
 
-    def resultCb(result):
-        return result
+    def getNodeAffiliations(self, identifier):
+        d = self.pubsub.getAffiliations(self.pubsub_jid,
+                                        identifier)
+        return d
 
-    jabber_client = getUtility(IDeferredXMPPClient)
-    d = jabber_client.execute(admin_jid, admin_password,
-                              setAffiliations, extra_handlers=[PubSub()])
-    d.addCallback(resultCb)
-    return d
+    def setNodeAffiliations(self, identifier, affiliations):
+        d = self.pubsub.modifyAffiliations(self.pubsub_jid,
+                                           identifier,
+                                           affiliations)
+        return d
 
+    def getNodeItems(self, identifier, maxItems=10):
 
-def deleteNode(identifier):
-    jsettings = getUtility(IXMPPSettings)
-    admin_jid = jsettings.getUserJID('admin')
-    admin_password = jsettings.getUserPassword('admin')
+        def cb(result):
+            items = []
+            for item in result:
+                entry = item.entry
+                content = entry.content.children[0]
+                updated = entry.updated.children[0]
+                author = entry.author.children[0]
+                items.append(PubSubItem(content, author, updated))
+            return items
 
-    def deleteChannel(xmlstream):
-        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
-        result = pubsub_handler.deleteNode(jsettings.PubSubJID,
-            identifier)
-        return result
-
-    def resultCb(result):
-        if result:
-            logger.info("Successfully deleted pubsub node %s" % identifier)
-        else:
-            logger.error("Failure in deleting pubsub node %s" % identifier)
-
-    jabber_client = getUtility(IDeferredXMPPClient)
-    d = jabber_client.execute(admin_jid, admin_password,
-                              deleteChannel, extra_handlers=[PubSub()])
-    d.addCallback(resultCb)
-    return d
+        d = self.pubsub.items(self.pubsub_jid,
+                                      identifier,
+                                      maxItems=10)
+        d.addCallback(cb)
+        return d
 
 
 def subscribeUserToNode(identifier, subscriber_id):
@@ -168,35 +156,5 @@ def publishItemToNode(identifier, content, user_id):
     jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(user_jid, password,
                               publishItem, extra_handlers=[PubSub()])
-    d.addCallback(resultCb)
-    return d
-
-
-def getNodeItems(identifier, user_id, maxItems=10):
-
-    jsettings = getUtility(IXMPPSettings)
-    user_jid = jsettings.getUserJID(user_id)
-    password = jsettings.getUserPassword(user_id)
-
-    def getItems(xmlstream):
-        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
-        result = pubsub_handler.items(jsettings.PubSubJID,
-                                      identifier,
-                                      maxItems=10)
-        return result
-
-    def resultCb(result):
-        items = []
-        for item in result:
-            entry = item.entry
-            content = entry.content.children[0]
-            updated = entry.updated.children[0]
-            author = entry.author.children[0]
-            items.append(PubSubItem(content, author, updated))
-        return items
-
-    jabber_client = getUtility(IDeferredXMPPClient)
-    d = jabber_client.execute(user_jid, password,
-                              getItems, extra_handlers=[PubSub()])
     d.addCallback(resultCb)
     return d

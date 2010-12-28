@@ -10,11 +10,19 @@ from plone.messaging.core.pubsub import PubSubClient
 
 
 def setupPubSubClient(event):
-    return
-    reactor = event.object
     gsm = getGlobalSiteManager()
-    gsm.registerUtility(PubSubClient(reactor), IPubSubClient)
+    gsm.registerUtility(PubSubClient(), IPubSubClient)
 
+
+def pubsubConnected(event):
+    pubsub = event.object
+    #pubsub.createNode('gogonode')
+    #pubsub.deleteNode('gogonode')
+
+    def cb(result):
+        import pdb; pdb.set_trace( )
+    #d = pubsub.getNodeItems('testing')
+    #d.addCallback(cb)
 
 def announceStart(event):
     client = getUtility(IDeferredXMPPClient)

@@ -2,14 +2,20 @@
     xmlns="http://namespaces.zope.org/zope"
     i18n_domain="plone.messaging.core">
 
+  <!-- Start up -->
+  <subscriber
+    for="plone.messaging.twisted.interfaces.ReactorStarted"
+    handler=".startup.setupPubSubClient"
+    />
+
   <subscriber
     for="plone.messaging.twisted.interfaces.ReactorStarted"
     handler=".startup.announceStart"
     />
 
   <subscriber
-    for="plone.messaging.twisted.interfaces.ReactorStarted"
-    handler=".startup.setupPubSubClient"
+    for="plone.messaging.core.interfaces.PubSubClientConnected"
+    handler=".startup.pubsubConnected"
     />
 
   <!-- User Management -->

@@ -1,6 +1,7 @@
 from plone.memoize.compress import xhtml_compress
 from plone.memoize.instance import memoize
 from plone.portlets.interfaces import IPortletDataProvider
+from zope.component import queryUtility
 from zope.formlib import form
 from zope.interface import implements
 from zope import schema
@@ -9,7 +10,7 @@ from plone.app.portlets import PloneMessageFactory as _
 from plone.app.portlets.portlets import base
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from plone.messaging.core.pubsub import getNodeItems
+from plone.messaging.core.interfaces import IPubSubClient
 
 ITEMS = {}
 
@@ -61,9 +62,11 @@ class Renderer(base.Renderer):
         def cb(result):
             ITEMS[self.data.node] = result
 
-        d = getNodeItems(self.data.node, 'admin', self.data.count)
-        d.addCallback(cb)
-        return d
+        pubsub = queryUtility(IPubSubClient)
+        if pubsub:
+            d = pubsub.getNodeItems(self.data.node, self.data.count)
+            d.addCallback(cb)
+            return d
 
     def _data(self):
         self._updateItems()
