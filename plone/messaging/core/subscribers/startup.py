@@ -16,7 +16,8 @@ def setupPubSubClient(event):
 
 def pubsubConnected(event):
     pubsub = event.object
-    #pubsub.createNode('gogonode')
+    pubsub.getNodes()
+    # #pubsub.createNode('gogonode')
     #pubsub.deleteNode('gogonode')
 
     def cb(result):

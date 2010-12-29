@@ -46,6 +46,10 @@ class PubSubClient(XMPPClient):
         ev = PubSubClientConnected(self)
         notify(ev)
 
+    def getNodes(self, identifier=None):
+        d = self.pubsub.getNodes(self.pubsub_jid, identifier)
+        return d
+
     def createNode(self, identifier, access_model='whitelist'):
 
         def cb(result):
