@@ -7,4 +7,5 @@ def createDefaultPubSubNodes():
     pubsub = getUtility(IPubSubClient)
     pubsub.createNode('people',
         options={'pubsub#node_title': 'All personal feeds',
-                 'pubsub#node_type': 'collection'})
+                 'pubsub#node_type': 'collection',
+                 'pubsub#collection': ''})
