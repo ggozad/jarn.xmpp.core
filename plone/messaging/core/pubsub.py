@@ -54,7 +54,7 @@ class PubSubClient(XMPPClient):
         d = self.pubsub.getNodeType(self.pubsub_jid, identifier)
         return d
 
-    def createNode(self, identifier, access_model='whitelist'):
+    def createNode(self, identifier, options=None):
 
         def cb(result):
             if result == identifier:
@@ -64,7 +64,7 @@ class PubSubClient(XMPPClient):
 
         d = self.pubsub.createNode(self.pubsub_jid,
                                    identifier,
-                                   options={'access_model': access_model})
+                                   options=options)
         d.addCallback(cb)
         return d
 
