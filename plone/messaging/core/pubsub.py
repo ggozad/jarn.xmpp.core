@@ -80,6 +80,10 @@ class PubSubClient(XMPPClient):
         d.addCallback(cb)
         return d
 
+    def getDefaultNodeConfiguration(self):
+        d = self.pubsub.getDefaultNodeConfiguration(self.pubsub_jid)
+        return d
+
     def getNodeAffiliations(self, identifier):
         d = self.pubsub.getAffiliations(self.pubsub_jid,
                                         identifier)
