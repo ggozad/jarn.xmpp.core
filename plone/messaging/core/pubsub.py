@@ -84,6 +84,13 @@ class PubSubClient(XMPPClient):
         d = self.pubsub.getDefaultNodeConfiguration(self.pubsub_jid)
         return d
 
+    def associateNodeToCollection(self, nodeIdentifier, collectionIdentifier):
+        d = self.pubsub.associateNodeToCollection(self.pubsub_jid,
+                                                  nodeIdentifier,
+                                                  collectionIdentifier)
+        return d
+
+
     def getNodeAffiliations(self, identifier):
         d = self.pubsub.getAffiliations(self.pubsub_jid,
                                         identifier)
