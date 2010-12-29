@@ -16,14 +16,15 @@ def setupPubSubClient(event):
 
 def pubsubConnected(event):
     pubsub = event.object
-    pubsub.getNodes()
     # #pubsub.createNode('gogonode')
     #pubsub.deleteNode('gogonode')
 
     def cb(result):
         import pdb; pdb.set_trace( )
+    d = pubsub.getNodeType('testing')
+    
     #d = pubsub.getNodeItems('testing')
-    #d.addCallback(cb)
+    d.addCallback(cb)
 
 def announceStart(event):
     client = getUtility(IDeferredXMPPClient)
