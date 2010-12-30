@@ -16,6 +16,7 @@
       assignment=".pubsubnode.Assignment"
       renderer=".pubsubnode.Renderer"
       addview=".pubsubnode.AddForm"
+      editview=".pubsubnode.EditForm"
       />
 
 </configure>

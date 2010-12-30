@@ -13,15 +13,8 @@ from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.interfaces import IPubSubClient
 from plone.messaging.core.interfaces import PubSubClientConnected
 
+
 logger = logging.getLogger('plone.messaging.core')
-
-
-class PubSubItem(object):
-
-    def __init__(self, text, author, date):
-        self.text = text
-        self.author = author
-        self.date = date
 
 
 class PubSubClient(XMPPClient):
@@ -98,7 +91,6 @@ class PubSubClient(XMPPClient):
                                                   collectionIdentifier)
         return d
 
-
     def getNodeAffiliations(self, identifier):
         d = self.pubsub.getAffiliations(self.pubsub_jid,
                                         identifier)
@@ -110,16 +102,42 @@ class PubSubClient(XMPPClient):
                                            affiliations)
         return d
 
+    def getCollectionNodeItems(self, identifier, maxItems=10):
+        """Currently ejabberd does not support this properly.
+        It should work as per http://xmpp.org/extensions/xep-0248.html#retrieve-items
+        In order to go around it, I get the child nodes of a collection, retrieve
+        their items, and return.
+        """
+
+        def itemsCb(result):
+            items = []
+            for (success, value) in result:
+                if success:
+                    items = items + value
+            return items
+
+        def nodesCb(nodes):
+            from twisted.internet import defer
+            d = defer.DeferredList(
+                [self.getNodeItems(node_dict['node'], maxItems=maxItems)
+                for node_dict in nodes],
+                consumeErrors=True)
+            d.addCallback(itemsCb)
+            return d
+
+        d = self.getNodes(identifier=identifier)
+        d.addCallback(nodesCb)
+        return d
+
     def getNodeItems(self, identifier, maxItems=10):
 
         def cb(result):
             items = []
             for item in result:
                 entry = item.entry
-                content = entry.content.children[0]
-                updated = entry.updated.children[0]
-                author = entry.author.children[0]
-                items.append(PubSubItem(content, author, updated))
+                atom = [(child.name, child.children[0])
+                    for child in entry.children]
+                items.append(dict(atom))
             return items
 
         d = self.pubsub.items(self.pubsub_jid,
