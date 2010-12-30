@@ -68,12 +68,14 @@ class PMCoreFixture(PloneSandboxLayer):
         z2.installProduct(app, 'pas.plugins.userdeletedevent')
 
     def setUpPloneSite(self, portal):
-            # Install into Plone site using portal_setup
-            applyProfile(portal, 'plone.messaging.core:default')
+        # Install into Plone site using portal_setup
+        applyProfile(portal, 'plone.messaging.core:default')
+        from plone.messaging.core.subscribers.startup import setupAdminClient
+        setupAdminClient(None)
 
     def tearDownZope(self, app):
-            # Uninstall product
-            z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
+        # Uninstall product
+        z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
 
 PMCORE_FIXTURE = PMCoreFixture()
 
