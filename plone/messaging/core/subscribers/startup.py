@@ -1,7 +1,7 @@
 from zope.component import getGlobalSiteManager
 
 from plone.messaging.core.interfaces import IAdminClient
-from plone.messaging.core.pubsub import AdminClient
+from plone.messaging.core.client import AdminClient
 
 
 def setupAdminClient(event):
