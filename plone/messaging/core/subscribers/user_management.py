@@ -9,8 +9,9 @@ def onUserCreation(event):
     """
 
     principal = event.principal
+    principal_id = principal.getUserId()
     jsettings = getUtility(IXMPPSettings)
-    jid = u'%s@%s' % (principal.getUserId(), jsettings.XMPPDomain)
+    jid = u'%s@%s' % (principal_id, jsettings.XMPPDomain)
     client = getUtility(IAdminClient)
 
     def genPasswd():
@@ -20,13 +21,19 @@ def onUserCreation(event):
         chars = string.letters + string.digits
         return ''.join([random.choice(chars) for i in range(12)])
 
+    def affiliateUser(result):
+        d = client.setNodeAffiliations(
+            principal_id, [(jsettings.getUserJID(principal_id), 'publisher')])
+        return d
+
     def configureUserPubSubNode(result):
-        d = client.configureNode(principal.getUserId(),
+        d = client.configureNode(principal_id,
                                  options={'pubsub#collection': 'people'})
+        d.addCallback(affiliateUser)
         return d
 
     def addUserPubSubNode(add_result):
-        d = client.createNode(principal.getUserId())
+        d = client.createNode(principal_id)
         d.addCallback(configureUserPubSubNode)
         return d
 
