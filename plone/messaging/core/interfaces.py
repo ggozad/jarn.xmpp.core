@@ -16,19 +16,19 @@ class IXMPPSettings(Interface):
         pass
 
 
-class IPubSubClient(Interface):
+class IAdminClient(Interface):
     """Marker interface for the PubSub twisted client.
     """
 
 
-class IPubSubClientConnected(IObjectEvent):
+class IAdminClientConnected(IObjectEvent):
     """Pubsub client has connected.
     """
     pass
 
 
-class PubSubClientConnected(object):
-    implements(IPubSubClientConnected)
+class AdminClientConnected(object):
+    implements(IAdminClientConnected)
 
     def __init__(self, obj):
         self.object = obj

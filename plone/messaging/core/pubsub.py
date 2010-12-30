@@ -7,19 +7,20 @@ from zope.event import notify
 from zope.interface import implements
 from wokkel.pubsub import Item
 
-from plone.messaging.twisted.client import PubSub, XMPPClient
+from plone.messaging.twisted.client import PubSub, Admin
+from plone.messaging.twisted.client import XMPPClient
 from plone.messaging.twisted.interfaces import IDeferredXMPPClient
 from plone.messaging.core.interfaces import IXMPPSettings
-from plone.messaging.core.interfaces import IPubSubClient
-from plone.messaging.core.interfaces import PubSubClientConnected
+from plone.messaging.core.interfaces import IAdminClient
+from plone.messaging.core.interfaces import AdminClientConnected
 
 
 logger = logging.getLogger('plone.messaging.core')
 
 
-class PubSubClient(XMPPClient):
+class AdminClient(XMPPClient):
 
-    implements(IPubSubClient)
+    implements(IAdminClient)
 
     def __init__(self):
         jsettings = getUtility(IXMPPSettings)
@@ -27,16 +28,18 @@ class PubSubClient(XMPPClient):
         jdomain = jsettings.XMPPDomain
         password = jsettings.getUserPassword('admin')
 
-        super(PubSubClient, self).__init__(jid,
+        super(AdminClient, self).__init__(jid,
                                            password,
-                                           extra_handlers=[PubSub()],
+                                           extra_handlers=[Admin(),
+                                                           PubSub()],
                                            host=jdomain)
-        self.pubsub = self.handlers[0]
+        self.admin = self.handlers[0]
+        self.pubsub = self.handlers[1]
         self.pubsub_jid = jsettings.PubSubJID
 
     def _authd(self, xs):
-        super(PubSubClient, self)._authd(xs)
-        ev = PubSubClientConnected(self)
+        super(AdminClient, self)._authd(xs)
+        ev = AdminClientConnected(self)
         notify(ev)
 
     def getNodes(self, identifier=None):
@@ -48,29 +51,13 @@ class PubSubClient(XMPPClient):
         return d
 
     def createNode(self, identifier, options=None):
-
-        def cb(result):
-            if result == identifier:
-                logger.info("Successfully created pubsub node %s" % identifier)
-            else:
-                logger.error("Failure in creating pubsub node %s" % identifier)
-
         d = self.pubsub.createNode(self.pubsub_jid,
                                    identifier,
                                    options=options)
-        d.addCallback(cb)
         return d
 
     def deleteNode(self, identifier):
-
-        def cb(result):
-            if result:
-                logger.info("Successfully deleted pubsub node %s" % identifier)
-            else:
-                logger.error("Failure in deleting pubsub node %s" % identifier)
-
         d = self.pubsub.deleteNode(self.pubsub_jid, identifier)
-        d.addCallback(cb)
         return d
 
     def getDefaultNodeConfiguration(self):

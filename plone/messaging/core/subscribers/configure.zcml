@@ -5,17 +5,12 @@
   <!-- Start up -->
   <subscriber
     for="plone.messaging.twisted.interfaces.ReactorStarted"
-    handler=".startup.setupPubSubClient"
+    handler=".startup.setupAdminClient"
     />
 
   <subscriber
-    for="plone.messaging.twisted.interfaces.ReactorStarted"
-    handler=".startup.announceStart"
-    />
-
-  <subscriber
-    for="plone.messaging.core.interfaces.PubSubClientConnected"
-    handler=".startup.pubsubConnected"
+    for="plone.messaging.core.interfaces.AdminClientConnected"
+    handler=".startup.adminConnected"
     />
 
   <!-- User Management -->

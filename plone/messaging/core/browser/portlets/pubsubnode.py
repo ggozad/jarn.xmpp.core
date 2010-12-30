@@ -10,7 +10,7 @@ from zope.component import queryUtility
 from zope.formlib import form
 from zope.interface import implements
 
-from plone.messaging.core.interfaces import IPubSubClient
+from plone.messaging.core.interfaces import IAdminClient
 
 ITEMS = {}
 
@@ -71,7 +71,7 @@ class Renderer(base.Renderer):
         def cb(result):
             ITEMS[self.data.node] = result
 
-        pubsub = queryUtility(IPubSubClient)
+        pubsub = queryUtility(IAdminClient)
         if pubsub:
             d = None
             if self.data.node_type == 'leaf':
