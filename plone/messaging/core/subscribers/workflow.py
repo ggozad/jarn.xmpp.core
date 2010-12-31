@@ -2,7 +2,7 @@ from zope.component import getUtility
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _mergedLocalRoles
 from plone.messaging.twisted.interfaces import IDeferredXMPPClient
-from plone.messaging.twisted.client import Chatter
+from plone.messaging.twisted.protocols import ChatHandler
 from plone.messaging.core.interfaces import IXMPPSettings
 
 
@@ -39,7 +39,7 @@ def onWorkflowChange(event):
 
         jabber_client = getUtility(IDeferredXMPPClient)
         d = jabber_client.execute(jid_from, from_password,
-                                  sendNotification, [Chatter()])
+                                  sendNotification, [ChatHandler()])
         return d
 
     elif action == 'submit':
@@ -67,5 +67,5 @@ def onWorkflowChange(event):
 
         jabber_client = getUtility(IDeferredXMPPClient)
         d = jabber_client.execute(jid_from, from_password,
-                                  sendNotification, [Chatter()])
+                                  sendNotification, [ChatHandler()])
         return d

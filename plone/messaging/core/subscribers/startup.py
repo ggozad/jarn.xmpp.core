@@ -12,4 +12,3 @@ def setupAdminClient(event):
 def adminConnected(event):
     client = event.object
     client.admin.sendAnnouncement("Instance started")
-    return

@@ -6,8 +6,9 @@ from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implements
 from wokkel.pubsub import Item
+from wokkel.xmppim import PresenceClientProtocol
 
-from plone.messaging.twisted.client import PubSub, Admin
+from plone.messaging.twisted.protocols import AdminHandler, PubSubHandler
 from plone.messaging.twisted.client import XMPPClient
 from plone.messaging.twisted.interfaces import IDeferredXMPPClient
 from plone.messaging.core.interfaces import IXMPPSettings
@@ -28,22 +29,34 @@ class AdminClient(XMPPClient):
         jdomain = jsettings.XMPPDomain
         password = jsettings.getUserPassword('admin')
 
-        super(AdminClient, self).__init__(jid,
-                                           password,
-                                           extra_handlers=[Admin(),
-                                                           PubSub()],
-                                           host=jdomain)
+        super(AdminClient, self).__init__(
+            jid, password,
+            extra_handlers=[AdminHandler(),
+                           PubSubHandler(),
+                           PresenceClientProtocol()],
+            host=jdomain)
+
         self.admin = self.handlers[0]
         self.pubsub = self.handlers[1]
+        self.presence = self.handlers[2]
         self.pubsub_jid = jsettings.PubSubJID
 
     def _authd(self, xs):
         super(AdminClient, self)._authd(xs)
+        self.presence.available()
         ev = AdminClientConnected(self)
         notify(ev)
 
     def getNodes(self, identifier=None):
         d = self.pubsub.getNodes(self.pubsub_jid, identifier)
+        return d
+
+    def getSubscriptions(self, identifier):
+        d = self.pubsub.getSubscriptions(self.pubsub_jid, identifier)
+        return d
+
+    def setSubscriptions(self, identifier, delta):
+        d = self.pubsub.setSubscriptions(self.pubsub_jid, identifier, delta)
         return d
 
     def getNodeType(self, identifier):
@@ -70,12 +83,6 @@ class AdminClient(XMPPClient):
 
     def configureNode(self, node, options):
         d = self.pubsub.configureNode(self.pubsub_jid, node, options)
-        return d
-
-    def associateNodeToCollection(self, nodeIdentifier, collectionIdentifier):
-        d = self.pubsub.associateNodeToCollection(self.pubsub_jid,
-                                                  nodeIdentifier,
-                                                  collectionIdentifier)
         return d
 
     def getNodeAffiliations(self, identifier):
@@ -146,16 +153,9 @@ def subscribeUserToNode(identifier, subscriber_id):
                                           subscriber_jid)
         return result
 
-    def resultCb(result):
-        if result:
-            logger.info("Successfully subscribed user %s to pubsub node %s" % (subscriber_jid, identifier))
-        else:
-            logger.error("Failure in subscribing user %s to pubsub node %s" % (subscriber_jid, identifier))
-
     jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(subscriber_jid, password,
-                              subscribeUser, extra_handlers=[PubSub()])
-    d.addCallback(resultCb)
+                              subscribeUser, extra_handlers=[PubSubHandler()])
     return d
 
 
@@ -187,6 +187,6 @@ def publishItemToNode(identifier, content, user_id):
 
     jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(user_jid, password,
-                              publishItem, extra_handlers=[PubSub()])
+                              publishItem, extra_handlers=[PubSubHandler()])
     d.addCallback(resultCb)
     return d
