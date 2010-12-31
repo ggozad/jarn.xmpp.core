@@ -47,9 +47,16 @@ class AdminClient(XMPPClient):
         ev = AdminClientConnected(self)
         notify(ev)
 
+    def itemsReceived(self, event):
+        items, headers, node = event.items, event.headers, event.nodeIdentifier
+
     def getNodes(self, identifier=None):
         d = self.pubsub.getNodes(self.pubsub_jid, identifier)
         return d
+
+    def subscribe(self, identifier, subscriber, options=None, sender=None):
+        return self.pubsub.subscribe(
+            self.pubsub_jid, identifier, subscriber, options, sender)
 
     def getSubscriptions(self, identifier):
         d = self.pubsub.getSubscriptions(self.pubsub_jid, identifier)
