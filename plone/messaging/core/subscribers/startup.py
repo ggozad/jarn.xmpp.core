@@ -31,6 +31,10 @@ def populatePubSubStorage():
         def gotNodeItems(result):
             node, items = result
             storage.node_items[node] = items
+            if parent:
+                storage.node_items[parent] = storage.node_items[parent] + (items)
+                storage.node_items[parent].sort(key=lambda item: item['updated'],
+                                                reverse=True)
 
         def gotNodeTypes(result):
             cNodes = []
@@ -46,6 +50,7 @@ def populatePubSubStorage():
             deferred_list = []
             for node in cNodes:
                 storage.collections[node] = []
+                storage.node_items[node] = []
                 if parent:
                     storage.collections[parent].append(node)
                 deferred_list.append(getChildNodes(node))
