@@ -65,7 +65,12 @@ pmcxmpp.Presence = {
 	}
 };
 
-
+pmcxmpp.PubSub = {
+	eventReceived: function(event) {
+		alert('event');
+		return true;
+	}
+};
 
 $(document).bind('pmcxmpp.connected', function () {
 	// Logging
@@ -80,5 +85,8 @@ $(document).bind('pmcxmpp.connected', function () {
 	pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');
 	// Presence
 	pmcxmpp.connection.addHandler(pmcxmpp.Presence.presenceReceived, null, 'presence', null);
+	// PubSub
+	//alert(pmcxmpp.pubsub_jid);
+	//pmcxmpp.connection.addHandler(pmcxmpp.PubSub.eventReceived, 'message', null, pmcxmpp.pubsub);
 	pmcxmpp.connection.send($pres());
 });

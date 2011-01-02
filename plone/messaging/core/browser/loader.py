@@ -32,6 +32,10 @@ class XMPPLoader(ViewletBase):
     def jpassword(self):
         return self.settings.getUserPassword(self.user_id)
 
+    @property
+    def pubsub_jid(self):
+        return self.settings.PubSubJID
+
     def boshSettings(self):
         script = """
         var pmcxmpp = {
@@ -39,6 +43,7 @@ class XMPPLoader(ViewletBase):
           BOSH_SERVICE : '%s',
           jid : '%s',
           password : '%s',
+          pubsub_jid : '%s',
         };
-        """ % (self.bosh, self.jid, self.jpassword)
+        """ % (self.bosh, self.jid, self.jpassword, self.pubsub_jid)
         return script
