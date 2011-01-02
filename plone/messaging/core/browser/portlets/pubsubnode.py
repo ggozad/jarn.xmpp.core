@@ -1,18 +1,15 @@
 from plone.memoize.compress import xhtml_compress
-from plone.memoize.instance import memoize
 from plone.portlets.interfaces import IPortletDataProvider
 
 from plone.app.portlets import PloneMessageFactory as _
 from plone.app.portlets.portlets import base
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
-from zope.component import queryUtility
+from zope.component import getUtility
 from zope.formlib import form
 from zope.interface import implements
 
-from plone.messaging.core.interfaces import IAdminClient
-
-ITEMS = {}
+from plone.messaging.core.interfaces import IPubSubStorage
 
 
 class IPubSubNodePortlet(IPortletDataProvider):
@@ -57,36 +54,17 @@ class Renderer(base.Renderer):
 
     @property
     def available(self):
-        return len(self._data())
+        return len(self.items())
 
     @property
     def title(self):
         return self.data.node
 
     def items(self):
-        return self._data()
-
-    def _updateItems(self):
-
-        def cb(result):
-            ITEMS[self.data.node] = result
-
-        pubsub = queryUtility(IAdminClient)
-        if pubsub:
-            d = None
-            if self.data.node_type == 'leaf':
-                d = pubsub.getNodeItems(self.data.node, self.data.count)
-            else:
-                d = pubsub.getCollectionNodeItems(self.data.node, self.data.count)
-            d.addCallback(cb)
-            return d
-
-    def _data(self):
-        self._updateItems()
-        if self.data.node in ITEMS:
-            return ITEMS[self.data.node]
-        return []
-
+        storage = getUtility(IPubSubStorage)
+        if self.data.node not in storage.node_items:
+            return []
+        return storage.node_items[self.data.node]
 
 class AddForm(base.AddForm):
     form_fields = form.Fields(IPubSubNodePortlet)

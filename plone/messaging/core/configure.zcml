@@ -9,6 +9,7 @@
   <include package=".browser" />
 
   <utility factory=".settings.XMPPSettings" />
+  <utility factory=".storage.PubSubStorage" />
 
   <genericsetup:registerProfile
     name="default"

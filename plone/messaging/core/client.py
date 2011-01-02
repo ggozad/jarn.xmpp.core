@@ -67,7 +67,12 @@ class AdminClient(XMPPClient):
         return d
 
     def getNodeType(self, identifier):
+
+        def cb(result):
+            return (identifier, result)
+
         d = self.pubsub.getNodeType(self.pubsub_jid, identifier)
+        d.addCallback(cb)
         return d
 
     def createNode(self, identifier, options=None):
@@ -139,7 +144,7 @@ class AdminClient(XMPPClient):
                 atom = [(child.name, child.children[0])
                     for child in entry.children]
                 items.append(dict(atom))
-            return items
+            return (identifier, items)
 
         d = self.pubsub.items(self.pubsub_jid,
                                       identifier,

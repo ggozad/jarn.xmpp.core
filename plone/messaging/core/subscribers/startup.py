@@ -1,10 +1,10 @@
-from twisted.words.protocols.jabber.jid import JID
 from twisted.internet import defer
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility
 
-from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.client import AdminClient
+from plone.messaging.core.interfaces import IAdminClient
+from plone.messaging.core.interfaces import IPubSubStorage
 
 
 def setupAdminClient(event):
@@ -15,50 +15,49 @@ def setupAdminClient(event):
 def adminConnected(event):
     client = event.object
     populatePubSubStorage()
-    #client.admin.sendAnnouncement("Instance started")
-    #client.deleteNode('people')
-    #return
-    #from plone.messaging.core.setuphandlers import createDefaultPubSubNodes
-    #createDefaultPubSubNodes()
-    #from plone.messaging.core.client import publishItemToNode
-    #publishItemToNode('gogo', 'hello there', 'gogo')
-    return
-
-    def cb(result):
-        import pdb; pdb.set_trace( )
-    d= client.getSubscriptions('ggozad')
-    #d= client.setSubscriptions('ggozad', [(JID('admin@localhost'), 'subscribed')])
-
-    d.addCallback(cb)
-    return
+    client.admin.sendAnnouncement("Instance started")
 
 
 def populatePubSubStorage():
-    """ TODO: This DOES NOT support nested collections. In fact it's retarted.
-    Needs to become recursive to stop being just that...
+    """ TODO: This would have been simpler if ejabberd supported retrieving
+    collection items. Enter recursive deferred nightmare ;)
     """
+
     client = getUtility(IAdminClient)
-
-    collections = {}
-    leaf_nodes = []
-
-    def gotChildNodes(node_types):
-        for node_dict in node_types:
-            for node in node_dict:
-                if node_dict[node] == 'collection':
-                    collections[node] = []
-                else:
-                   leaf_nodes.append(node)
-            import pdb; pdb.set_trace( )
+    storage = getUtility(IPubSubStorage)
 
     def getChildNodes(parent):
 
+        def gotNodeItems(result):
+            node, items = result
+            storage.node_items[node] = items
+
         def gotNodeTypes(result):
-            nodes = []
-            for success, node_dict in result:
+            cNodes = []
+            lNodes = []
+            for success, res in result:
                 if success:
-                    nodes.append(node_dict)
-            return nodes
+                    node, node_type = res
+                    if node_type == 'collection':
+                        cNodes.append(node)
+                    else:
+                        lNodes.append(node)
+
+            deferred_list = []
+            for node in cNodes:
+                storage.collections[node] = []
+                if parent:
+                    storage.collections[parent].append(node)
+                deferred_list.append(getChildNodes(node))
+
+            for node in lNodes:
+                storage.leaf_nodes.append(node)
+                if parent:
+                    storage.collections[parent].append(node)
+                d = client.getNodeItems(node)
+                d.addCallback(gotNodeItems)
+                deferred_list.append(d)
+            return defer.DeferredList(deferred_list)
 
         def gotNodes(result):
             d = defer.DeferredList(
@@ -68,11 +67,9 @@ def populatePubSubStorage():
             d.addCallback(gotNodeTypes)
             return d
 
-
         d = client.getNodes(parent)
         d.addCallback(gotNodes)
         return d
 
     d = getChildNodes(None)
-    d.addCallback(gotChildNodes)
-
+    return d

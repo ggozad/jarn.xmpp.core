@@ -16,6 +16,11 @@ class IXMPPSettings(Interface):
         pass
 
 
+class IPubSubStorage(Interface):
+    """Marker interface for the PubSub storage
+    """
+
+
 class IAdminClient(Interface):
     """Marker interface for the PubSub twisted client.
     """
@@ -24,7 +29,6 @@ class IAdminClient(Interface):
 class IAdminClientConnected(IObjectEvent):
     """Pubsub client has connected.
     """
-    pass
 
 
 class AdminClientConnected(object):
