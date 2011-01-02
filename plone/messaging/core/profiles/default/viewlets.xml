@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <object>
-  <order manager="plone.abovecontent" skinname="Plone Default">
-    <viewlet name="plone.messaging.core.messages" />
-  </order>
-
   <order manager="plone.belowcontent" skinname="Plone Default">
     <viewlet name="plone.messaging.core.loader" />
   </order>
