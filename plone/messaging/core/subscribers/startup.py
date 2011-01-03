@@ -36,6 +36,13 @@ def populatePubSubStorage():
                 storage.node_items[parent].sort(key=lambda item: item['updated'],
                                                 reverse=True)
 
+        def gotNodeAffiliations(result):
+            node, affiliations = result
+            publishers = [jid.user
+                          for jid, role in affiliations
+                          if role=='publisher']
+            storage.publishers[node] = publishers
+
         def gotNodeTypes(result):
             cNodes = []
             lNodes = []
@@ -61,6 +68,9 @@ def populatePubSubStorage():
                     storage.collections[parent].append(node)
                 d = client.getNodeItems(node)
                 d.addCallback(gotNodeItems)
+                deferred_list.append(d)
+                d = client.getNodeAffiliations(node)
+                d.addCallback(gotNodeAffiliations)
                 deferred_list.append(d)
             return defer.DeferredList(deferred_list)
 

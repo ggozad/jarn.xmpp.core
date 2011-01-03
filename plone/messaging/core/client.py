@@ -98,8 +98,12 @@ class AdminClient(XMPPClient):
         return d
 
     def getNodeAffiliations(self, identifier):
-        d = self.pubsub.getAffiliations(self.pubsub_jid,
-                                        identifier)
+
+        def cb(result):
+            return identifier, result
+
+        d = self.pubsub.getAffiliations(self.pubsub_jid, identifier)
+        d.addCallback(cb)
         return d
 
     def setNodeAffiliations(self, identifier, affiliations):

@@ -9,5 +9,6 @@ class PubSubStorage(object):
 
     def __init__(self):
         self.node_items = dict()
-        self.collections = {}
+        self.collections = dict()
         self.leaf_nodes = []
+        self.publishers = dict()
