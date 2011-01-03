@@ -1,12 +1,15 @@
 from z3c.form import form
 from z3c.form import field
 from z3c.form import button
-from zope import schema
-from zope.interface import Interface
 
 from Products.CMFCore.utils import getToolByName
+from Products.statusmessages.interfaces import IStatusMessage
+from zope import schema
+from zope.component import getUtility
+from zope.interface import Interface
 
 from plone.messaging.core import messageFactory as _
+from plone.messaging.core.interfaces import IAdminClient, IXMPPSettings, IPubSubStorage
 from plone.messaging.core.pubsub_utils import publishItemToNode
 
 
@@ -19,23 +22,30 @@ class IPublishToNode(Interface):
                           required=True)
 
 
+class ISubscribeToNode(Interface):
+
+    node = schema.ASCIILine(title=_(u'Node'),
+                            required=True)
+
+
 class PublishToNodeForm(form.Form):
 
     fields = field.Fields(IPublishToNode)
     label = _("Post message")
     ignoreContext = True
 
-    def __init__(self, context, request, full=True):
-        form.Form.__init__(self, context, request)
-        self.all_fields = full
+    def __init__(self, context, request, node=None):
+        super(PublishToNodeForm, self).__init__(context, request)
+        self.node = node
 
     def updateWidgets(self):
         """ Make sure that return URL is not visible to the user.
         """
         form.Form.updateWidgets(self)
 
-        if not self.all_fields:
+        if self.node:
             # Hide fields which we don't want to bother user with
+            self.widgets["node"].value = self.node
             self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
 
     @button.buttonAndHandler(_('Post'), name='publish_message')
@@ -49,6 +59,78 @@ class PublishToNodeForm(form.Form):
         message = transforms.convert('web_intelligent_plain_text_to_html',
                                      message).getData()
         pm = getToolByName(self.context, 'portal_membership')
-        user = pm.getAuthenticatedMember().getUserId()
+        user = str(pm.getAuthenticatedMember())
         publishItemToNode(node, message, user)
+        return self.request.response.redirect(self.context.absolute_url())
+
+
+class SubscribeUnsubscribeForm(form.Form):
+
+    fields = field.Fields(ISubscribeToNode)
+    ignoreContext = True
+
+    def __init__(self, context, request, node=None):
+        super(SubscribeUnsubscribeForm, self).__init__(context, request)
+        self.node = node
+
+    def updateWidgets(self):
+        """ Make sure that return URL is not visible to the user.
+        """
+        form.Form.updateWidgets(self)
+        if self.node:
+            # Hide fields which we don't want to bother user with
+            self.widgets["node"].value = self.node
+            self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
+
+
+class SubscribeToNodeForm(SubscribeUnsubscribeForm):
+
+    label = _("Subscribe")
+
+    @button.buttonAndHandler(_('Subscribe'), name='subscribe_node')
+    def subscribe_handler(self, action):
+        data, errors = self.extractData()
+        if errors:
+            return
+        node = data['node']
+        pm = getToolByName(self.context, 'portal_membership')
+        user_id = str(pm.getAuthenticatedMember())
+        settings = getUtility(IXMPPSettings)
+        client = getUtility(IAdminClient)
+        user_jid = settings.getUserJID(user_id)
+
+        def updateStorage(result):
+            if result==True:
+                storage = getUtility(IPubSubStorage)
+                storage.subscriptions[node][user_id] = 'subscribed'
+
+        d = client.setSubscriptions(node, [(user_jid, 'subscribed')])
+        d.addCallback(updateStorage)
+        return self.request.response.redirect(self.context.absolute_url())
+
+
+class UnsubscribeFromNodeForm(SubscribeUnsubscribeForm):
+
+    label = _("Unsubscribe")
+
+    @button.buttonAndHandler(_('Unsubscribe'), name='unsubscribe_node')
+    def unsubscribe_handler(self, action):
+        data, errors = self.extractData()
+        if errors:
+            return
+        node = data['node']
+        pm = getToolByName(self.context, 'portal_membership')
+        user_id = str(pm.getAuthenticatedMember())
+        settings = getUtility(IXMPPSettings)
+        client = getUtility(IAdminClient)
+        user_jid = settings.getUserJID(user_id)
+
+        def updateStorage(result):
+            if result==True:
+                storage = getUtility(IPubSubStorage)
+                if user_id in storage.subscriptions[node]:
+                    del storage.subscriptions[node][user_id]
+
+        d = client.setSubscriptions(node, [(user_jid, 'none')])
+        d.addCallback(updateStorage)
         return self.request.response.redirect(self.context.absolute_url())

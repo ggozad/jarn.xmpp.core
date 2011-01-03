@@ -55,16 +55,14 @@ class AdminClient(XMPPClient):
         sender = event.sender
         items = event.items
 
-        if sender != self.pubsub_jid:
+        if sender != self.pubsub_jid or not items:
             return
-
-        if not items:
-            return
-
         headers = event.headers
         collections = headers.get('Collection', [])
         node = event.nodeIdentifier
-        items =  [self._pubsubItemToDict(item) for item in items]
+        items =  [self._pubsubItemToDict(item)
+                  for item in items
+                  if item.name=='item']
         storage = getUtility(IPubSubStorage)
         for item in items:
             storage.node_items[node].insert(0, item)

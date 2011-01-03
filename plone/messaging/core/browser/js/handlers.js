@@ -66,8 +66,8 @@ pmcxmpp.Presence = {
 };
 
 pmcxmpp.PubSub = {
-	eventReceived: function(event) {
-		alert('event');
+	eventReceived: function(msg) {
+		var items = $(msg).children('item')		
 		return true;
 	}
 };
@@ -76,17 +76,14 @@ $(document).bind('pmcxmpp.connected', function () {
 	// Logging
 	pmcxmpp.connection.rawInput = pmcxmpp.rawInput;
 	pmcxmpp.connection.rawOutput = pmcxmpp.rawOutput;
-
 	// Messages
-	pmcxmpp.connection.addHandler(pmcxmpp.Messages.messageReceived,
-								  null, 'message', 'chat');
+	pmcxmpp.connection.addHandler(pmcxmpp.Messages.messageReceived, null, 'message', 'chat');
 	//Roster
 	pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
 	pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');
 	// Presence
 	pmcxmpp.connection.addHandler(pmcxmpp.Presence.presenceReceived, null, 'presence', null);
 	// PubSub
-	//alert(pmcxmpp.pubsub_jid);
-	//pmcxmpp.connection.addHandler(pmcxmpp.PubSub.eventReceived, 'message', null, pmcxmpp.pubsub);
+	pmcxmpp.connection.addHandler(pmcxmpp.PubSub.eventReceived, null, 'message', null, null, pmcxmpp.pubsub_jid);
 	pmcxmpp.connection.send($pres());
 });

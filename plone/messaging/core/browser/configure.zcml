@@ -8,9 +8,23 @@
   <include package=".portlets" />
 
   <browser:page
-    for="Products.CMFPlone.Portal.PloneSite"
+    for="*"
     name="pubsub_publish"
     class=".pubsub.PublishToNodeForm"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="pubsub_subscribe"
+    class=".pubsub.SubscribeToNodeForm"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="pubsub_unsubscribe"
+    class=".pubsub.UnsubscribeFromNodeForm"
     permission="zope2.View"
     />
 

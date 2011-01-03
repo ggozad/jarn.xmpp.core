@@ -9,6 +9,7 @@
         <span class="portletTopLeft"></span>
         <span tal:content="view/title">A node</span>
         <span class="portletTopRight"></span>
+        <form tal:replace="structure view/subscribe_form_wrapper" />
     </dt>
 
     <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
@@ -24,9 +25,8 @@
     </tal:pubsubitems>
 
     <dd class="portletItem odd" tal:condition="view/showPublishForm">
-        <form tal:replace="structure view/form_wrapper" />
+        <form tal:replace="structure view/publish_form_wrapper" />
     </dd>
-
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
         <span class="portletBottomRight"></span>
