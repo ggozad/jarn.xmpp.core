@@ -4,14 +4,22 @@
   xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="plone.messaging.core">
 
+  <include package="plone.app.z3cform" />
   <include package=".portlets" />
 
+  <browser:page
+    for="Products.CMFPlone.Portal.PloneSite"
+    name="pubsub_publish"
+    class=".pubsub.PublishToNodeForm"
+    permission="zope2.View"
+    />
+
   <browser:viewlet
-      name="plone.messaging.core.loader"
-      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
-      class=".loader.XMPPLoader"
-      permission="zope2.View"
-      />
+    name="plone.messaging.core.loader"
+    manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+    class=".loader.XMPPLoader"
+    permission="zope2.View"
+    />
 
   <browser:resourceDirectory
     name="plone.messaging.core.js"

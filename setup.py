@@ -25,7 +25,7 @@ setup(name='plone.messaging.core',
       install_requires=[
           'setuptools',
           'plone.messaging.twisted',
-          'punjab',
+          'plone.app.z3cform',
           'pas.plugins.userdeletedevent',
 
           # -*- Extra requirements: -*-

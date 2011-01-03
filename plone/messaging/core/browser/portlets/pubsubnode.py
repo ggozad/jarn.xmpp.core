@@ -1,16 +1,16 @@
 from plone.memoize.compress import xhtml_compress
 from plone.portlets.interfaces import IPortletDataProvider
 
-from plone.app.portlets import PloneMessageFactory as _
 from plone.app.portlets.portlets import base
+from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope import schema
 from zope.component import getUtility
 from zope.formlib import form
 from zope.interface import implements
 
+from plone.messaging.core import messageFactory as _
 from plone.messaging.core.interfaces import IPubSubStorage
-
 
 class IPubSubNodePortlet(IPortletDataProvider):
 
@@ -75,7 +75,8 @@ class Renderer(base.Renderer):
 
     @property
     def showPublishForm(self):
-        user = self.context.portal_membership.getAuthenticatedMember().getUserId()
+        pm = getToolByName(self.context, 'portal_membership')
+        user = pm.getAuthenticatedMember().getUserId()
         return user in self.publishers
 
 class AddForm(base.AddForm):
