@@ -1,0 +1,3 @@
+<div class="portlet-form">
+   <div tal:replace="structure view/contents" />
+</div>

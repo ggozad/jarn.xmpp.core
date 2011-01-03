@@ -11,6 +11,9 @@ from zope.interface import implements
 
 from plone.messaging.core import messageFactory as _
 from plone.messaging.core.interfaces import IPubSubStorage
+from plone.messaging.core.browser.pubsub import PublishToNodeForm
+from plone.messaging.core.browser.portlets.formwrapper import PortletFormView
+
 
 class IPubSubNodePortlet(IPortletDataProvider):
 
@@ -49,6 +52,21 @@ class Renderer(base.Renderer):
 
     _template = ViewPageTemplateFile('pubsubnode.pt')
 
+    def __init__(self, context, request, view, manager, data):
+        base.Renderer.__init__(self, context, request, view, manager, data)
+        self.form_wrapper = self.createForm()
+
+    def createForm(self):
+        context = self.context.aq_inner
+        request = self.request
+        request['form.widgets.node'] = self.data.node
+        form = PublishToNodeForm(context, self.request, full=False)
+        # Wrap a form in Plone view
+        view = PortletFormView(context, self.request)
+        view = view.__of__(context) # Make sure acquisition chain is respected
+        view.form_instance = form
+        return view
+
     def render(self):
         return xhtml_compress(self._template())
 
@@ -78,6 +96,7 @@ class Renderer(base.Renderer):
         pm = getToolByName(self.context, 'portal_membership')
         user = pm.getAuthenticatedMember().getUserId()
         return user in self.publishers
+
 
 class AddForm(base.AddForm):
     form_fields = form.Fields(IPubSubNodePortlet)

@@ -23,6 +23,10 @@
     </dd>
     </tal:pubsubitems>
 
+    <dd class="portletItem odd" tal:condition="view/showPublishForm">
+        <form tal:replace="structure view/form_wrapper" />
+    </dd>
+
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
         <span class="portletBottomRight"></span>
