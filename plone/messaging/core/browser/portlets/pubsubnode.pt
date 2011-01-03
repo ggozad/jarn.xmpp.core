@@ -17,7 +17,7 @@
     <dd tal:define="oddrow repeat/obj/odd;"
          tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
       
-         <span tal:content="obj/content">xmpp ftw!</span>
+         <span tal:replace="structure obj/content">xmpp ftw!</span>
          <span class="portletItemDetails"
             tal:content="python:toLocalizedTime(obj['updated'])">May 5</span>
     </dd>
