@@ -54,7 +54,7 @@ class Renderer(base.Renderer):
 
     @property
     def available(self):
-        return len(self.items())
+        return len(self.items()) or self.showPublishForm
 
     @property
     def title(self):
@@ -65,6 +65,18 @@ class Renderer(base.Renderer):
         if self.data.node not in storage.node_items:
             return []
         return storage.node_items[self.data.node]
+
+    @property
+    def publishers(self):
+        storage = getUtility(IPubSubStorage)
+        if self.data.node not in storage.publishers:
+            return []
+        return storage.publishers[self.data.node]
+
+    @property
+    def showPublishForm(self):
+        user = self.context.portal_membership.getAuthenticatedMember().getUserId()
+        return user in self.publishers
 
 class AddForm(base.AddForm):
     form_fields = form.Fields(IPubSubNodePortlet)
