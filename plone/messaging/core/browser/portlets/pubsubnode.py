@@ -82,7 +82,7 @@ class Renderer(base.Renderer):
         storage = getUtility(IPubSubStorage)
         if self.data.node not in storage.node_items:
             return []
-        return storage.node_items[self.data.node]
+        return storage.node_items[self.data.node][:self.data.count]
 
     @property
     def publishers(self):
@@ -94,6 +94,8 @@ class Renderer(base.Renderer):
     @property
     def showPublishForm(self):
         pm = getToolByName(self.context, 'portal_membership')
+        if pm.isAnonymousUser():
+            return False
         user = pm.getAuthenticatedMember().getUserId()
         return user in self.publishers
 
