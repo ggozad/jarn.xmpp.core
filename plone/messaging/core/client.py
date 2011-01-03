@@ -10,6 +10,7 @@ from plone.messaging.twisted.client import XMPPClient
 
 from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.interfaces import IAdminClient
+from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.interfaces import AdminClientConnected
 
 
@@ -44,8 +45,28 @@ class AdminClient(XMPPClient):
         ev = AdminClientConnected(self)
         notify(ev)
 
+    def _pubsubItemToDict(self, item):
+        entry = item.entry
+        atom = [(child.name, child.children[0])
+            for child in entry.children]
+        return dict(atom)
+
     def itemsReceived(self, event):
-        items, headers, node = event.items, event.headers, event.nodeIdentifier
+        sender = event.sender
+        items = event.items
+
+        if sender != self.pubsub_jid or not items:
+            return
+
+        headers = event.headers
+        collections = headers.get('Collection', [])
+        node = event.nodeIdentifier
+        items =  [self._pubsubItemToDict(item) for item in items]
+        storage = getUtility(IPubSubStorage)
+        for item in items:
+            storage.node_items[node].insert(0, item)
+            for collection in collections:
+                storage.node_items[collection].insert(0, item)
 
     def getNodes(self, identifier=None):
         d = self.pubsub.getNodes(self.pubsub_jid, identifier)
@@ -141,10 +162,7 @@ class AdminClient(XMPPClient):
         def cb(result):
             items = []
             for item in result:
-                entry = item.entry
-                atom = [(child.name, child.children[0])
-                    for child in entry.children]
-                items.append(dict(atom))
+                items.append(self._pubsubItemToDict(item))
             return (identifier, items)
 
         d = self.pubsub.items(self.pubsub_jid,
