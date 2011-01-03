@@ -12,3 +12,4 @@ class PubSubStorage(object):
         self.collections = dict()
         self.leaf_nodes = []
         self.publishers = dict()
+        self.subscriptions = dict()

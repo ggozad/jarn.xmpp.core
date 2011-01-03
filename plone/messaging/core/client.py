@@ -55,7 +55,10 @@ class AdminClient(XMPPClient):
         sender = event.sender
         items = event.items
 
-        if sender != self.pubsub_jid or not items:
+        if sender != self.pubsub_jid:
+            return
+
+        if not items:
             return
 
         headers = event.headers
@@ -77,7 +80,10 @@ class AdminClient(XMPPClient):
             self.pubsub_jid, identifier, subscriber, options, sender)
 
     def getSubscriptions(self, identifier):
+        def cb(result):
+            return (identifier, result)
         d = self.pubsub.getSubscriptions(self.pubsub_jid, identifier)
+        d.addCallback(cb)
         return d
 
     def setSubscriptions(self, identifier, delta):
