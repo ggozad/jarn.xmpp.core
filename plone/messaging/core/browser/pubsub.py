@@ -99,8 +99,8 @@ class SubscribeToNodeForm(SubscribeUnsubscribeForm):
         client = getUtility(IAdminClient)
         user_jid = settings.getUserJID(user_id)
 
-        client.setSubscriptions(node, [(user_jid, 'subscribed')])
-        return self.request.response.redirect(self.context.absolute_url())
+        d = client.setSubscriptions(node, [(user_jid, 'subscribed')])
+        return d
 
 
 class UnsubscribeFromNodeForm(SubscribeUnsubscribeForm):
@@ -119,5 +119,5 @@ class UnsubscribeFromNodeForm(SubscribeUnsubscribeForm):
         client = getUtility(IAdminClient)
         user_jid = settings.getUserJID(user_id)
 
-        client.setSubscriptions(node, [(user_jid, 'none')])
-        return self.request.response.redirect(self.context.absolute_url())
+        d = client.setSubscriptions(node, [(user_jid, 'none')])
+        return d
