@@ -9,7 +9,6 @@
         <span class="portletTopLeft"></span>
         <span tal:content="view/title">A node</span>
         <span class="portletTopRight"></span>
-        <form tal:replace="structure view/subscribe_form_wrapper" />
     </dt>
 
     <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;

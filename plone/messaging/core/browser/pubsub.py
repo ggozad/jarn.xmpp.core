@@ -3,13 +3,13 @@ from z3c.form import field
 from z3c.form import button
 
 from Products.CMFCore.utils import getToolByName
-from Products.statusmessages.interfaces import IStatusMessage
 from zope import schema
 from zope.component import getUtility
 from zope.interface import Interface
 
 from plone.messaging.core import messageFactory as _
-from plone.messaging.core.interfaces import IAdminClient, IXMPPSettings, IPubSubStorage
+from plone.messaging.core.interfaces import IAdminClient
+from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.pubsub_utils import publishItemToNode
 
 
@@ -99,13 +99,7 @@ class SubscribeToNodeForm(SubscribeUnsubscribeForm):
         client = getUtility(IAdminClient)
         user_jid = settings.getUserJID(user_id)
 
-        def updateStorage(result):
-            if result==True:
-                storage = getUtility(IPubSubStorage)
-                storage.subscriptions[node][user_id] = 'subscribed'
-
-        d = client.setSubscriptions(node, [(user_jid, 'subscribed')])
-        d.addCallback(updateStorage)
+        client.setSubscriptions(node, [(user_jid, 'subscribed')])
         return self.request.response.redirect(self.context.absolute_url())
 
 
@@ -125,12 +119,5 @@ class UnsubscribeFromNodeForm(SubscribeUnsubscribeForm):
         client = getUtility(IAdminClient)
         user_jid = settings.getUserJID(user_id)
 
-        def updateStorage(result):
-            if result==True:
-                storage = getUtility(IPubSubStorage)
-                if user_id in storage.subscriptions[node]:
-                    del storage.subscriptions[node][user_id]
-
-        d = client.setSubscriptions(node, [(user_jid, 'none')])
-        d.addCallback(updateStorage)
+        client.setSubscriptions(node, [(user_jid, 'none')])
         return self.request.response.redirect(self.context.absolute_url())

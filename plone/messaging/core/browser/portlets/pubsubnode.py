@@ -12,8 +12,6 @@ from zope.interface import implements
 from plone.messaging.core import messageFactory as _
 from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.browser.pubsub import PublishToNodeForm
-from plone.messaging.core.browser.pubsub import SubscribeToNodeForm
-from plone.messaging.core.browser.pubsub import UnsubscribeFromNodeForm
 from plone.messaging.core.browser.portlets.formwrapper import PortletFormView
 
 
@@ -60,23 +58,15 @@ class Renderer(base.Renderer):
 
     def createForms(self):
         context = self.context.aq_inner
-        publish_form = PublishToNodeForm(context, self.request, node=self.data.node)
+        publish_form = PublishToNodeForm(context,
+                                         self.request,
+                                         node=self.data.node)
         # Wrap a form in Plone view
         publish_view = PortletFormView(context, self.request)
-        publish_view = publish_view.__of__(context) # Make sure acquisition chain is respected
+        # Make sure acquisition chain is respected
+        publish_view = publish_view.__of__(context)
         publish_view.form_instance = publish_form
         self.publish_form_wrapper = publish_view
-
-        subscribe_form = None
-        if self.isSubscribed:
-            subscribe_form = UnsubscribeFromNodeForm(context, self.request, node=self.data.node)
-        else:
-            subscribe_form = SubscribeToNodeForm(context, self.request, node=self.data.node)
-        # Wrap a form in Plone view
-        subscribe_view = PortletFormView(context, self.request)
-        subscribe_view = subscribe_view.__of__(context) # Make sure acquisition chain is respected
-        subscribe_view.form_instance = subscribe_form
-        self.subscribe_form_wrapper = subscribe_view
 
     def render(self):
         return xhtml_compress(self._template())
@@ -109,31 +99,6 @@ class Renderer(base.Renderer):
             return False
         user = str(pm.getAuthenticatedMember())
         return user in self.publishers
-
-    @property
-    def subscribers(self):
-        storage = getUtility(IPubSubStorage)
-        if self.data.node not in storage.subscriptions:
-            return []
-        return [user_id
-                for user_id, state in
-                storage.subscriptions[self.data.node].items()
-                if state=='subscribed']
-
-    @property
-    def isSubscribed(self):
-        pm = getToolByName(self.context, 'portal_membership')
-        if pm.isAnonymousUser():
-            return False
-        user = str(pm.getAuthenticatedMember())
-        return user in self.subscribers
-
-    @property
-    def showSubscriptionForm(self):
-        pm = getToolByName(self.context, 'portal_membership')
-        if pm.isAnonymousUser():
-            return False
-        return True
 
 
 class AddForm(base.AddForm):
