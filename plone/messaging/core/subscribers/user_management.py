@@ -3,6 +3,7 @@ import logging
 from zope.component import getUtility
 
 from plone.messaging.core.interfaces import IXMPPSettings
+from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.interfaces import IAdminClient
 
 logger = logging.getLogger('plone.messaging.core')
@@ -17,6 +18,7 @@ def onUserCreation(event):
     jsettings = getUtility(IXMPPSettings)
     jid = u'%s@%s' % (principal_id, jsettings.XMPPDomain)
     client = getUtility(IAdminClient)
+    storage = getUtility(IPubSubStorage)
 
     def genPasswd():
         return 'secret'
@@ -29,12 +31,14 @@ def onUserCreation(event):
         if result == False:
             logger.error("Failed to associate user %s with node %s" % (principal_id, principal))
             return
+        storage.publishers[principal_id] = [principal_id]
         logger.info("Associated user %s with node %s" % (principal_id, principal))
 
     def affiliateUser(result):
         if result == False:
             logger.error("Failed to add pubsub node %s to 'people' collection" % principal_id)
             return
+        storage.collections['people'].append(principal_id)
         logger.info("Add pubsub node %s to 'people' collection" % principal_id)
         d = client.setNodeAffiliations(
             principal_id, [(jsettings.getUserJID(principal_id), 'publisher')])
@@ -45,6 +49,8 @@ def onUserCreation(event):
         if result == False:
             logger.error("Failed to add pubsub node  %s" % principal_id)
             return
+        storage.leaf_nodes.append(principal_id)
+        storage.node_items[principal_id] = []
         logger.info("Added pubsub node  %s" % principal_id)
         d = client.configureNode(principal_id, options={'pubsub#collection': 'people'})
         d.addCallback(affiliateUser)
@@ -67,14 +73,32 @@ def onUserCreation(event):
 def onUserDeletion(event):
     """Delete jabber account when a user is removed.
     """
-    principal = event.principal
+    principal_id = event.principal
     client = getUtility(IAdminClient)
     jsettings = getUtility(IXMPPSettings)
-    jid = u'%s@%s' % (principal, jsettings.XMPPDomain)
+    jid = u'%s@%s' % (principal_id, jsettings.XMPPDomain)
+    storage = getUtility(IPubSubStorage)
+
+    def finalResult(result):
+        if result == False:
+            logger.error("Failed to delete account  %s" % principal_id)
+        logger.info("Deleted account %s" % principal_id)
 
     def deleteUser(result):
-        client.admin.deleteUsers([jid])
+        if result == False:
+            logger.error("Failed to delete pubsub node  %s" % principal_id)
+        if principal_id in storage.leaf_nodes:
+            storage.leaf_nodes.remove(principal_id)
+        if principal_id in storage.publishers:
+            del storage.publishers[principal_id]
+        if principal_id in storage.node_items:
+            del storage.node_items[principal_id]
+        if principal_id in storage.collections['people']:
+            storage.collections['people'].remove(principal_id)
+        logger.info("Deleted pubsub node  %s" % principal_id)
 
-    d = client.deleteNode(principal)
+        d = client.admin.deleteUsers([jid])
+        d.addCallback(finalResult)
+    d = client.deleteNode(principal_id)
     d.addCallback(deleteUser)
     return d
