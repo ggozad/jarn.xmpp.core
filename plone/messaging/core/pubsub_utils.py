@@ -13,30 +13,6 @@ from plone.messaging.core.interfaces import IXMPPSettings
 logger = logging.getLogger('plone.messaging.core')
 
 
-def subscribeUserToNode(identifier, subscriber_id, unsubscribe=False):
-    jsettings = getUtility(IXMPPSettings)
-    subscriber_jid = jsettings.getUserJID(subscriber_id)
-    password = jsettings.getUserPassword(subscriber_id)
-
-    def subscribeUser(xmlstream):
-        pubsub_handler = xmlstream.factory.streamManager.handlers[0]
-        d = None
-        if unsubscribe:
-            d = pubsub_handler.unsubscribe(jsettings.PubSubJID,
-                                              identifier,
-                                              subscriber_jid)
-        else:
-            d = pubsub_handler.subscribe(jsettings.PubSubJID,
-                                              identifier,
-                                              subscriber_jid)
-        return d
-
-    jabber_client = getUtility(IDeferredXMPPClient)
-    d = jabber_client.execute(subscriber_jid, password,
-                              subscribeUser, extra_handlers=[PubSubHandler()])
-    return d
-
-
 def publishItemToNode(identifier, content, user_id):
 
     jsettings = getUtility(IXMPPSettings)
