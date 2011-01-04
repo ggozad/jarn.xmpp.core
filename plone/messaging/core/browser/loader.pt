@@ -5,4 +5,6 @@
 <script src="++resource++plone.messaging.core.js/loader.js"></script>
 <script src="++resource++plone.messaging.core.js/handlers.js"></script>
 <script src="++resource++plone.messaging.core.js/messages.js"></script>
+<script src="++resource++plone.messaging.core.js/pubsub.js"></script>
+
 <div id='log'></div>

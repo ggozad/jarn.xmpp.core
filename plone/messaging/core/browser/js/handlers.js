@@ -67,7 +67,17 @@ pmcxmpp.Presence = {
 
 pmcxmpp.PubSub = {
 	eventReceived: function(msg) {
-		var items = $(msg).children('item')		
+		var items = $(msg).find('item');
+		if (items.length>0) {
+			for (var i = 0; i < items.length; i++) {
+				var entry = $(items[i]).children('entry')
+				var event = jQuery.Event('pmcxmpp.nodePublished');
+				event.author = $(entry).children('author').text();
+				event.published = $(entry).children('published').text();
+				event.content = $(entry).children('content').text();
+				$(document).trigger(event);
+			}
+		}
 		return true;
 	}
 };
