@@ -14,12 +14,19 @@
     <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
                                 plone_view context/@@plone;"
                     tal:repeat="obj view/items">
-    <dd tal:define="oddrow repeat/obj/odd;"
+    <dd tal:define="oddrow repeat/obj/odd;
+                    author obj/author;
+                    content obj/content;
+                    updated obj/updated;
+                    portrait python:context.portal_membership.getPersonalPortrait(author);"
          tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
-      
-         <span tal:replace="structure obj/content">xmpp ftw!</span>
+         <img tal:condition="portrait" 
+              tal:attributes="src portrait/absolute_url"
+              height="30" widdth="30" style="float:left;">
+         <span tal:content="author">Saint Andre</span>
+         <span tal:replace="structure content">xmpp ftw!</span>
          <span class="portletItemDetails"
-            tal:content="python:toLocalizedTime(obj['updated'])">May 5</span>
+            tal:content="python:toLocalizedTime(updated)">May 5</span>
     </dd>
     </tal:pubsubitems>
 
