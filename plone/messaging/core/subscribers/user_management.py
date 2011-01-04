@@ -29,10 +29,19 @@ def onUserCreation(event):
 
     def finalResult(result):
         if result == False:
+            logger.error("Failed to subscribe user %s to node 'people'" % principal_id)
+            return
+        logger.info("Subscribed user %s to node 'people'" % principal_id)
+
+    def subscribeToMainFeed(result):
+        if result == False:
             logger.error("Failed to associate user %s with node %s" % (principal_id, principal))
             return
         storage.publishers[principal_id] = [principal_id]
         logger.info("Associated user %s with node %s" % (principal_id, principal))
+        d = client.setSubscriptions('people', [(jsettings.getUserJID(principal_id), 'subscribed')])
+        d.addCallback(finalResult)
+        return d
 
     def affiliateUser(result):
         if result == False:
@@ -42,7 +51,7 @@ def onUserCreation(event):
         logger.info("Add pubsub node %s to 'people' collection" % principal_id)
         d = client.setNodeAffiliations(
             principal_id, [(jsettings.getUserJID(principal_id), 'publisher')])
-        d.addCallback(finalResult)
+        d.addCallback(subscribeToMainFeed)
         return d
 
     def configureUserPubSubNode(result):
