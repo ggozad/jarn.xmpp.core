@@ -5,7 +5,10 @@ from zope.event import notify
 from zope.interface import implements
 from wokkel.xmppim import PresenceClientProtocol
 
-from plone.messaging.twisted.protocols import AdminHandler, PubSubHandler
+from plone.messaging.twisted.protocols import AdminHandler
+from plone.messaging.twisted.protocols import PubSubHandler
+from plone.messaging.twisted.protocols import ChatHandler
+
 from plone.messaging.twisted.client import XMPPClient
 
 from plone.messaging.core.interfaces import IXMPPSettings
@@ -31,12 +34,14 @@ class AdminClient(XMPPClient):
             jid, password,
             extra_handlers=[AdminHandler(),
                            PubSubHandler(),
+                           ChatHandler(),
                            PresenceClientProtocol()],
             host=jdomain)
 
         self.admin = self.handlers[0]
         self.pubsub = self.handlers[1]
-        self.presence = self.handlers[2]
+        self.chat = self.handlers[2]
+        self.presence = self.handlers[3]
         self.pubsub_jid = jsettings.PubSubJID
 
     def _authd(self, xs):
