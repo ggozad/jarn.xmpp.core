@@ -37,9 +37,23 @@ pmcxmpp.Messages = {
 pmcxmpp.Roster = {
 	rosterSet: function(iq) {
 		// XXX: Fill me in
+		return true;
 	},
 	rosterResult: function(iq) {
 		// XXX: Fill me in
+		return true;
+	},
+
+	rosterSuggestedItem: function(msg) {
+		$(msg).find('item').each(function () {
+			var jid = $(this).attr('jid');
+			var action = $(this).attr('action');
+			if (action === 'add') {
+				pmcxmpp.connection.send($pres({
+					to: jid,
+					"type": "subscribe"}));
+			}
+		});
 	}
 };
 
@@ -48,7 +62,22 @@ pmcxmpp.Presence = {
 		var ptype = $(presence).attr('type');
 		var from = $(presence).attr('from');
 		var status = '';
-		if (ptype !== 'error') {
+		//
+		// User wants to subscribe to us. Always approve and
+		// ask to subscribe to him
+		//
+		if (ptype === 'subscribe' ) {
+			pmcxmpp.connection.send($pres({
+				to: from,
+				"type": "subscribed"}));
+			pmcxmpp.connection.send($pres({
+				to: from,
+				"type": "subscribe"}));
+		}
+		//
+		// Presence has changed
+		//
+		else if (ptype !== 'error') {
 			if (ptype === 'unavailable') {
 				status = 'offline';
 			} else {
@@ -95,5 +124,6 @@ $(document).bind('pmcxmpp.connected', function () {
 	pmcxmpp.connection.addHandler(pmcxmpp.Presence.presenceReceived, null, 'presence', null);
 	// PubSub
 	pmcxmpp.connection.addHandler(pmcxmpp.PubSub.eventReceived, null, 'message', null, null, pmcxmpp.pubsub_jid);
+	pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterSuggestedItem, 'http://jabber.org/protocol/rosterx', 'message', null);
 	pmcxmpp.connection.send($pres());
 });
