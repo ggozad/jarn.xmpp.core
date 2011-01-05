@@ -1,5 +1,7 @@
 import logging
 
+from Products.CMFCore.interfaces import ISiteRoot
+from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
 from plone.messaging.core.interfaces import IXMPPSettings
@@ -12,6 +14,7 @@ logger = logging.getLogger('plone.messaging.core')
 def onUserCreation(event):
     """Create a jabber account for new user.
     """
+    portal = getUtility(ISiteRoot)
 
     principal = event.principal
     principal_id = principal.getUserId()
@@ -67,14 +70,23 @@ def onUserCreation(event):
 
     def addUserPubSubNode(result):
         if result == False:
-            logger.error("Failed to add user %s" % jid)
+            logger.error("Failed to add user %s" % principal_id)
             return
-        logger.info("Added user %s" % jid)
+        logger.info("Added user %s" % principal_id)
         d = client.createNode(principal_id)
         d.addCallback(configureUserPubSubNode)
         return d
 
+    def subscribeToAllUsers(result):
+        mtool = getToolByName(portal,'portal_membership')
+        principal_jid = jsettings.getUserJID(principal_id)
+        members_jids = [jsettings.getUserJID(member.getUserId())
+                        for member in mtool.listMembers()]
+        client.chat.sendRosterItemAddSuggestion(principal_jid, members_jids)
+        return result
+
     d = client.admin.addUser(jid, genPasswd())
+    d.addCallback(subscribeToAllUsers)
     d.addCallback(addUserPubSubNode)
     return d
 
