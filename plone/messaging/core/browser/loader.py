@@ -1,3 +1,5 @@
+import logging
+
 from plone.app.layout.viewlets.common import ViewletBase
 from plone.messaging.twisted.client import randomResource
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -8,6 +10,8 @@ from zope.component import getUtility
 
 from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.httpb import BOSHClient
+
+logger = logging.getLogger('plone.messaging.core')
 
 
 class XMPPLoader(ViewletBase):
@@ -51,14 +55,16 @@ class XMPPLoader(ViewletBase):
     def boshSettings(self):
         if not self.user_id:
             return ""
-
         rid, sid = self.prebind()
+
+        logger.info('jid=%s, rid=%s, sid=%s'%(self.jid.full(), rid, sid))
+
         if rid and sid:
             return """
             var pmcxmpp = {
               connection : null,
               BOSH_SERVICE : '%s',
-              rid: %s,
+              rid: %i,
               sid: '%s',
               jid : '%s',
               pubsub_jid : '%s',
@@ -73,4 +79,4 @@ class XMPPLoader(ViewletBase):
               password : '%s',
               pubsub_jid : '%s',
             };
-            """ % (self.bosh, self.jid.full(), self.jpassword, self.pubsub_jid)
+            """ % (self.bosh, self.jid.userhost(), self.jpassword, self.pubsub_jid)
