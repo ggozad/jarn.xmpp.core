@@ -10,6 +10,8 @@ pmcxmpp.onConnect = function (status) {
 
 $(document).ready(function () {
 	pmcxmpp.connection = new Strophe.Connection(pmcxmpp.BOSH_SERVICE);
-	//pmcxmpp.connection.connect(pmcxmpp.jid, pmcxmpp.password, pmcxmpp.onConnect);
-	pmcxmpp.connection.attach(pmcxmpp.jid, pmcxmpp.sid, pmcxmpp.rid, pmcxmpp.onConnect);
+	if (('rid' in pmcxmpp) && ('sid' in pmcxmpp))
+		pmcxmpp.connection.attach(pmcxmpp.jid, pmcxmpp.sid, pmcxmpp.rid, pmcxmpp.onConnect);
+	else 
+		pmcxmpp.connection.connect(pmcxmpp.jid, pmcxmpp.password, pmcxmpp.onConnect);
 });
