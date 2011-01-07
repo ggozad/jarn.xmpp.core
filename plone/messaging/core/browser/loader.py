@@ -1,8 +1,13 @@
-from zope.component import getUtility
 from plone.app.layout.viewlets.common import ViewletBase
+from plone.messaging.twisted.client import randomResource
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
+from twisted.words.protocols.jabber.jid import JID
+from zope.component import getUtility
+
+
 from plone.messaging.core.interfaces import IXMPPSettings
+from plone.messaging.core.httpb import BOSHClient
 
 
 class XMPPLoader(ViewletBase):
@@ -15,6 +20,7 @@ class XMPPLoader(ViewletBase):
         self.settings = getUtility(IXMPPSettings)
         pm = getToolByName(self.context, 'portal_membership')
         self.user_id = pm.getAuthenticatedMember().getId()
+        self.resource = randomResource()
 
     @property
     def bosh(self):
@@ -26,7 +32,7 @@ class XMPPLoader(ViewletBase):
 
     @property
     def jid(self):
-        return "%s@%s" % (self.user_id, self.jdomain)
+        return JID("%s@%s/%s" % (self.user_id, self.jdomain, self.resource))
 
     @property
     def jpassword(self):
@@ -36,14 +42,35 @@ class XMPPLoader(ViewletBase):
     def pubsub_jid(self):
         return self.settings.PubSubJID
 
+    def prebind(self):
+        b_client = BOSHClient(self.jid, self.jpassword, self.bosh)
+        if b_client.startSession():
+            return b_client.rid, b_client.sid
+        return ('', '')
+
     def boshSettings(self):
-        script = """
-        var pmcxmpp = {
-          connection : null,
-          BOSH_SERVICE : '%s',
-          jid : '%s',
-          password : '%s',
-          pubsub_jid : '%s',
-        };
-        """ % (self.bosh, self.jid, self.jpassword, self.pubsub_jid)
-        return script
+        if not self.user_id:
+            return ""
+
+        rid, sid = self.prebind()
+        if rid and sid:
+            return """
+            var pmcxmpp = {
+              connection : null,
+              BOSH_SERVICE : '%s',
+              rid: %s,
+              sid: '%s',
+              jid : '%s',
+              pubsub_jid : '%s',
+            };
+            """ % (self.bosh, int(rid), sid, self.jid.full(), self.pubsub_jid)
+        else:
+            return """
+            var pmcxmpp = {
+              connection : null,
+              BOSH_SERVICE : '%s',
+              jid : '%s',
+              password : '%s',
+              pubsub_jid : '%s',
+            };
+            """ % (self.bosh, self.jid.full(), self.jpassword, self.pubsub_jid)
