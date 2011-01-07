@@ -4,8 +4,6 @@ import base64
 from urlparse import urlparse
 from xml.dom.minidom import Document, Element, parseString
 
-from twisted.words.protocols.jabber.jid import JID
-
 NS_HTTPBIND = 'http://jabber.org/protocol/httpbind'
 NS_TLS = 'urn:ietf:params:xml:ns:xmpp-tls'
 NS_SASL = 'urn:ietf:params:xml:ns:xmpp-sasl'
@@ -27,7 +25,6 @@ class BOSHClient(object):
 
     def buildBody(self, attributes={}, child=None):
 
-        self.rid = self.rid + 1
 
         body = Element('body')
         body.setAttribute('xmlns', NS_HTTPBIND)
@@ -40,6 +37,7 @@ class BOSHClient(object):
             body.setAttribute(attribute, attributes[attribute])
         if child is not None:
             body.appendChild(child)
+        self.rid = self.rid + 1
         return body
 
     def sendRequest(self, body):
@@ -123,4 +121,13 @@ class BOSHClient(object):
         response = self.sendRequest(body)
         if not response or not response.getElementsByTagName('jid'):
             return False
+
+        iq = Element('iq')
+        iq.setAttribute('id', str(random.randint(0, 1000000)))
+        iq.setAttribute('type', 'set')
+        session = Element('session')
+        session.setAttribute('xmlns', NS_SESSION)
+        iq.appendChild(session)
+        body = self.buildBody(child=iq)
+        response = self.sendRequest(body)
         return True
