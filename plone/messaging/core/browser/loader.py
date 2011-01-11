@@ -2,14 +2,13 @@ import logging
 
 from plone.app.layout.viewlets.common import ViewletBase
 from plone.messaging.twisted.client import randomResource
+from plone.messaging.twisted.httpb import BOSHClient
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
 
-
 from plone.messaging.core.interfaces import IXMPPSettings
-from plone.messaging.core.httpb import BOSHClient
 
 logger = logging.getLogger('plone.messaging.core')
 
@@ -56,10 +55,9 @@ class XMPPLoader(ViewletBase):
         if not self.user_id:
             return ""
         rid, sid = self.prebind()
-
-        logger.info('jid=%s, rid=%s, sid=%s'%(self.jid.full(), rid, sid))
-
         if rid and sid:
+            logger.info('Pre-binded %s' % self.jid.full())
+
             return """
             var pmcxmpp = {
               connection : null,
@@ -71,6 +69,7 @@ class XMPPLoader(ViewletBase):
             };
             """ % (self.bosh, int(rid), sid, self.jid.full(), self.pubsub_jid)
         else:
+            logger.info('Could not pre-bind %s' % self.jid.full())
             return """
             var pmcxmpp = {
               connection : null,
