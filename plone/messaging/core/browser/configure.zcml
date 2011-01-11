@@ -28,6 +28,13 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="xmpp_setup"
+    class=".setup.SetupXMPPForm"
+    permission="cmf.ManagePortal"
+    />
+
   <browser:viewlet
     name="plone.messaging.core.loader"
     manager="plone.app.layout.viewlets.interfaces.IBelowContent"
