@@ -83,7 +83,9 @@ class SetupXMPPForm(form.Form):
         def createUsers(result):
             if not result:
                 return False
-            # # XXX: FIX ME!!!!
+            # XXX: FIX ME!!!!
+            # I should iterate the members and create their accounts, nodes,
+            # subscriptions. Same as onUserCreation...
             return True
 
         def finalResult(result):
