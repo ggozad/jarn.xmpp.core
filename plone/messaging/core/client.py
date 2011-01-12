@@ -1,15 +1,15 @@
 import logging
 
+from twisted.internet import defer
 from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implements
 from wokkel.xmppim import PresenceClientProtocol
 
+from plone.messaging.twisted.client import XMPPClient
 from plone.messaging.twisted.protocols import AdminHandler
 from plone.messaging.twisted.protocols import PubSubHandler
 from plone.messaging.twisted.protocols import ChatHandler
-
-from plone.messaging.twisted.client import XMPPClient
 
 from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.interfaces import IAdminClient
@@ -154,7 +154,6 @@ class AdminClient(XMPPClient):
             return items
 
         def nodesCb(nodes):
-            from twisted.internet import defer
             d = defer.DeferredList(
                 [self.getNodeItems(node_dict['node'], maxItems=maxItems)
                 for node_dict in nodes],

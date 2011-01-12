@@ -7,7 +7,7 @@ from plone.messaging.core.interfaces import IAdminClient, IXMPPSettings
 logger = logging.getLogger('plone.messaging.core')
 
 
-def createDefaultPubSubNodes():
+def createDefaultPubSubNodes(result=None):
     pubsub = getUtility(IAdminClient)
     jsettings = getUtility(IXMPPSettings)
     jid = jsettings.getUserJID('admin')

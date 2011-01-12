@@ -30,7 +30,7 @@
 
   <browser:page
     for="*"
-    name="xmpp_setup"
+    name="setup-xmpp"
     class=".setup.SetupXMPPForm"
     permission="cmf.ManagePortal"
     />
