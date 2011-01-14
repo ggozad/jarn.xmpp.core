@@ -30,28 +30,20 @@ def onUserCreation(event):
         chars = string.letters + string.digits
         return ''.join([random.choice(chars) for i in range(12)])
 
-    def finalResult(result):
-        if result == False:
-            logger.error("Failed onUserCreation for user %s" % principal_id)
-            return
-        logger.debug("Succesful onUserCreation for user %s" % principal_id)
-
-    def subscribeToMainFeed(result):
+    def subscribeToAllUsers(result):
         if result == False:
             return False
-        storage.publishers[principal_id] = [principal_id]
-        d = client.setSubscriptions('people',
-            [(jsettings.getUserJID(principal_id), 'subscribed')])
-        d.addCallback(finalResult)
-        return d
+        mtool = getToolByName(portal, 'portal_membership')
+        principal_jid = jsettings.getUserJID(principal_id)
+        members_jids = [jsettings.getUserJID(member.getUserId())
+                        for member in mtool.listMembers()]
+        client.chat.sendRosterItemAddSuggestion(principal_jid, members_jids)
+        return result
 
-    def affiliateUser(result):
+    def addUserPubSubNode(result):
         if result == False:
             return False
-        storage.collections['people'].append(principal_id)
-        d = client.setNodeAffiliations(
-            principal_id, [(jsettings.getUserJID(principal_id), 'publisher')])
-        d.addCallback(subscribeToMainFeed)
+        d = client.createNode(principal_id)
         return d
 
     def configureUserPubSubNode(result):
@@ -61,27 +53,39 @@ def onUserCreation(event):
         storage.node_items[principal_id] = []
         d = client.configureNode(principal_id,
             options={'pubsub#collection': 'people'})
-        d.addCallback(affiliateUser)
         return d
 
-    def addUserPubSubNode(result):
+    def affiliateUser(result):
         if result == False:
             return False
-        d = client.createNode(principal_id)
-        d.addCallback(configureUserPubSubNode)
+        storage.collections['people'].append(principal_id)
+        d = client.setNodeAffiliations(
+            principal_id, [(jsettings.getUserJID(principal_id), 'publisher')])
         return d
 
-    def subscribeToAllUsers(result):
-        mtool = getToolByName(portal, 'portal_membership')
-        principal_jid = jsettings.getUserJID(principal_id)
-        members_jids = [jsettings.getUserJID(member.getUserId())
-                        for member in mtool.listMembers()]
-        client.chat.sendRosterItemAddSuggestion(principal_jid, members_jids)
-        return result
+    def subscribeToMainFeed(result):
+        if result == False:
+            return False
+        storage.publishers[principal_id] = [principal_id]
+        d = client.setSubscriptions('people',
+            [(jsettings.getUserJID(principal_id), 'subscribed')])
+        return d
+
+    def finalResult(result):
+        if result == False:
+            logger.error("Failed onUserCreation for user %s" % principal_id)
+            return
+        logger.info("Succesful onUserCreation for user %s" % principal_id)
+
+
 
     d = client.admin.addUser(jid, genPasswd())
     d.addCallback(subscribeToAllUsers)
     d.addCallback(addUserPubSubNode)
+    d.addCallback(configureUserPubSubNode)
+    d.addCallback(affiliateUser)
+    d.addCallback(subscribeToMainFeed)
+    d.addCallback(finalResult)
     return d
 
 
@@ -97,7 +101,7 @@ def onUserDeletion(event):
     def finalResult(result):
         if result == False:
             logger.error("Failed onUserDeletion for user %s" % principal_id)
-        logger.debug("Succesful onUserDeletion for user %s" % principal_id)
+        logger.info("Succesful onUserDeletion for user %s" % principal_id)
 
     def deleteUser(result):
         if result == False:
@@ -112,7 +116,9 @@ def onUserDeletion(event):
             storage.collections['people'].remove(principal_id)
 
         d = client.admin.deleteUsers([jid])
-        d.addCallback(finalResult)
+        return d
+
     d = client.deleteNode(principal_id)
     d.addCallback(deleteUser)
+    d.addCallback(finalResult)
     return d
