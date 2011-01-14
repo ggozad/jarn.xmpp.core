@@ -90,7 +90,7 @@ class SetupXMPPForm(form.Form):
 
         def finalResult(result):
             if result:
-                logger.info('Succesfully setup xmpp server')
+                logger.debug('Succesfully setup xmpp server')
             else:
                 logger.error('Failed to setup xmpp server')
 

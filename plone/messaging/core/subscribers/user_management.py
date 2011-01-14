@@ -32,26 +32,23 @@ def onUserCreation(event):
 
     def finalResult(result):
         if result == False:
-            logger.error("Failed to subscribe user %s to node 'people'" % principal_id)
+            logger.error("Failed onUserCreation for user %s" % principal_id)
             return
-        logger.info("Subscribed user %s to node 'people'" % principal_id)
+        logger.debug("Succesful onUserCreation for user %s" % principal_id)
 
     def subscribeToMainFeed(result):
         if result == False:
-            logger.error("Failed to associate user %s with node %s" % (principal_id, principal))
-            return
+            return False
         storage.publishers[principal_id] = [principal_id]
-        logger.info("Associated user %s with node %s" % (principal_id, principal))
-        d = client.setSubscriptions('people', [(jsettings.getUserJID(principal_id), 'subscribed')])
+        d = client.setSubscriptions('people',
+            [(jsettings.getUserJID(principal_id), 'subscribed')])
         d.addCallback(finalResult)
         return d
 
     def affiliateUser(result):
         if result == False:
-            logger.error("Failed to add pubsub node %s to 'people' collection" % principal_id)
-            return
+            return False
         storage.collections['people'].append(principal_id)
-        logger.info("Add pubsub node %s to 'people' collection" % principal_id)
         d = client.setNodeAffiliations(
             principal_id, [(jsettings.getUserJID(principal_id), 'publisher')])
         d.addCallback(subscribeToMainFeed)
@@ -59,26 +56,23 @@ def onUserCreation(event):
 
     def configureUserPubSubNode(result):
         if result == False:
-            logger.error("Failed to add pubsub node  %s" % principal_id)
-            return
+            return False
         storage.leaf_nodes.append(principal_id)
         storage.node_items[principal_id] = []
-        logger.info("Added pubsub node  %s" % principal_id)
-        d = client.configureNode(principal_id, options={'pubsub#collection': 'people'})
+        d = client.configureNode(principal_id,
+            options={'pubsub#collection': 'people'})
         d.addCallback(affiliateUser)
         return d
 
     def addUserPubSubNode(result):
         if result == False:
-            logger.error("Failed to add user %s" % principal_id)
-            return
-        logger.info("Added user %s" % principal_id)
+            return False
         d = client.createNode(principal_id)
         d.addCallback(configureUserPubSubNode)
         return d
 
     def subscribeToAllUsers(result):
-        mtool = getToolByName(portal,'portal_membership')
+        mtool = getToolByName(portal, 'portal_membership')
         principal_jid = jsettings.getUserJID(principal_id)
         members_jids = [jsettings.getUserJID(member.getUserId())
                         for member in mtool.listMembers()]
@@ -102,12 +96,12 @@ def onUserDeletion(event):
 
     def finalResult(result):
         if result == False:
-            logger.error("Failed to delete account  %s" % principal_id)
-        logger.info("Deleted account %s" % principal_id)
+            logger.error("Failed onUserDeletion for user %s" % principal_id)
+        logger.debug("Succesful onUserDeletion for user %s" % principal_id)
 
     def deleteUser(result):
         if result == False:
-            logger.error("Failed to delete pubsub node  %s" % principal_id)
+            return False
         if principal_id in storage.leaf_nodes:
             storage.leaf_nodes.remove(principal_id)
         if principal_id in storage.publishers:
@@ -116,7 +110,6 @@ def onUserDeletion(event):
             del storage.node_items[principal_id]
         if principal_id in storage.collections['people']:
             storage.collections['people'].remove(principal_id)
-        logger.info("Deleted pubsub node  %s" % principal_id)
 
         d = client.admin.deleteUsers([jid])
         d.addCallback(finalResult)

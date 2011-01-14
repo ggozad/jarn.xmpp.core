@@ -56,7 +56,7 @@ class XMPPLoader(ViewletBase):
             return ""
         rid, sid = self.prebind()
         if rid and sid:
-            logger.info('Pre-binded %s' % self.jid.full())
+            logger.debug('Pre-binded %s' % self.jid.full())
 
             return """
             var pmcxmpp = {
@@ -69,7 +69,7 @@ class XMPPLoader(ViewletBase):
             };
             """ % (self.bosh, int(rid), sid, self.jid.full(), self.pubsub_jid)
         else:
-            logger.info('Could not pre-bind %s' % self.jid.full())
+            logger.error('Could not pre-bind %s' % self.jid.full())
             return """
             var pmcxmpp = {
               connection : null,
