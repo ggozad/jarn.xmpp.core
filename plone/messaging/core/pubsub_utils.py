@@ -36,7 +36,7 @@ def publishItemToNode(identifier, content, user_id):
 
     def resultCb(result):
         if result:
-            logger.debug("Successfully published item pubsub node %s" % identifier)
+            logger.info("Successfully published item pubsub node %s" % identifier)
         else:
             logger.error("Failure in publishing item to pubsub node %s" % identifier)
 

@@ -56,7 +56,7 @@ class XMPPLoader(ViewletBase):
             return ""
         rid, sid = self.prebind()
         if rid and sid:
-            logger.debug('Pre-binded %s' % self.jid.full())
+            logger.info('Pre-binded %s' % self.jid.full())
 
             return """
             var pmcxmpp = {
