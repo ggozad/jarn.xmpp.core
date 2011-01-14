@@ -39,8 +39,6 @@ class PublishToNodeForm(form.Form):
         self.node = node
 
     def updateWidgets(self):
-        """ Make sure that return URL is not visible to the user.
-        """
         form.Form.updateWidgets(self)
 
         if self.node:
@@ -69,13 +67,18 @@ class SubscribeUnsubscribeForm(form.Form):
     fields = field.Fields(ISubscribeToNode)
     ignoreContext = True
 
-    def __init__(self, context, request, node=None):
+    def __init__(self, context, request, node=None, user_jid=None):
         super(SubscribeUnsubscribeForm, self).__init__(context, request)
         self.node = node
+        if user_jid is not None:
+            self.user_jid = user_jid
+        else:
+            pm = getToolByName(self.context, 'portal_membership')
+            user_id = pm.getAuthenticatedMember().getId()
+            settings = getUtility(IXMPPSettings)
+            self.user_jid = settings.getUserJID(user_id)
 
     def updateWidgets(self):
-        """ Make sure that return URL is not visible to the user.
-        """
         form.Form.updateWidgets(self)
         if self.node:
             # Hide fields which we don't want to bother user with
@@ -93,13 +96,8 @@ class SubscribeToNodeForm(SubscribeUnsubscribeForm):
         if errors:
             return
         node = data['node']
-        pm = getToolByName(self.context, 'portal_membership')
-        user_id = str(pm.getAuthenticatedMember())
-        settings = getUtility(IXMPPSettings)
         client = getUtility(IAdminClient)
-        user_jid = settings.getUserJID(user_id)
-
-        d = client.setSubscriptions(node, [(user_jid, 'subscribed')])
+        d = client.setSubscriptions(node, [(self.user_jid, 'subscribed')])
         return d
 
 
@@ -113,11 +111,6 @@ class UnsubscribeFromNodeForm(SubscribeUnsubscribeForm):
         if errors:
             return
         node = data['node']
-        pm = getToolByName(self.context, 'portal_membership')
-        user_id = str(pm.getAuthenticatedMember())
-        settings = getUtility(IXMPPSettings)
         client = getUtility(IAdminClient)
-        user_jid = settings.getUserJID(user_id)
-
-        d = client.setSubscriptions(node, [(user_jid, 'none')])
+        d = client.setSubscriptions(node, [(self.user_jid, 'none')])
         return d
