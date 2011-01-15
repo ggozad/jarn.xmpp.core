@@ -16,6 +16,7 @@ Setting up ejabberd (>=2.1.5)
 -----------------------------
 
 * Download `ejabberd`_
+* Unless you decide to customize what the IXMPPSettings utility reports, as domain use ``localhost`` and the administrator should be ``admin@localhost`` with password ``admin``.
 * Make sure you have enabled the `http_bind` module. You should have  something like this in your ejabberd.cfg:
 
   ::
