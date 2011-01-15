@@ -24,6 +24,13 @@
     handler=".user_management.onUserDeletion"
     />
 
+  <!-- Content subscriptions -->
+  <subscriber
+    for="Products.ATContentTypes.interfaces.IATContentType
+         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+    handler=".content.onObjectModified"
+    />
+
   <!-- Workflow Changes -->
   
   <subscriber

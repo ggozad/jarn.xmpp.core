@@ -53,13 +53,18 @@ class SetupXMPPForm(form.Form):
                 consumeErrors=True)
             return d
 
-        def createPeopleNode(result):
+        def createCollections(result):
             if not result:
                 return False
-            d = self.admin.createNode('people',
+            d1 = self.admin.createNode('people',
                 options={'pubsub#node_title': 'All personal feeds',
                          'pubsub#node_type': 'collection',
                          'pubsub#collection': ''})
+            d2 = self.admin.createNode('content',
+                options={'pubsub#node_title': 'All content feeds',
+                         'pubsub#node_type': 'collection',
+                         'pubsub#collection': ''})
+
             d.addCallback(subscribeAdmin)
             return d
 
@@ -96,7 +101,7 @@ class SetupXMPPForm(form.Form):
 
         d = self.admin.getNodes()
         d.addCallback(deleteAllNodes)
-        d.addCallback(createPeopleNode)
+        d.addCallback(createCollections)
         d.addCallback(initStorage)
         d.addCallback(createUsers)
         d.addCallback(finalResult)

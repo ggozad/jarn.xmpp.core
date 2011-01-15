@@ -112,6 +112,9 @@ class AdminClient(XMPPClient):
         d = self.pubsub.deleteNode(self.pubsub_jid, identifier)
         return d
 
+    def publish(self, identifier, items):
+        d = self.pubsub.publish(self.pubsub_jid, identifier, items=items)
+
     def getDefaultNodeConfiguration(self):
         d = self.pubsub.getDefaultNodeConfiguration(self.pubsub_jid)
         return d
