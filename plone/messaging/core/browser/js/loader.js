@@ -1,8 +1,12 @@
 pmcxmpp.onConnect = function (status) {
-	if (status === Strophe.Status.ATTACHED) {
-		$(document).trigger('pmcxmpp.connected')
-	} else if (status === Strophe.Status.CONNECTED) {
+	if ((status === Strophe.Status.ATTACHED) ||
+	    (status === Strophe.Status.CONNECTED)) {
+		$(window).bind('beforeunload', function() {
+			pmcxmpp.connection.flush();
+			pmcxmpp.connection.disconnect();
+		});
 		$(document).trigger('pmcxmpp.connected');
+		
 	} else if (status === Strophe.Status.DISCONNECTED) { 
 		$(document).trigger('pmcxmpp.disconnected');
 	}
