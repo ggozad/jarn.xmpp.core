@@ -50,7 +50,7 @@ Setting up a new Plone site
 * Start the nginx frontend. ``bin/frontend start``
 * Start your zope instance. You can observe on the console that the reactor has started.
 * Access Zope via Nginx ``http://localhost:8080/`` and create a new Plone site with ``plone.messaging.core``
-* Before you add any users you need to setup the pubsub nodes. You do this by calling ``@@setup-xmpp``. Eventually this will take care of existing users as well but it's not there yet. The form will not report any errors as everything will happen asynchronously but you will get the result on the console.
+* Before you add any users you need to setup the pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://localhost:8081/Plone/@@setup-xmpp``. Eventually this will take care of existing users as well but it's not there yet. The form will not report any errors as everything will happen asynchronously but you will get the result on the console.
 
 Experimenting
 =============
