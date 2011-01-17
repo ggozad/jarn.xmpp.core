@@ -45,7 +45,8 @@ Test that you can access your ejabberd by logging to the admin interface (typica
 
 Setting up a new Plone site
 ---------------------------
-
+* Start ejabberd
+* Start the nginx frontend.
 * Start your zope instance. You can observe on the console that the reactor has started.
 * Create a new Plone site and install ``plone.messaging.core``
 * Before you add any users you need to setup the pubsub nodes. You do this by calling ``@@setup-xmpp``. Eventually this will take care of existing users as well but it's not there yet. The form will not report any errors as everything will happen asynchronously but you will get the result on the console.
