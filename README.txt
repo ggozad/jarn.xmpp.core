@@ -15,8 +15,9 @@ Before setting up the package you need to have a working XMPP server and access 
 Setting up ejabberd (>=2.1.5)
 -----------------------------
 
-* Download `ejabberd`_
+* Download `ejabberd`_ installer
 * Unless you decide to customize what the IXMPPSettings utility reports, as domain use ``localhost`` and the administrator should be ``admin@localhost`` with password ``admin``.
+* The sample ``ejabberd.cfg`` is intended for use with the Mac installer which puts files in ``/Applications/ejabberd-2.1.6``
 * Make sure you have enabled the `http_bind` module. You should have  something like this in your ejabberd.cfg:
 
   ::
@@ -46,9 +47,9 @@ Test that you can access your ejabberd by logging to the admin interface (typica
 Setting up a new Plone site
 ---------------------------
 * Start ejabberd
-* Start the nginx frontend.
+* Start the nginx frontend. ``bin/frontend start``
 * Start your zope instance. You can observe on the console that the reactor has started.
-* Create a new Plone site and install ``plone.messaging.core``
+* Access Zope via Nginx ``http://localhost:8080/`` and create a new Plone site with ``plone.messaging.core``
 * Before you add any users you need to setup the pubsub nodes. You do this by calling ``@@setup-xmpp``. Eventually this will take care of existing users as well but it's not there yet. The form will not report any errors as everything will happen asynchronously but you will get the result on the console.
 
 Experimenting
