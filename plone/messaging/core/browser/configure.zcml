@@ -36,6 +36,14 @@
     />
 
   <browser:viewlet
+      name="plone.messaging.core.content_subscription"
+      for="Products.CMFCore.interfaces.IContentish"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+      class=".content_subscription.ContentSubscriptionViewlet"
+      permission="zope2.View"
+      />
+
+  <browser:viewlet
     name="plone.messaging.core.loader"
     manager="plone.app.layout.viewlets.interfaces.IBelowContent"
     class=".loader.XMPPLoader"

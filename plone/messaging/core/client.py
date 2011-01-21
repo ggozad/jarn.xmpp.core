@@ -53,7 +53,8 @@ class AdminClient(XMPPClient):
     def _pubsubItemToDict(self, item):
         entry = item.entry
         atom = [(child.name, child.children[0])
-            for child in entry.children]
+            for child in entry.children
+            if child.children]
         return dict(atom)
 
     def itemsReceived(self, event):
@@ -111,6 +112,9 @@ class AdminClient(XMPPClient):
     def deleteNode(self, identifier):
         d = self.pubsub.deleteNode(self.pubsub_jid, identifier)
         return d
+
+    def publish(self, identifier, items):
+        d = self.pubsub.publish(self.pubsub_jid, identifier, items=items)
 
     def getDefaultNodeConfiguration(self):
         d = self.pubsub.getDefaultNodeConfiguration(self.pubsub_jid)
