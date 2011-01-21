@@ -53,7 +53,8 @@ class AdminClient(XMPPClient):
     def _pubsubItemToDict(self, item):
         entry = item.entry
         atom = [(child.name, child.children[0])
-            for child in entry.children]
+            for child in entry.children
+            if child.children]
         return dict(atom)
 
     def itemsReceived(self, event):
