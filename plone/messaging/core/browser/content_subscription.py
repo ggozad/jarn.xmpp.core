@@ -12,7 +12,7 @@ from plone.messaging.core.browser.portlets.formwrapper import PortletFormView
 from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.interfaces import IXMPPSettings
-
+from plone.messaging.core.pubsub_utils import content_node_config
 
 class ChangeContentSubscriptionForm(form.Form):
 
@@ -30,12 +30,15 @@ class ChangeContentSubscriptionForm(form.Form):
 
         def subscribe():
             def subscribeToNode(result):
-                d = client.setSubscriptions(self.node, [(self.user_jid, 'subscribed')])
-                return d
-            d = client.createNode(self.node,
-                options={'pubsub#collection': 'content'})
-            d.addCallbacks(subscribeToNode, subscribeToNode)
-            return d
+                if result == True:
+                    storage = getUtility(IPubSubStorage)
+                    storage.node_items[self.node] = []
+                    storage.leaf_nodes.append(self.node)
+                d2 = client.setSubscriptions(self.node, [(self.user_jid, 'subscribed')])
+                return d2
+            d1 = client.createNode(self.node, options=content_node_config)
+            d1.addCallbacks(subscribeToNode)
+            return d1
 
         if self.subscribe:
             return subscribe()

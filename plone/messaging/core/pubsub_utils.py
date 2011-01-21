@@ -1,5 +1,5 @@
-import logging
 from datetime import datetime
+import logging
 
 from twisted.words.xish.domish import Element
 from wokkel.pubsub import Item
@@ -9,6 +9,8 @@ from zope.component import getUtility
 
 from plone.messaging.core.interfaces import IXMPPSettings
 
+content_node_config = {'pubsub#send_last_published_item': 'never',
+                       'pubsub#collection': 'content'}
 
 logger = logging.getLogger('plone.messaging.core')
 
@@ -36,9 +38,9 @@ def publishItemToNode(identifier, content, user_id):
 
     def resultCb(result):
         if result:
-            logger.info("Successfully published item pubsub node %s" % identifier)
+            logger.info("Successfully published to node %s" % identifier)
         else:
-            logger.error("Failure in publishing item to pubsub node %s" % identifier)
+            logger.error("Failure in publishing to node %s" % identifier)
 
     jabber_client = getUtility(IDeferredXMPPClient)
     d = jabber_client.execute(user_jid, password,
