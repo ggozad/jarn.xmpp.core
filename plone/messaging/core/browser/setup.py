@@ -93,8 +93,8 @@ class SetupXMPPForm(form.Form):
             if not result:
                 return False
             storage = getUtility(IPubSubStorage)
-            storage.node_items = {'people': []}
-            storage.collections = {'people': []}
+            storage.node_items = {'people': [], 'content': []}
+            storage.collections = {'people': [], 'content': []}
             return True
 
         def createUsers(result):
