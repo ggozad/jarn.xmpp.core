@@ -64,17 +64,21 @@ class SetupXMPPForm(form.Form):
                 options={'pubsub#node_title': 'All content feeds',
                          'pubsub#node_type': 'collection',
                          'pubsub#collection': ''})
-
-            d.addCallback(subscribeAdmin)
+            d = defer.DeferredList([d1, d2])
             return d
 
-        def initStorage(result):
+        def createDummyItemNodes(result):
+            """ XXX: This is necessary as ejabberd stupidly considers a node
+            a collection only if it has children...
+            """
             if not result:
                 return False
-            storage = getUtility(IPubSubStorage)
-            storage.node_items = {'people': []}
-            storage.collections = {'people': []}
-            return True
+            d1 = self.admin.createNode('dummy_people_node',
+                options={'pubsub#collection': 'people'})
+            d2 = self.admin.createNode('dummy_content_node',
+                options={'pubsub#collection': 'content'})
+            d = defer.DeferredList([d1, d2])
+            return d
 
         def subscribeAdmin(result):
             if not result:
@@ -84,6 +88,14 @@ class SetupXMPPForm(form.Form):
                 options={'pubsub#subscription_type': 'items',
                          'pubsub#subscription_depth': 'all'})
             return d
+
+        def initStorage(result):
+            if not result:
+                return False
+            storage = getUtility(IPubSubStorage)
+            storage.node_items = {'people': []}
+            storage.collections = {'people': []}
+            return True
 
         def createUsers(result):
             if not result:
@@ -102,6 +114,8 @@ class SetupXMPPForm(form.Form):
         d = self.admin.getNodes()
         d.addCallback(deleteAllNodes)
         d.addCallback(createCollections)
+        d.addCallback(createDummyItemNodes)
+        d.addCallback(subscribeAdmin)
         d.addCallback(initStorage)
         d.addCallback(createUsers)
         d.addCallback(finalResult)
