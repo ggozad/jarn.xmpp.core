@@ -8,7 +8,7 @@ from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from wokkel.pubsub import Item
 
 from plone.messaging.core.interfaces import IAdminClient
-from plone.messaging.core.interfaces import IPubSubStorage
+from plone.messaging.core.pubsub_utils import content_node_config
 
 
 def pubsubObjectModified(obj, event):
@@ -30,4 +30,18 @@ def pubsubObjectModified(obj, event):
 
     client = getUtility(IAdminClient)
     d = client.publish(uid, items=[item])
+    return d
+
+
+def pubsubObjectAdded(obj, event):
+    if 'portal_factory' in obj.getPhysicalPath():
+        return
+    client = getUtility(IAdminClient)
+    d = client.createNode(obj.UID(), options=content_node_config)
+    return d
+
+
+def pubsubObjectRemoved(obj, event):
+    client = getUtility(IAdminClient)
+    d = client.deleteNode(obj.UID())
     return d

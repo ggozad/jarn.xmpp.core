@@ -37,5 +37,16 @@
     handler=".content.pubsubObjectModified"
     />
 
+  <subscriber
+    for="Products.ATContentTypes.interfaces.IATContentType
+         zope.lifecycleevent.interfaces.IObjectAddedEvent"
+    handler=".content.pubsubObjectAdded"
+    />
+
+  <subscriber
+    for="Products.ATContentTypes.interfaces.IATContentType
+         zope.lifecycleevent.interfaces.IObjectRemovedEvent"
+    handler=".content.pubsubObjectRemoved"
+    />
 
 </configure>
