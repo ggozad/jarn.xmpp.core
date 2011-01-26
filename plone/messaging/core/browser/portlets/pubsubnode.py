@@ -12,7 +12,7 @@ from zope.interface import implements
 from plone.messaging.core import messageFactory as _
 from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.browser.pubsub import PublishToNodeForm
-from plone.messaging.core.browser.portlets.formwrapper import PortletFormView
+from plone.messaging.core.browser.formwrapper import WrappedFormView
 
 
 class IPubSubNodePortlet(IPortletDataProvider):
@@ -62,7 +62,7 @@ class Renderer(base.Renderer):
                                          self.request,
                                          node=self.data.node)
         # Wrap a form in Plone view
-        publish_view = PortletFormView(context, self.request)
+        publish_view = WrappedFormView(context, self.request)
         # Make sure acquisition chain is respected
         publish_view = publish_view.__of__(context)
         publish_view.form_instance = publish_form

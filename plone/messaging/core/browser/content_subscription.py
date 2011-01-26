@@ -8,7 +8,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from plone.messaging.core import messageFactory as _
-from plone.messaging.core.browser.portlets.formwrapper import PortletFormView
+from plone.messaging.core.browser.formwrapper import WrappedFormView
 from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.interfaces import IXMPPSettings
@@ -77,7 +77,7 @@ class ContentSubscriptionViewlet(ViewletBase):
                                       user_jid=self.user_jid,
                                       subscribe=True)
         # Wrap a form in Plone view
-        form_view = PortletFormView(self.context, self.request)
+        form_view = WrappedFormView(self.context, self.request)
         # Make sure acquisition chain is respected
         form_view = form_view.__of__(self.context)
         form_view.form_instance = form
