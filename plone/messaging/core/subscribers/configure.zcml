@@ -28,14 +28,14 @@
   <subscriber
     for="Products.ATContentTypes.interfaces.IATContentType
          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
-    handler=".content.onObjectModified"
+    handler=".content.pubsubObjectModified"
     />
 
-  <!-- Workflow Changes -->
-  
   <subscriber
-    for="Products.CMFCore.interfaces.IActionSucceededEvent"
-    handler=".workflow.onWorkflowChange"
+    for="Products.ATContentTypes.interfaces.IATContentType
+         Products.CMFCore.interfaces.IActionSucceededEvent"
+    handler=".content.pubsubObjectModified"
     />
+
 
 </configure>

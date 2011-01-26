@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from Products.CMFCore.interfaces import IActionSucceededEvent
 from twisted.words.xish.domish import Element
 from zope.component import getUtility
 from zope.lifecycleevent.interfaces import IObjectModifiedEvent
@@ -9,16 +10,13 @@ from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.interfaces import IPubSubStorage
 
 
-def onObjectModified(obj, event):
+def pubsubObjectModified(obj, event):
     uid = obj.UID()
-    storage = getUtility(IPubSubStorage)
-    if uid not in storage.leaf_nodes:
-        # We don't have subscribers for this content.
-        return
-
     message = ''
     if IObjectModifiedEvent.providedBy(event):
         message = "'%s' modified." % obj.Title()
+    elif IActionSucceededEvent.providedBy(event):
+        message = "Workflow action '%s' on '%s'" % (event.action, obj.Title())
     entry = Element(('http://www.w3.org/2005/Atom', 'entry'))
     entry.addElement('content', content=message)
     entry.addElement('author', content=obj.getOwner().getId())
