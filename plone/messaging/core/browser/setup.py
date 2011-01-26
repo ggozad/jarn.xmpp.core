@@ -1,10 +1,11 @@
 import logging
 
+from Products.ATContentTypes.interface import IATContentType
+from Products.CMFCore.utils import getToolByName
 from twisted.internet import defer
 from z3c.form import form
 from z3c.form import field
 from z3c.form import button
-#from zope import schema
 from zope.component import getUtility
 from zope.interface import Interface
 
@@ -12,7 +13,8 @@ from plone.messaging.core import messageFactory as _
 from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.interfaces import IPubSubStorage
-
+from plone.messaging.core.pubsub_utils import content_node_config
+from plone.messaging.core.subscribers.user_management import onUserCreation
 logger = logging.getLogger('plone.messaging.core')
 
 
@@ -67,6 +69,18 @@ class SetupXMPPForm(form.Form):
             d = defer.DeferredList([d1, d2])
             return d
 
+        def createContentNodes(result):
+            if not result:
+                return False
+            ct = getToolByName(self.context, 'portal_catalog')
+            items = ct.unrestrictedSearchResults(object_provides=IATContentType.__identifier__)
+            deferred_list = []
+            for item in items:
+                d = self.admin.createNode(item.UID, options=content_node_config)
+                deferred_list.append(d)
+            d = defer.DeferredList(deferred_list, consumeErrors=True)
+            return d
+
         def createDummyItemNodes(result):
             """ XXX: This is necessary as ejabberd stupidly considers a node
             a collection only if it has children...
@@ -77,7 +91,7 @@ class SetupXMPPForm(form.Form):
                 options={'pubsub#collection': 'people'})
             d2 = self.admin.createNode('dummy_content_node',
                 options={'pubsub#collection': 'content'})
-            d = defer.DeferredList([d1, d2])
+            d = defer.DeferredList([d1, d2], consumeErrors=True)
             return d
 
         def subscribeAdmin(result):
@@ -100,10 +114,23 @@ class SetupXMPPForm(form.Form):
         def createUsers(result):
             if not result:
                 return False
-            # XXX: FIX ME!!!!
-            # I should iterate the members and create their accounts, nodes,
-            # subscriptions. Same as onUserCreation...
-            return True
+
+            class FakePrincipalCreated(object):
+                """ Dummy principal created event
+                """
+                def __init__(self, principal):
+                    self.principal = principal
+
+            mt = getToolByName(self.context, 'portal_membership')
+            member_ids = mt.listMemberIds()
+            deferred_list = []
+
+            for member_id in member_ids:
+                p = FakePrincipalCreated(mt.getMemberById(member_id))
+                d = onUserCreation(p)
+                deferred_list.append(d)
+            d = defer.DeferredList(deferred_list, consumeErrors=True)
+            return d
 
         def finalResult(result):
             if result:
@@ -114,6 +141,7 @@ class SetupXMPPForm(form.Form):
         d = self.admin.getNodes()
         d.addCallback(deleteAllNodes)
         d.addCallback(createCollections)
+        d.addCallback(createContentNodes)
         d.addCallback(createDummyItemNodes)
         d.addCallback(subscribeAdmin)
         d.addCallback(initStorage)

@@ -1,6 +1,5 @@
 import logging
 
-from Products.CMFCore.interfaces import ISiteRoot
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
@@ -14,7 +13,6 @@ logger = logging.getLogger('plone.messaging.core')
 def onUserCreation(event):
     """Create a jabber account for new user.
     """
-    portal = getUtility(ISiteRoot)
 
     principal = event.principal
     principal_id = principal.getUserId()
@@ -33,7 +31,7 @@ def onUserCreation(event):
     def subscribeToAllUsers(result):
         if result == False:
             return False
-        mtool = getToolByName(portal, 'portal_membership')
+        mtool = getToolByName(principal, 'portal_membership')
         principal_jid = jsettings.getUserJID(principal_id)
         members_jids = [jsettings.getUserJID(member.getUserId())
                         for member in mtool.listMembers()]
@@ -76,8 +74,6 @@ def onUserCreation(event):
             logger.error("Failed onUserCreation for user %s" % principal_id)
             return
         logger.info("Succesful onUserCreation for user %s" % principal_id)
-
-
 
     d = client.admin.addUser(jid, genPasswd())
     d.addCallback(subscribeToAllUsers)
