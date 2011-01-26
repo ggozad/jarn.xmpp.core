@@ -47,10 +47,10 @@ Test that you can access your ejabberd by logging to the admin interface (typica
 Setting up a new Plone site
 ---------------------------
 * Start ejabberd
-* Start the nginx frontend. ``bin/frontend start``
+* Start the Nginx frontend. ``bin/frontend start``
 * Start your zope instance. You can observe on the console that the reactor has started.
-* Access Zope via Nginx ``http://localhost:8080/`` and create a new Plone site with ``plone.messaging.core``
-* Before you add any users you need to setup the pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://localhost:8081/Plone/@@setup-xmpp``. Eventually this will take care of existing users as well but it's not there yet. The form will not report any errors as everything will happen asynchronously but you will get the result on the console.
+* Access Zope via Nginx ``http://localhost:8080/`` and create a new Plone site with ``plone.messaging.core``.
+* Setup the the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://localhost:8081/Plone/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
 
 Experimenting
 =============
@@ -66,10 +66,9 @@ Setup
 Usage
 -----
 
-* Login several users in different browsers. Note the ugly logs at the bottom with the XMPP stanzas exchanged. Each will be able to post a message to his node. Others will receive in real time. The portlets will be updated on reload.
-
-* There exists an example of notification. This is intended as a demo and will change. In a folder make a few users reviewers and a few others contributors. When someone submits for publication all reviewers get a notification. When the document is published the owner gets a notification.
-
+* Login several users in different browsers. Note the ugly logs at the bottom with the XMPP stanzas exchanged.
+* Each user is able to post a message to his node. Others will receive in real time. The portlets will be updated on reload.
+* As some user subscribe to some content by clicking the subscribe button (it's at IBelowContent). As some other user modify the content/workflow, the subscribed user should receive a notification.
 * From you normal jabber client login as one of the users. You will see that your contacts are online. Send them a messsage which will appear on their browser.
 
 .. _XEP-0071: http://xmpp.org/extensions/xep-0071.html

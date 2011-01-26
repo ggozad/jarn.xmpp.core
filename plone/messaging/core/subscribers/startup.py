@@ -19,8 +19,11 @@ def adminConnected(event):
 
 
 def populatePubSubStorage():
-    """ TODO: This would have been simpler if ejabberd supported retrieving
-    collection items. Enter recursive deferred nightmare ;)
+    """ XXX TODO:
+    1) I retrieve every node and items. Change this to retrieve only those
+    where the admin is subscribed. The rest are not used.
+    2) This would have been simpler if ejabberd supported retrieving
+    collection items as it should. Argue in the mailing list.
     """
 
     client = getUtility(IAdminClient)
