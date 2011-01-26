@@ -1,51 +1,31 @@
-from plone.app.layout.viewlets.common import ViewletBase
-from z3c.form import form
-from z3c.form import field
-from z3c.form import button
-from zope.component import getUtility
+import time
 
+from plone.app.layout.viewlets.common import ViewletBase
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.component import getUtility
 
 from plone.messaging.core import messageFactory as _
 from plone.messaging.core.browser.formwrapper import WrappedFormView
+from plone.messaging.core.browser.pubsub import SubscribeToNodeForm
+from plone.messaging.core.browser.pubsub import UnsubscribeFromNodeForm
 from plone.messaging.core.interfaces import IAdminClient
-from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.interfaces import IXMPPSettings
-from plone.messaging.core.pubsub_utils import content_node_config
-
-class ChangeContentSubscriptionForm(form.Form):
-
-
-    def __init__(self, context, request, node, user_jid, subscribe):
-        super(ChangeContentSubscriptionForm, self).__init__(context, request)
-        self.node = node
-        self.user_jid = user_jid
-        self.subscribe = subscribe
-
-    @button.buttonAndHandler(_('Change subscription'), name='change_subscription')
-    def change_subscribe_handler(self, action):
-
-        client = getUtility(IAdminClient)
-
-        def subscribe():
-            def subscribeToNode(result):
-                if result == True:
-                    storage = getUtility(IPubSubStorage)
-                    storage.node_items[self.node] = []
-                    storage.leaf_nodes.append(self.node)
-                d2 = client.setSubscriptions(self.node, [(self.user_jid, 'subscribed')])
-                return d2
-            d1 = client.createNode(self.node, options=content_node_config)
-            d1.addCallbacks(subscribeToNode)
-            return d1
-
-        if self.subscribe:
-            return subscribe()
 
 
 class ContentSubscriptionViewlet(ViewletBase):
     index = ViewPageTemplateFile('content_subscription.pt')
+
+    def gotSubscriptions(self, result):
+        node, subscriptions = result
+        subscribers = [jid
+                       for jid, state in subscriptions
+                       if state=='subscribed']
+        if self.user_jid in subscribers:
+            self._subscribed = True
+        else:
+            self._subscribed = False
+
 
     def update(self):
         pm = getToolByName(self.context, 'portal_membership')
@@ -54,28 +34,36 @@ class ContentSubscriptionViewlet(ViewletBase):
             self.available = False
             return
         self.available = True
+        self._subscribed = None
 
         settings = getUtility(IXMPPSettings)
-        storage = getUtility(IPubSubStorage)
         client = getUtility(IAdminClient)
         self.user_jid = settings.getUserJID(user_id)
         self.node = self.context.UID()
 
-        # If the node does not exist at all, then he is not subscribed.
-        if self.node not in storage.leaf_nodes:
-            self.subscribed = False
-            self.createForms()
+        d = client.getSubscriptions(self.node)
+        d.addCallback(self.gotSubscriptions)
+
+        # XXX: EVIL: WE SHOILD NOT BLOCK
+        # This should be ajaxified somehow.
+        while self._subscribed is None:
+            time.sleep(0.01)
         self.createForms()
-        return
 
 
     def createForms(self):
         form = None
-        form = ChangeContentSubscriptionForm(self.context,
-                                      self.request,
-                                      node=self.node,
-                                      user_jid=self.user_jid,
-                                      subscribe=True)
+        if self._subscribed:
+            form = UnsubscribeFromNodeForm(self.context,
+                                           self.request,
+                                           node=self.node,
+                                           user_jid=self.user_jid)
+        else:
+            form = SubscribeToNodeForm(self.context,
+                                       self.request,
+                                       node=self.node,
+                                       user_jid=self.user_jid)
+
         # Wrap a form in Plone view
         form_view = WrappedFormView(self.context, self.request)
         # Make sure acquisition chain is respected

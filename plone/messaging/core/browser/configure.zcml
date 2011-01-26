@@ -16,14 +16,14 @@
 
   <browser:page
     for="*"
-    name="pubsub_subscribe"
+    name="pubsub-subscribe"
     class=".pubsub.SubscribeToNodeForm"
     permission="zope2.View"
     />
 
   <browser:page
     for="*"
-    name="pubsub_unsubscribe"
+    name="pubsub-unsubscribe"
     class=".pubsub.UnsubscribeFromNodeForm"
     permission="zope2.View"
     />
@@ -36,19 +36,20 @@
     />
 
   <browser:viewlet
-      name="plone.messaging.core.content_subscription"
-      for="Products.CMFCore.interfaces.IContentish"
-      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
-      class=".content_subscription.ContentSubscriptionViewlet"
-      permission="zope2.View"
-      />
-
-  <browser:viewlet
     name="plone.messaging.core.loader"
     manager="plone.app.layout.viewlets.interfaces.IBelowContent"
     class=".loader.XMPPLoader"
     permission="zope2.View"
     />
+
+  <browser:viewlet
+      name="plone.messaging.core.content_subscription"
+      for="Products.CMFCore.interfaces.IContentish"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+      view="plone.app.layout.globals.interfaces.IViewView"
+      class=".content_subscription.ContentSubscriptionViewlet"
+      permission="zope2.View"
+      />
 
   <browser:resourceDirectory
     name="plone.messaging.core.js"
