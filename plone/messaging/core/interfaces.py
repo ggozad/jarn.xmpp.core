@@ -16,6 +16,10 @@ class IXMPPSettings(Interface):
         pass
 
 
+class IPubSubable(Interface):
+    """Interface for objects that can be uniquely linked to pubsub nodes.
+    """
+
 class IPubSubStorage(Interface):
     """Marker interface for the PubSub storage
     """

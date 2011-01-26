@@ -5,6 +5,7 @@
 <!--
   <include package="plone.messaging.twisted" />
 -->
+  <include package=".adapters" />
   <include package=".subscribers" />
   <include package=".browser" />
 

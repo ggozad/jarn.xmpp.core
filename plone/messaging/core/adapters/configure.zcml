@@ -1,0 +1,9 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="plone.messaging.core">
+
+    <adapter for="Products.ATContentTypes.interface.IATContentType"
+      provides="..interfaces.IPubSubable"
+      factory=".content_pubsub.ATPubSubableAdapter"/>
+
+</configure>

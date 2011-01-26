@@ -4,12 +4,14 @@ from plone.app.layout.viewlets.common import ViewletBase
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility
+from zope.component import queryAdapter
 
 from plone.messaging.core import messageFactory as _
 from plone.messaging.core.browser.formwrapper import WrappedFormView
 from plone.messaging.core.browser.pubsub import SubscribeToNodeForm
 from plone.messaging.core.browser.pubsub import UnsubscribeFromNodeForm
 from plone.messaging.core.interfaces import IAdminClient
+from plone.messaging.core.interfaces import IPubSubable
 from plone.messaging.core.interfaces import IXMPPSettings
 
 
@@ -30,16 +32,27 @@ class ContentSubscriptionViewlet(ViewletBase):
     def update(self):
         pm = getToolByName(self.context, 'portal_membership')
         user_id = pm.getAuthenticatedMember().getId()
+
         if user_id is None:
             self.available = False
             return
+
+        if IPubSubable.providedBy(self.context):
+            self.node = self.context.nodeId
+        else:
+            wrapper = queryAdapter(self.context, IPubSubable)
+            if wrapper:
+                self.node = wrapper.nodeId
+            else:
+                self.available = False
+                return
+
         self.available = True
         self._subscribed = None
 
         settings = getUtility(IXMPPSettings)
         client = getUtility(IAdminClient)
         self.user_jid = settings.getUserJID(user_id)
-        self.node = self.context.UID()
 
         d = client.getSubscriptions(self.node)
         d.addCallback(self.gotSubscriptions)
