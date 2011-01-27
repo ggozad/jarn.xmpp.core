@@ -1,8 +1,7 @@
 pmcxmpp.muc = {
+    NS_MUC: "http://jabber.org/protocol/muc",
     room: 'myroom@conference.localhost',
     nickname: null,
-    NS_MUC: "http://jabber.org/protocol/muc",
-
     joined: null,
     participants: null,
 
@@ -13,9 +12,25 @@ pmcxmpp.muc = {
         if (room != pmcxmpp.muc.room) return true;
         var nick = Strophe.getResourceFromJid(from);
 
+        if (!pmcxmpp.muc.participants[nick] &&
+            $(presence).attr('type') !== 'unavailable') {
+
+            // add to participant list
+            var user_jid = $(presence).find('item').attr('jid');
+            pmcxmpp.muc.participants[nick] = user_jid || true;
+
+            if (pmcxmpp.muc.joined) {
+                $(document).trigger('pmcxmpp.muc.userJoined', nick);
+            }
+        } else if (pmcxmpp.muc.participants[nick] &&
+                   $(presence).attr('type') === 'unavailable') {
+            delete pmcxmpp.muc.participants[nick];
+            $(document).trigger('pmcxmpp.muc.userLeft', nick);
+        }
+
         if ($(presence).attr('type') !== 'error' &&
-            !pmcxmpp.muc.joined) {
-            // check for status 110 to see if we joined or created
+                   !pmcxmpp.muc.joined) {
+            // check for status 110 or 201 to see if we joined or created
             // the room
             if (($(presence).find("status[code='110']").length > 0) ||
                 ($(presence).find("status[code='201']").length > 0)) {
@@ -26,10 +41,12 @@ pmcxmpp.muc = {
                 // room join complete
                 $(document).trigger("pmcxmpp.muc.roomJoined");
             }
+        } else if ($(presence).attr('type') === 'error' &&
+                   !pmcxmpp.muc.joined) {
+            // error joining room
+            pmcxmpp.connection.disconnect();
         }
-
         return true;
-
     },
 
     addMessage: function (msg) {
@@ -49,11 +66,14 @@ $(document).bind('pmcxmpp.connected', function () {
     // Logging
     pmcxmpp.connection.rawInput = pmcxmpp.rawInput;
     pmcxmpp.connection.rawOutput = pmcxmpp.rawOutput;
+    // Initialize
+    pmcxmpp.muc.joined = false;
+    pmcxmpp.muc.participants = {};
     // Presence
     pmcxmpp.connection.addHandler(pmcxmpp.muc.presenceReceived,
                                   null, "presence");
     // Room creation
-    pmcxmpp.nickname = Strophe.getNodeFromJid(pmcxmpp.jid);
+    pmcxmpp.muc.nickname = Strophe.getNodeFromJid(pmcxmpp.jid);
     pmcxmpp.connection.send(
         $pres({
             to: pmcxmpp.muc.room+'/'+pmcxmpp.nickname
@@ -64,6 +84,23 @@ $(document).bind('pmcxmpp.connected', function () {
 $(document).bind('pmcxmpp.muc.roomJoined', function () {
     pmcxmpp.muc.joined = true;
     $('#room-name').text(pmcxmpp.muc.room);
+    $('#participant-list').append('<li>' + pmcxmpp.muc.nickname + '</li>');
+    pmcxmpp.muc.addMessage("<div class='notice'>*** Room joined.</div>");
+});
 
-    pmcxmpp.muc.addMessage("<div class='notice'>*** Room joined.</div>")
+$(document).bind('pmcxmpp.muc.userJoined', function (ev, nick) {
+    $('#participant-list').append('<li>' + nick + '</li>');
+    pmcxmpp.muc.addMessage("<div class='notice'>*** " + nick +
+                           " joined.</div>");
+});
+
+$(document).bind('pmcxmpp.muc.userLeft', function (ev, nick) {
+    $('#participant-list li').each(function () {
+        if (nick === $(this).text()) {
+            $(this).remove();
+            return false;
+        }
+    });
+    pmcxmpp.muc.addMessage("<div class='notice'>*** " + nick +
+                           " left.</div>");
 });
