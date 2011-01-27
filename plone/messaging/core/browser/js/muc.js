@@ -1,6 +1,6 @@
 pmcxmpp.muc = {
     NS_MUC: "http://jabber.org/protocol/muc",
-    room: 'myroom@conference.localhost',
+    room: 'myroom1@conference.localhost',
     nickname: null,
     joined: null,
     participants: null,
@@ -49,6 +49,46 @@ pmcxmpp.muc = {
         return true;
     },
 
+    publicMessageReceived: function (message) {
+        var from = $(message).attr('from');
+        var room = Strophe.getBareJidFromJid(from);
+        var nick = Strophe.getResourceFromJid(from);
+        if (room != pmcxmpp.muc.room) return true;
+
+        var notice = !nick;
+
+        // messages from ourself will be styled differently
+        var nick_class = "nick";
+        if (nick === pmcxmpp.muc.nickname) {
+            nick_class += " self";
+        }
+
+        var body = $(message).children('body').text();
+
+        var delayed = $(message).children("delay").length > 0  ||
+            $(message).children("x[xmlns='jabber:x:delay']").length > 0;
+
+        // look for room topic change
+        var subject = $(message).children('subject').text();
+        if (subject) {
+            $('#room-topic').text(subject);
+        }
+
+        if (!notice) {
+            var delay_css = delayed ? " delayed" : "";
+            pmcxmpp.muc.addMessage(
+                "<div class='message" + delay_css + "'>" +
+                    "&lt;<span class='" + nick_class + "'>" +
+                    nick + "</span>&gt; <span class='body'>" +
+                    body + "</span></div>");
+        } else {
+            pmcxmpp.muc.addMessage("<div class='notice'>*** " + body +
+                                "</div>");
+        }
+
+        return true;
+
+    },
     addMessage: function (msg) {
         // detect if we are scrolled all the way down
         var chat = $('#chat').get(0);
@@ -72,6 +112,9 @@ $(document).bind('pmcxmpp.connected', function () {
     // Presence
     pmcxmpp.connection.addHandler(pmcxmpp.muc.presenceReceived,
                                   null, "presence");
+    pmcxmpp.connection.addHandler(pmcxmpp.muc.publicMessageReceived,
+                                null, "message", "groupchat");
+
     // Room creation
     pmcxmpp.muc.nickname = Strophe.getNodeFromJid(pmcxmpp.jid);
     pmcxmpp.connection.send(
