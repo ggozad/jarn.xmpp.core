@@ -16,7 +16,6 @@ logger = logging.getLogger('plone.messaging.core')
 class XMPPLoader(ViewletBase):
     """
     """
-    index = ViewPageTemplateFile('loader.pt')
 
     def update(self):
         super(XMPPLoader, self).update()

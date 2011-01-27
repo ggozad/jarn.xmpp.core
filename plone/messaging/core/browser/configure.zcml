@@ -35,10 +35,36 @@
     permission="cmf.ManagePortal"
     />
 
+  <browser:page
+    for="*"
+    name="muc"
+    class=".muc.MUCView"
+    template="muc.pt"
+    permission="zope2.View"
+    />
+
+  <!-- Viewlets -->
+
+  <browser:viewletManager
+      name="plone.messaging.core.loader.vm"
+      provides="..interfaces.IXMPPLoaderVM"
+      permission="zope2.View"
+      class="plone.app.viewletmanager.manager.OrderedViewletManager"
+      />
+
   <browser:viewlet
     name="plone.messaging.core.loader"
     manager="plone.app.layout.viewlets.interfaces.IBelowContent"
     class=".loader.XMPPLoader"
+    template="loader.pt"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="plone.messaging.core.loader_muc"
+    manager="..interfaces.IXMPPLoaderVM"
+    class=".loader.XMPPLoader"
+    template="loader_muc.pt"
     permission="zope2.View"
     />
 

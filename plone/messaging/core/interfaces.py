@@ -1,5 +1,6 @@
 from zope.interface import Interface
 from zope.component.interfaces import IObjectEvent, implements
+from zope.viewlet.interfaces import IViewletManager
 
 
 class IXMPPSettings(Interface):
@@ -40,3 +41,8 @@ class AdminClientConnected(object):
 
     def __init__(self, obj):
         self.object = obj
+
+
+class IXMPPLoaderVM(IViewletManager):
+    """Viewlet manager for the loader viewlet.
+    """
