@@ -1,6 +1,6 @@
 pmcxmpp.muc = {
     NS_MUC: "http://jabber.org/protocol/muc",
-    room: 'myroom1@conference.localhost',
+    room: 'myroom@conference.localhost',
     nickname: null,
     joined: null,
     participants: null,
@@ -100,6 +100,7 @@ pmcxmpp.muc = {
             chat.scrollTop = chat.scrollHeight;
         }
     }
+
 };
 
 $(document).bind('pmcxmpp.connected', function () {
@@ -119,9 +120,21 @@ $(document).bind('pmcxmpp.connected', function () {
     pmcxmpp.muc.nickname = Strophe.getNodeFromJid(pmcxmpp.jid);
     pmcxmpp.connection.send(
         $pres({
-            to: pmcxmpp.muc.room+'/'+pmcxmpp.nickname
+            to: pmcxmpp.muc.room+'/'+pmcxmpp.muc.nickname
         }).c('x', {xmlns: pmcxmpp.muc.NS_MUC}));
 
+    $('#input').keypress(function (ev) {
+        if (ev.which === 13) {
+            ev.preventDefault();
+
+            var body = $(this).val();
+            pmcxmpp.connection.send(
+                $msg({
+                    to: pmcxmpp.muc.room,
+                    type: "groupchat"}).c('body').t(body));
+            $(this).val('');
+        }
+    });
 });
 
 $(document).bind('pmcxmpp.muc.roomJoined', function () {

@@ -87,4 +87,9 @@
     directory="gritter"
   />
 
+  <browser:resourceDirectory
+    name="plone.messaging.core.css"
+    directory="css"
+  />
+
 </configure>

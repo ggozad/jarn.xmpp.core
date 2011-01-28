@@ -37,7 +37,7 @@
     <div tal:replace="structure provider:plone.htmlhead" />
     <link tal:replace="structure provider:plone.htmlhead.links" />
     <meta http-equiv="imagetoolbar" content="no" />
-
+    <link rel="stylesheet" href="++resource++plone.messaging.core.css/muc.css" type="text/css">
   </head>
   <body>
 
@@ -45,7 +45,7 @@
           <h1>Chat</h1>
         
 
-          <div>
+          <div id="chat-container">
             <div id='chat-area'>
               <div>
                 <div id='room-name'></div>
