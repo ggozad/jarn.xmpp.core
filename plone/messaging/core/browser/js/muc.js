@@ -8,8 +8,26 @@ pmcxmpp.muc = {
     presenceReceived: function (presence) {
         var from = $(presence).attr('from');
         var room = Strophe.getBareJidFromJid(from);
+
         // Is this for us?
-        if (room != pmcxmpp.muc.room) return true;
+        if (room != pmcxmpp.muc.room) {
+            var participating = false;
+            for (var user in pmcxmpp.muc.participants) {
+                var jid = pmcxmpp.muc.participants[user];
+                if (from === jid) {
+                    participating =true;
+                    break
+                }
+            }
+            if (!participating) {
+                if ($(presence).attr('type') !== 'unavailable')
+                    $(document).trigger('pmcxmpp.muc.userOnline', from);
+                else 
+                    $(document).trigger('pmcxmpp.muc.userOffline', from);
+            }
+            return true;
+        }
+
         var nick = Strophe.getResourceFromJid(from);
 
         if (!pmcxmpp.muc.participants[nick] &&
@@ -114,6 +132,7 @@ $(document).bind('pmcxmpp.connected', function () {
     pmcxmpp.connection.addHandler(pmcxmpp.muc.publicMessageReceived,
                                 null, "message", "groupchat");
 
+    pmcxmpp.connection.send($pres());
     // Room creation
     pmcxmpp.muc.nickname = Strophe.getNodeFromJid(pmcxmpp.jid);
     pmcxmpp.connection.send(
@@ -132,6 +151,12 @@ $(document).bind('pmcxmpp.muc.roomJoined', function () {
 
 $(document).bind('pmcxmpp.muc.userJoined', function (ev, nick) {
     $('#participant-list').append('<li>' + nick + '</li>');
+    $('#online-list li').each(function () {
+        if (nick === $(this).text()) {
+            $(this).remove();
+            return false;
+        }
+    });
     pmcxmpp.muc.addMessage(nick +" joined.", null, true, false);
 });
 
@@ -143,6 +168,21 @@ $(document).bind('pmcxmpp.muc.userLeft', function (ev, nick) {
         }
     });
     pmcxmpp.muc.addMessage(nick +" left.", null, true, false);
+});
+
+$(document).bind('pmcxmpp.muc.userOnline', function (ev, jid) {
+    var nick = Strophe.getNodeFromJid(jid);
+    $('#online-list').append('<li>' + nick + '</li>');
+});
+
+$(document).bind('pmcxmpp.muc.userOffline', function (ev, jid) {
+    var nick = Strophe.getNodeFromJid(jid);
+    $('#online-list li').each(function () {
+        if (nick === $(this).text()) {
+            $(this).remove();
+            return false;
+        }
+    });
 });
 
 $(document).ready(function () {

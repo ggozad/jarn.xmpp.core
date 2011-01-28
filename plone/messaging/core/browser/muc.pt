@@ -54,8 +54,10 @@
             </div>
     
             <div id='participants'>
-              <ul id='participant-list'>
-              </ul>
+              <label>Participants</label>
+              <ul id='participant-list'></ul>
+              <label>Online</label>
+              <ul id='online-list'></ul>
             </div>
           </div>
 
