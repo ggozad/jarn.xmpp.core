@@ -47,13 +47,9 @@
 
           <div id="chat-container">
             <div id='chat-area'>
-              <div>
-                <div id='room-name'></div>
-                <div id='room-topic'></div>
-              </div>
-              <div id='chat'>
-              </div>
-
+              <div id='room-name'></div>
+              <div id='room-topic'></div>
+              <div id='chat'></div>
               <textarea id='input'></textarea>
             </div>
     

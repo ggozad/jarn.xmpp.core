@@ -1,5 +1,4 @@
 #chat-container {
-	float:left;
 	clear: both;
 	
 }
@@ -23,6 +22,10 @@
 
 #participant-list {
     list-style: none;
+}
+
+#participant-list li {
+	display: block;
 }
 
 #input {
@@ -58,8 +61,4 @@
 
 .delayed {
     opacity: 0.5;
-}
-
-.private {
-    background-color: #fdd;
 }

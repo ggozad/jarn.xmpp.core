@@ -1,6 +1,6 @@
 pmcxmpp.muc = {
     NS_MUC: "http://jabber.org/protocol/muc",
-    room: 'myroom@conference.localhost',
+    room: 'myroom1@conference.localhost',
     nickname: null,
     joined: null,
     participants: null,
@@ -30,17 +30,12 @@ pmcxmpp.muc = {
 
         if ($(presence).attr('type') !== 'error' &&
                    !pmcxmpp.muc.joined) {
-            // check for status 110 or 201 to see if we joined or created
-            // the room
-            if (($(presence).find("status[code='110']").length > 0) ||
-                ($(presence).find("status[code='201']").length > 0)) {
-                // check if server changed our nick
-                if ($(presence).find("status[code='210']").length > 0) {
-                    pmcxmpp.muc.nickname = Strophe.getResourceFromJid(from);
-                }
-                // room join complete
-                $(document).trigger("pmcxmpp.muc.roomJoined");
+            if ($(presence).find("status[code='210']").length > 0) {
+                pmcxmpp.muc.nickname = Strophe.getResourceFromJid(from);
             }
+            // room join complete
+            $(document).trigger("pmcxmpp.muc.roomJoined");
+            
         } else if ($(presence).attr('type') === 'error' &&
                    !pmcxmpp.muc.joined) {
             // error joining room
@@ -53,49 +48,51 @@ pmcxmpp.muc = {
         var from = $(message).attr('from');
         var room = Strophe.getBareJidFromJid(from);
         var nick = Strophe.getResourceFromJid(from);
+        // look for room topic change
+        var subject = $(message).children('subject').text();
+        if (subject) {
+            $('#room-topic').text(subject);
+            return true;
+        }
+
         if (room != pmcxmpp.muc.room) return true;
 
         var notice = !nick;
-
-        // messages from ourself will be styled differently
-        var nick_class = "nick";
-        if (nick === pmcxmpp.muc.nickname) {
-            nick_class += " self";
-        }
 
         var body = $(message).children('body').text();
 
         var delayed = $(message).children("delay").length > 0  ||
             $(message).children("x[xmlns='jabber:x:delay']").length > 0;
 
-        // look for room topic change
-        var subject = $(message).children('subject').text();
-        if (subject) {
-            $('#room-topic').text(subject);
-        }
 
+        pmcxmpp.muc.addMessage(body, nick, notice, delayed);
+        return true;
+    },
+
+    addMessage: function (body, nick, notice, delayed) {
+        var msg = "";
         if (!notice) {
             var delay_css = delayed ? " delayed" : "";
-            pmcxmpp.muc.addMessage(
-                "<div class='message" + delay_css + "'>" +
-                    "&lt;<span class='" + nick_class + "'>" +
-                    nick + "</span>&gt; <span class='body'>" +
-                    body + "</span></div>");
+            // messages from ourself will be styled differently
+            var nick_class = "nick";
+            if (nick === pmcxmpp.muc.nickname) {
+                nick_class += " self";
+            }
+            msg = "<div class='message" + delay_css + "'>" +
+                  "&lt;<span class='" + nick_class + "'>" +
+                                        nick + "</span>&gt;" +
+                  " <span class='body'>" + body + "</span></div>"
         } else {
-            pmcxmpp.muc.addMessage("<div class='notice'>*** " + body +
-                                "</div>");
+            msg = "<div class='notice'>*** " + body + "</div>"            
         }
 
-        return true;
-
-    },
-    addMessage: function (msg) {
         // detect if we are scrolled all the way down
         var chat = $('#chat').get(0);
         var at_bottom = chat.scrollTop >= chat.scrollHeight -
             chat.clientHeight;
         $('#chat').append(msg);
         // if we were at the bottom, keep us at the bottom
+
         if (at_bottom) {
             chat.scrollTop = chat.scrollHeight;
         }
@@ -113,6 +110,7 @@ $(document).bind('pmcxmpp.connected', function () {
     // Presence
     pmcxmpp.connection.addHandler(pmcxmpp.muc.presenceReceived,
                                   null, "presence");
+    // Public messages
     pmcxmpp.connection.addHandler(pmcxmpp.muc.publicMessageReceived,
                                 null, "message", "groupchat");
 
@@ -123,6 +121,31 @@ $(document).bind('pmcxmpp.connected', function () {
             to: pmcxmpp.muc.room+'/'+pmcxmpp.muc.nickname
         }).c('x', {xmlns: pmcxmpp.muc.NS_MUC}));
 
+});
+
+$(document).bind('pmcxmpp.muc.roomJoined', function () {
+    pmcxmpp.muc.joined = true;
+    $('#room-name').text(pmcxmpp.muc.room);
+    $('#participant-list').append('<li>' + pmcxmpp.muc.nickname + '</li>');
+    pmcxmpp.muc.addMessage("Room joined.", null, true, false);
+});
+
+$(document).bind('pmcxmpp.muc.userJoined', function (ev, nick) {
+    $('#participant-list').append('<li>' + nick + '</li>');
+    pmcxmpp.muc.addMessage(nick +" joined.", null, true, false);
+});
+
+$(document).bind('pmcxmpp.muc.userLeft', function (ev, nick) {
+    $('#participant-list li').each(function () {
+        if (nick === $(this).text()) {
+            $(this).remove();
+            return false;
+        }
+    });
+    pmcxmpp.muc.addMessage(nick +" left.", null, true, false);
+});
+
+$(document).ready(function () {
     $('#input').keypress(function (ev) {
         if (ev.which === 13) {
             ev.preventDefault();
@@ -135,28 +158,4 @@ $(document).bind('pmcxmpp.connected', function () {
             $(this).val('');
         }
     });
-});
-
-$(document).bind('pmcxmpp.muc.roomJoined', function () {
-    pmcxmpp.muc.joined = true;
-    $('#room-name').text(pmcxmpp.muc.room);
-    $('#participant-list').append('<li>' + pmcxmpp.muc.nickname + '</li>');
-    pmcxmpp.muc.addMessage("<div class='notice'>*** Room joined.</div>");
-});
-
-$(document).bind('pmcxmpp.muc.userJoined', function (ev, nick) {
-    $('#participant-list').append('<li>' + nick + '</li>');
-    pmcxmpp.muc.addMessage("<div class='notice'>*** " + nick +
-                           " joined.</div>");
-});
-
-$(document).bind('pmcxmpp.muc.userLeft', function (ev, nick) {
-    $('#participant-list li').each(function () {
-        if (nick === $(this).text()) {
-            $(this).remove();
-            return false;
-        }
-    });
-    pmcxmpp.muc.addMessage("<div class='notice'>*** " + nick +
-                           " left.</div>");
 });
