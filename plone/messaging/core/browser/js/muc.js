@@ -99,6 +99,7 @@ pmcxmpp.muc = {
             .c('x', {xmlns: pmcxmpp.muc.NS_MUC_USER})
             .c('invite', {to: Strophe.getBareJidFromJid(jid)});
         pmcxmpp.connection.send(invitation);
+        pmcxmpp.muc.addMessage("Invitation sent.", null, true, false);
     },
 
     addMessage: function (body, nick, notice, delayed) {
