@@ -1,0 +1,6 @@
+#online-users .offline {
+    opacity: 0.5;
+}
+#online-users button.offline  {
+	display: none;
+}
