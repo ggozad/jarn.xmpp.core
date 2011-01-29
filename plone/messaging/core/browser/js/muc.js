@@ -1,7 +1,7 @@
 pmcxmpp.muc = {
     NS_MUC: "http://jabber.org/protocol/muc",
     NS_MUC_USER: "http://jabber.org/protocol/muc#user",
-    room: 'myroom1@conference.localhost',
+    room: null,
     nickname: null,
     joined: null,
     participants: null,
@@ -148,8 +148,8 @@ $(document).bind('pmcxmpp.connected', function () {
     pmcxmpp.connection.addHandler(pmcxmpp.muc.publicMessageReceived,
                                 null, "message", "groupchat");
 
-    pmcxmpp.connection.send($pres());
     // Room creation
+    pmcxmpp.connection.send($pres());
     pmcxmpp.muc.nickname = Strophe.getNodeFromJid(pmcxmpp.jid);
     pmcxmpp.connection.send(
         $pres({

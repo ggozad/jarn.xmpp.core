@@ -62,6 +62,9 @@
           </div>
 
     <div tal:replace="structure provider:plone.messaging.core.loader.vm" />
+    <script tal:content="view/mucSettings"></script>
+
+    <!-- -->
 
   </body>
 </html>

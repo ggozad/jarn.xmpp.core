@@ -7,7 +7,7 @@ $(document).bind('pmcxmpp.message', function (event) {
 });
 
 $(document).bind('pmcxmpp.roomInvitation', function (event) {
-    link = portal_url + '/@@muc'
+    link = portal_url + '/@@muc?room=' + event.room
     body = 'You have received an invitation to ' +
            '<a href="' + link +'">join</a>' +
            ' a group chat.';
