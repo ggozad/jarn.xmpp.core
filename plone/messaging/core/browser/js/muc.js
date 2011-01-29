@@ -187,10 +187,12 @@ $(document).bind('pmcxmpp.muc.userLeft', function (ev, nick) {
 });
 
 $(document).bind('pmcxmpp.muc.userOnline', function (ev, nick) {
-    $('#online-list').append('<li>' +
-                             '<span>' + nick + '</span>' +
-                             '<button class="invite">+</button>' +
-                             '</li>');
+    if (!(nick in pmcxmpp.muc.participants)) {
+        $('#online-list').append('<li>' +
+                                 '<span>' + nick + '</span>' +
+                                 '<button class="invite"></button>' +
+                                 '</li>');
+    }
 });
 
 $(document).bind('pmcxmpp.muc.userOffline', function (ev, nick) {

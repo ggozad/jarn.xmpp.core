@@ -6,6 +6,7 @@ from zope.component import getUtility
 
 from plone.messaging.core.interfaces import IXMPPSettings
 
+
 class MUCView(BrowserView):
 
     def __init__(self, context, request):
