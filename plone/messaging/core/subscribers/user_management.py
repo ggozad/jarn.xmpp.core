@@ -14,12 +14,16 @@ def onUserCreation(event):
     """Create a jabber account for new user.
     """
 
-    principal = event.principal
-    principal_id = principal.getUserId()
     jsettings = getUtility(IXMPPSettings)
-    jid = u'%s@%s' % (principal_id, jsettings.XMPPDomain)
     client = getUtility(IAdminClient)
     storage = getUtility(IPubSubStorage)
+
+    principal = event.principal
+    principal_id = principal.getUserId()
+    principal_jid = jsettings.getUserJID(principal_id)
+    mtool = getToolByName(principal, 'portal_membership')
+    members_jids = [jsettings.getUserJID(member.getUserId())
+                    for member in mtool.listMembers()]
 
     def genPasswd():
         return 'secret'
@@ -31,10 +35,6 @@ def onUserCreation(event):
     def subscribeToAllUsers(result):
         if result == False:
             return False
-        mtool = getToolByName(principal, 'portal_membership')
-        principal_jid = jsettings.getUserJID(principal_id)
-        members_jids = [jsettings.getUserJID(member.getUserId())
-                        for member in mtool.listMembers()]
         client.chat.sendRosterItemAddSuggestion(principal_jid, members_jids)
         return result
 
@@ -72,10 +72,11 @@ def onUserCreation(event):
     def finalResult(result):
         if result == False:
             logger.error("Failed onUserCreation for user %s" % principal_id)
-            return
-        logger.info("Succesful onUserCreation for user %s" % principal_id)
+        else:
+            logger.info("Succesful onUserCreation for user %s" % principal_id)
+        return result
 
-    d = client.admin.addUser(jid, genPasswd())
+    d = client.admin.addUser(principal_jid.userhost(), genPasswd())
     d.addCallback(subscribeToAllUsers)
     d.addCallback(addUserPubSubNode)
     d.addCallback(configureUserPubSubNode)
@@ -88,11 +89,12 @@ def onUserCreation(event):
 def onUserDeletion(event):
     """Delete jabber account when a user is removed.
     """
-    principal_id = event.principal
     client = getUtility(IAdminClient)
     jsettings = getUtility(IXMPPSettings)
-    jid = u'%s@%s' % (principal_id, jsettings.XMPPDomain)
     storage = getUtility(IPubSubStorage)
+
+    principal_id = event.principal
+    jid = u'%s@%s' % (principal_id, jsettings.XMPPDomain)
 
     def finalResult(result):
         if result == False:
