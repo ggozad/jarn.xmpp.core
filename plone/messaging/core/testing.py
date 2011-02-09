@@ -1,11 +1,16 @@
 import commands
-from zope.configuration import xmlconfig
+
 from plone.testing import z2, Layer
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
-from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.messaging.twisted.testing import REACTOR_FIXTURE
+from plone.messaging.twisted.testing import wait_for_client_state
+from zope.component import getUtility
+from zope.configuration import xmlconfig
+
+from plone.messaging.core.interfaces import IAdminClient
+from plone.messaging.core.subscribers.startup import setupAdminClient
 
 
 class EJabberdLayer(Layer):
@@ -22,9 +27,9 @@ class EJabberdLayer(Layer):
             print """
             You need to make available a running ejabberd server in order
             to run the functional tests, as well as give the user with JID
-            admin@localhost administrator privileges. Make sure the environment
-            variable EJABBERDCTL is set pointing to the ejabberdctl command path.
-            Aborting tests...
+            admin@localhost administrator privileges. Make sure the
+            environment variable EJABBERDCTL is set pointing to the
+            ejabberdctl command path. Aborting tests...
             """
             exit(1)
 
@@ -63,21 +68,34 @@ class PMCoreFixture(PloneSandboxLayer):
         # Load ZCML
         import plone.messaging.core
         import pas.plugins.userdeletedevent
-        xmlconfig.file('configure.zcml', plone.messaging.core, context=configurationContext)
-        xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent, context=configurationContext)
+        xmlconfig.file('configure.zcml', plone.messaging.core,
+                       context=configurationContext)
+        xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent,
+                       context=configurationContext)
         z2.installProduct(app, 'pas.plugins.userdeletedevent')
 
     def setUpPloneSite(self, portal):
         # Install into Plone site using portal_setup
         applyProfile(portal, 'plone.messaging.core:default')
-        from plone.messaging.core.subscribers.startup import setupAdminClient
-        setupAdminClient(None)
 
     def tearDownZope(self, app):
         # Uninstall product
         z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
 
+    def testSetUp(self):
+        setupAdminClient(None)
+        client = getUtility(IAdminClient)
+        wait_for_client_state(client, 'authenticated')
+
+    def testTearDown(self):
+        client = getUtility(IAdminClient)
+        client.disconnect()
+        wait_for_client_state(client, 'disconnected')
+
+
 PMCORE_FIXTURE = PMCoreFixture()
 
-PMCORE_INTEGRATION_TESTING = IntegrationTesting(bases=(PMCORE_FIXTURE,), name="PMCoreFixture:Integration")
-PMCORE_FUNCTIONAL_TESTING = FunctionalTesting(bases=(PMCORE_FIXTURE,), name="PMCoreFixture:Functional")
+PMCORE_INTEGRATION_TESTING = IntegrationTesting(bases=(PMCORE_FIXTURE, ),
+    name="PMCoreFixture:Integration")
+PMCORE_FUNCTIONAL_TESTING = FunctionalTesting(bases=(PMCORE_FIXTURE, ),
+    name="PMCoreFixture:Functional")
