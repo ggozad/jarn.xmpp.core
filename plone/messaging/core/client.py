@@ -20,35 +20,7 @@ from plone.messaging.core.interfaces import AdminClientConnected
 logger = logging.getLogger('plone.messaging.core')
 
 
-class AdminClient(XMPPClient):
-
-    implements(IAdminClient)
-
-    def __init__(self):
-        jsettings = getUtility(IXMPPSettings)
-        jid = jsettings.getUserJID('admin')
-        jdomain = jsettings.XMPPDomain
-        password = jsettings.getUserPassword('admin')
-
-        super(AdminClient, self).__init__(
-            jid, password,
-            extra_handlers=[AdminHandler(),
-                           PubSubHandler(),
-                           ChatHandler(),
-                           PresenceClientProtocol()],
-            host=jdomain)
-
-        self.admin = self.handlers[0]
-        self.pubsub = self.handlers[1]
-        self.chat = self.handlers[2]
-        self.presence = self.handlers[3]
-        self.pubsub_jid = jsettings.PubSubJID
-
-    def _authd(self, xs):
-        super(AdminClient, self)._authd(xs)
-        self.presence.available()
-        ev = AdminClientConnected(self)
-        notify(ev)
+class PubSubClientMixIn(object):
 
     def _pubsubItemToDict(self, item):
         entry = item.entry
@@ -66,7 +38,7 @@ class AdminClient(XMPPClient):
         headers = event.headers
         collections = headers.get('Collection', [])
         node = event.nodeIdentifier
-        items =  [self._pubsubItemToDict(item)
+        items = [self._pubsubItemToDict(item)
                   for item in items
                   if item.name=='item']
         storage = getUtility(IPubSubStorage)
@@ -84,8 +56,10 @@ class AdminClient(XMPPClient):
             self.pubsub_jid, identifier, subscriber, options, sender)
 
     def getSubscriptions(self, identifier):
+
         def cb(result):
             return (identifier, result)
+
         d = self.pubsub.getSubscriptions(self.pubsub_jid, identifier)
         d.addCallback(cb)
         return d
@@ -114,7 +88,7 @@ class AdminClient(XMPPClient):
         return d
 
     def publish(self, identifier, items):
-        d = self.pubsub.publish(self.pubsub_jid, identifier, items=items)
+        self.pubsub.publish(self.pubsub_jid, identifier, items=items)
 
     def getDefaultNodeConfiguration(self):
         d = self.pubsub.getDefaultNodeConfiguration(self.pubsub_jid)
@@ -145,9 +119,10 @@ class AdminClient(XMPPClient):
 
     def getCollectionNodeItems(self, identifier, maxItems=10):
         """Currently ejabberd does not support this properly.
-        It should work as per http://xmpp.org/extensions/xep-0248.html#retrieve-items
-        In order to go around it, I get the child nodes of a collection, retrieve
-        their items, and return.
+        It should work as per
+        http://xmpp.org/extensions/xep-0248.html#retrieve-items
+        In order to go around it, I get the child nodes of a collection,
+        retrieve their items, and return.
         """
 
         def itemsCb(result):
@@ -182,3 +157,34 @@ class AdminClient(XMPPClient):
                                       maxItems=10)
         d.addCallback(cb)
         return d
+
+
+class AdminClient(XMPPClient, PubSubClientMixIn):
+
+    implements(IAdminClient)
+
+    def __init__(self):
+        jsettings = getUtility(IXMPPSettings)
+        jid = jsettings.getUserJID('admin')
+        jdomain = jsettings.XMPPDomain
+        password = jsettings.getUserPassword('admin')
+
+        self.pubsub_jid = jsettings.PubSubJID
+        self.admin = AdminHandler()
+        self.pubsub = PubSubHandler()
+        self.chat = ChatHandler()
+        self.presence = PresenceClientProtocol()
+
+        super(AdminClient, self).__init__(
+            jid, password,
+            extra_handlers=[self.admin,
+                            self.pubsub,
+                            self.chat,
+                            self.presence],
+            host=jdomain)
+
+    def _authd(self, xs):
+        super(AdminClient, self)._authd(xs)
+        self.presence.available()
+        ev = AdminClientConnected(self)
+        notify(ev)
