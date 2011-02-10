@@ -33,28 +33,23 @@ class EJabberdLayer(Layer):
             """
             exit(1)
 
-        # Remove all users
-        self._delAllUsers()
-        addadmin = "%s register admin localhost admin" % self.ejabberdctl
-        commands.getoutput(addadmin)
+        # Start ejabberd
+        start = "%s start" % self.ejabberdctl
+        out = commands.getoutput(start)
+        if out:
+            print "Problem starting ejabberd"
+            exit(1)
 
     def tearDown(self):
-        pass
+        # Stop ejabberd
+        stop = "%s stop" % self.ejabberdctl
+        commands.getoutput(stop)
 
     def testSetUp(self):
-        self._delAllUsers(exceptions=['admin'])
+        pass
 
     def testTearDown(self):
-        self._delAllUsers(exceptions=['admin'])
-
-    def _delAllUsers(self, exceptions=[]):
-        listusers = "%s registered_users localhost" % self.ejabberdctl
-        users = commands.getoutput(listusers).split()
-        for user in users:
-            if user not in exceptions:
-                deluser = "%s unregister %s localhost" % \
-                           (self.ejabberdctl, user)
-                commands.getoutput(deluser)
+        pass
 
 
 EJABBERD_LAYER = EJabberdLayer()
