@@ -17,10 +17,16 @@ def getAllChildNodes(client, root):
                     node, node_type = res
                     if node_type == 'collection':
                         tree[node] = []
-                        tree[parent].append(node)
+                        if parent is not None:
+                            tree[parent].append(node)
+                        else:
+                            tree[''].append(node)
                         deferred_list.append(getChildNodes(node))
                     else:
-                        tree[parent].append(node)
+                        if parent is not None:
+                            tree[parent].append(node)
+                        else:
+                            tree[''].append(node)
             if deferred_list:
                 return defer.DeferredList(deferred_list)
             return True
@@ -40,7 +46,11 @@ def getAllChildNodes(client, root):
     def returnResult(result):
         return tree
 
-    tree[root] = []
+    if root is None:
+        tree[''] = []
+    else:
+        tree[root] = []
+
     d = getChildNodes(root)
     d.addCallback(returnResult)
     return d
