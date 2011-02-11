@@ -4,13 +4,17 @@ from plone.testing import z2, Layer
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting, FunctionalTesting
-from plone.messaging.twisted.testing import REACTOR_FIXTURE
-from plone.messaging.twisted.testing import wait_for_client_state
+from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
 from zope.configuration import xmlconfig
 
+from plone.messaging.twisted.testing import REACTOR_FIXTURE
+from plone.messaging.twisted.testing import wait_on_deferred
+from plone.messaging.twisted.testing import wait_for_client_state
+
 from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.subscribers.startup import setupAdminClient
+from plone.messaging.core.utils.setup import setupXMPPEnvironment
 
 
 class EJabberdLayer(Layer):
@@ -27,9 +31,9 @@ class EJabberdLayer(Layer):
             print """
             You need to make available a running ejabberd server in order
             to run the functional tests, as well as give the user with JID
-            admin@localhost administrator privileges. Make sure the
-            environment variable EJABBERDCTL is set pointing to the
-            ejabberdctl command path. Aborting tests...
+            admin@localhost and password 'admin' administrator privileges.
+            Make sure the environment variable EJABBERDCTL is set pointing to
+            the ejabberdctl command path. Aborting tests...
             """
             exit(1)
 
@@ -44,12 +48,6 @@ class EJabberdLayer(Layer):
         # Stop ejabberd
         stop = "%s stop" % self.ejabberdctl
         commands.getoutput(stop)
-
-    def testSetUp(self):
-        pass
-
-    def testTearDown(self):
-        pass
 
 
 EJABBERD_LAYER = EJabberdLayer()
@@ -81,6 +79,11 @@ class PMCoreFixture(PloneSandboxLayer):
         setupAdminClient(None)
         client = getUtility(IAdminClient)
         wait_for_client_state(client, 'authenticated')
+        d = setupXMPPEnvironment(client,
+            member_jids=[JID('test_user_1_@localhost')],
+            member_passwords={JID('test_user_1_@localhost'): 'secret'},
+            content_nodes=[])
+        wait_on_deferred(d)
 
     def testTearDown(self):
         client = getUtility(IAdminClient)
