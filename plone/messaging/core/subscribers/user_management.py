@@ -6,6 +6,7 @@ from zope.component import getUtility
 from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.interfaces import IPubSubStorage
 from plone.messaging.core.interfaces import IAdminClient
+from plone.messaging.core.utils.users import setupPrincipal
 
 logger = logging.getLogger('plone.messaging.core')
 
@@ -32,57 +33,12 @@ def onUserCreation(event):
         chars = string.letters + string.digits
         return ''.join([random.choice(chars) for i in range(12)])
 
-    def subscribeToAllUsers(result):
-        if result == False:
-            return False
-        client.chat.sendRosterItemAddSuggestion(principal_jid, members_jids)
-        return result
+    storage.leaf_nodes.append(principal_id)
+    storage.node_items[principal_id] = []
+    storage.collections['people'].append(principal_id)
+    storage.publishers[principal_id] = [principal_id]
 
-    def addUserPubSubNode(result):
-        if result == False:
-            return False
-        d = client.createNode(principal_id)
-        return d
-
-    def configureUserPubSubNode(result):
-        if result == False:
-            return False
-        storage.leaf_nodes.append(principal_id)
-        storage.node_items[principal_id] = []
-        d = client.configureNode(principal_id,
-            options={'pubsub#collection': 'people'})
-        return d
-
-    def affiliateUser(result):
-        if result == False:
-            return False
-        storage.collections['people'].append(principal_id)
-        d = client.setNodeAffiliations(
-            principal_id, [(jsettings.getUserJID(principal_id), 'publisher')])
-        return d
-
-    def subscribeToMainFeed(result):
-        if result == False:
-            return False
-        storage.publishers[principal_id] = [principal_id]
-        d = client.setSubscriptions('people',
-            [(jsettings.getUserJID(principal_id), 'subscribed')])
-        return d
-
-    def finalResult(result):
-        if result == False:
-            logger.error("Failed onUserCreation for user %s" % principal_id)
-        else:
-            logger.info("Succesful onUserCreation for user %s" % principal_id)
-        return result
-
-    d = client.admin.addUser(principal_jid.userhost(), genPasswd())
-    d.addCallback(subscribeToAllUsers)
-    d.addCallback(addUserPubSubNode)
-    d.addCallback(configureUserPubSubNode)
-    d.addCallback(affiliateUser)
-    d.addCallback(subscribeToMainFeed)
-    d.addCallback(finalResult)
+    d = setupPrincipal(client, principal_jid, genPasswd(), members_jids)
     return d
 
 
