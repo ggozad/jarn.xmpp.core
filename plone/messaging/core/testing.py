@@ -1,4 +1,5 @@
 import commands
+import os
 
 from plone.testing import z2, Layer
 from plone.app.testing import PloneSandboxLayer
@@ -24,7 +25,6 @@ class EJabberdLayer(Layer):
         Hopefully, the tests are run through the current buildout, which also
         installs ejabberd...
         """
-        import os
         if 'EJABBERDCTL' in os.environ:
             self.ejabberdctl = os.environ['EJABBERDCTL']
         else:

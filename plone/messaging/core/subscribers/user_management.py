@@ -22,23 +22,17 @@ def onUserCreation(event):
     principal = event.principal
     principal_id = principal.getUserId()
     principal_jid = jsettings.getUserJID(principal_id)
+    principal_pass = jsettings.getUserPassword(principal_id)
     mtool = getToolByName(principal, 'portal_membership')
     members_jids = [jsettings.getUserJID(member.getUserId())
                     for member in mtool.listMembers()]
-
-    def genPasswd():
-        return 'secret'
-        import string
-        import random
-        chars = string.letters + string.digits
-        return ''.join([random.choice(chars) for i in range(12)])
 
     storage.leaf_nodes.append(principal_id)
     storage.node_items[principal_id] = []
     storage.collections['people'].append(principal_id)
     storage.publishers[principal_id] = [principal_id]
 
-    d = setupPrincipal(client, principal_jid, genPasswd(), members_jids)
+    d = setupPrincipal(client, principal_jid, principal_pass, members_jids)
     return d
 
 

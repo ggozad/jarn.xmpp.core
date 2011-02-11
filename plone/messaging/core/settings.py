@@ -1,6 +1,12 @@
-from zope.interface import implements
+import string
+import random
+
 from twisted.words.protocols.jabber.jid import JID
+from zope.interface import implements
+
 from plone.messaging.core.interfaces import IXMPPSettings
+
+chars = string.letters + string.digits
 
 
 class XMPPSettings(object):
@@ -14,6 +20,9 @@ class XMPPSettings(object):
         if user_id == 'admin':
             return 'admin'
         else:
+            # temp hack until I have a persistent password storage
+            # if we need to create one:
+            # return ''.join([random.choice(chars) for i in range(12)])
             return 'secret'
 
     @property
