@@ -10,7 +10,7 @@ from zope.interface import Interface
 from plone.messaging.core import messageFactory as _
 from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.interfaces import IXMPPSettings
-from plone.messaging.core.pubsub_utils import publishItemToNode
+from plone.messaging.core.utils.pubsub import publishItemToNode
 
 
 class IPublishToNode(Interface):
