@@ -1,14 +1,14 @@
-pmcxmpp.log = function (msg) 
+jarnxmpp.log = function (msg) 
 {
 	$('#log').append('<div></div><br/>').append(document.createTextNode(msg));
 }
 
-pmcxmpp.rawInput = function(data)
+jarnxmpp.rawInput = function(data)
 {
-	pmcxmpp.log('RECV: ' + data);
+	jarnxmpp.log('RECV: ' + data);
 }
 
-pmcxmpp.rawOutput = function (data)
+jarnxmpp.rawOutput = function (data)
 {
-	pmcxmpp.log('SENT: ' + data);
+	jarnxmpp.log('SENT: ' + data);
 }

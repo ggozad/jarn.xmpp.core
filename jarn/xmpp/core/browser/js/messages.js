@@ -1,4 +1,4 @@
-$(document).bind('pmcxmpp.message', function (event) {
+$(document).bind('jarnxmpp.message', function (event) {
     //XXX If mtype is 'xhtml' we should sanitize
     $.gritter.add({
         title: event.from,
@@ -6,7 +6,7 @@ $(document).bind('pmcxmpp.message', function (event) {
     });
 });
 
-$(document).bind('pmcxmpp.roomInvitation', function (event) {
+$(document).bind('jarnxmpp.roomInvitation', function (event) {
     link = portal_url + '/@@muc?room=' + event.room
     body = 'You have received an invitation to ' +
            '<a class="muc_join" href="'+ link +'">join</a>' +

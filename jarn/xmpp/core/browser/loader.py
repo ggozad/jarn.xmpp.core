@@ -58,7 +58,7 @@ class XMPPLoader(ViewletBase):
             logger.info('Pre-binded %s' % self.jid.full())
 
             return """
-            var pmcxmpp = {
+            var jarnxmpp = {
               connection : null,
               BOSH_SERVICE : '%s',
               rid: %i,
@@ -70,7 +70,7 @@ class XMPPLoader(ViewletBase):
         else:
             logger.error('Could not pre-bind %s' % self.jid.full())
             return """
-            var pmcxmpp = {
+            var jarnxmpp = {
               connection : null,
               BOSH_SERVICE : '%s',
               jid : '%s',

@@ -1,11 +1,11 @@
-pmcxmpp.Messages = {
+jarnxmpp.Messages = {
     messageReceived: function (message) {
         var body = $(message).children('body').text();
         if (body=="") {
             return true; // This is a typing notification, we do not handle it here...
         }
         var xhtml_body = $(message).find('html > body').contents();
-        event = jQuery.Event('pmcxmpp.message');
+        event = jQuery.Event('jarnxmpp.message');
         if (xhtml_body.length>0) {
             event.mtype = 'xhtml';
             event.body = xhtml_body.html();
@@ -21,7 +21,7 @@ pmcxmpp.Messages = {
     invitationReceived: function(message) {
         room = $(message).attr('from');
         from = $(message).find('invite').attr('from');
-        event = jQuery.Event('pmcxmpp.roomInvitation');
+        event = jQuery.Event('jarnxmpp.roomInvitation');
         event.room = room;
         event.from = from;
         $(document).trigger(event);
@@ -29,7 +29,7 @@ pmcxmpp.Messages = {
     }
 };
 
-pmcxmpp.Roster = {
+jarnxmpp.Roster = {
     rosterSet: function(iq) {
         // XXX: Fill me in
         return true;
@@ -44,7 +44,7 @@ pmcxmpp.Roster = {
             var jid = $(this).attr('jid');
             var action = $(this).attr('action');
             if (action === 'add') {
-                pmcxmpp.connection.send($pres({
+                jarnxmpp.connection.send($pres({
                     to: jid,
                     "type": "subscribe"}));
             }
@@ -52,7 +52,7 @@ pmcxmpp.Roster = {
     }
 };
 
-pmcxmpp.Presence = {
+jarnxmpp.Presence = {
     presenceReceived: function (presence) {
         var ptype = $(presence).attr('type');
         var from = $(presence).attr('from');
@@ -62,10 +62,10 @@ pmcxmpp.Presence = {
         // ask to subscribe to him
         //
         if (ptype === 'subscribe' ) {
-            pmcxmpp.connection.send($pres({
+            jarnxmpp.connection.send($pres({
                 to: from,
                 "type": "subscribed"}));
-            pmcxmpp.connection.send($pres({
+            jarnxmpp.connection.send($pres({
                 to: from,
                 "type": "subscribe"}));
         }
@@ -83,19 +83,19 @@ pmcxmpp.Presence = {
                     status = 'away'
                 }
             }
-            $(document).trigger('pmcxmpp.presence', [from, status]);
+            $(document).trigger('jarnxmpp.presence', [from, status]);
         }
         return true;
     }
 };
 
-pmcxmpp.PubSub = {
+jarnxmpp.PubSub = {
     eventReceived: function(msg) {
         var items = $(msg).find('item');
         if (items.length>0) {
             for (var i = 0; i < items.length; i++) {
                 var entry = $(items[i]).children('entry')
-                var event = jQuery.Event('pmcxmpp.nodePublished');
+                var event = jQuery.Event('jarnxmpp.nodePublished');
                 event.author = $(entry).children('author').text();
                 event.published = $(entry).children('published').text();
                 event.content = $(entry).children('content').text();
@@ -106,20 +106,20 @@ pmcxmpp.PubSub = {
     }
 };
 
-$(document).bind('pmcxmpp.connected', function () {
+$(document).bind('jarnxmpp.connected', function () {
     // Logging
-    pmcxmpp.connection.rawInput = pmcxmpp.rawInput;
-    pmcxmpp.connection.rawOutput = pmcxmpp.rawOutput;
+    jarnxmpp.connection.rawInput = jarnxmpp.rawInput;
+    jarnxmpp.connection.rawOutput = jarnxmpp.rawOutput;
     // Messages
-    pmcxmpp.connection.addHandler(pmcxmpp.Messages.messageReceived, null, 'message', 'chat');
-    pmcxmpp.connection.addHandler(pmcxmpp.Messages.invitationReceived, 'http://jabber.org/protocol/muc#user', 'message', null);
+    jarnxmpp.connection.addHandler(jarnxmpp.Messages.messageReceived, null, 'message', 'chat');
+    jarnxmpp.connection.addHandler(jarnxmpp.Messages.invitationReceived, 'http://jabber.org/protocol/muc#user', 'message', null);
     //Roster
-    pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
-    pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');
+    jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
+    jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');
     // Presence
-    pmcxmpp.connection.addHandler(pmcxmpp.Presence.presenceReceived, null, 'presence', null);
+    jarnxmpp.connection.addHandler(jarnxmpp.Presence.presenceReceived, null, 'presence', null);
     // PubSub
-    pmcxmpp.connection.addHandler(pmcxmpp.PubSub.eventReceived, null, 'message', null, null, pmcxmpp.pubsub_jid);
-    pmcxmpp.connection.addHandler(pmcxmpp.Roster.rosterSuggestedItem, 'http://jabber.org/protocol/rosterx', 'message', null);
-    pmcxmpp.connection.send($pres());
+    jarnxmpp.connection.addHandler(jarnxmpp.PubSub.eventReceived, null, 'message', null, null, jarnxmpp.pubsub_jid);
+    jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterSuggestedItem, 'http://jabber.org/protocol/rosterx', 'message', null);
+    jarnxmpp.connection.send($pres());
 });

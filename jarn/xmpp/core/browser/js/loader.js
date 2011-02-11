@@ -1,21 +1,21 @@
-pmcxmpp.onConnect = function (status) {
+jarnxmpp.onConnect = function (status) {
 	if ((status === Strophe.Status.ATTACHED) ||
 	    (status === Strophe.Status.CONNECTED)) {
 		$(window).bind('beforeunload', function() {
-			pmcxmpp.connection.flush();
-			pmcxmpp.connection.disconnect();
+			jarnxmpp.connection.flush();
+			jarnxmpp.connection.disconnect();
 		});
-		$(document).trigger('pmcxmpp.connected');
+		$(document).trigger('jarnxmpp.connected');
 		
 	} else if (status === Strophe.Status.DISCONNECTED) { 
-		$(document).trigger('pmcxmpp.disconnected');
+		$(document).trigger('jarnxmpp.disconnected');
 	}
 };
 
 $(document).ready(function () {
-	pmcxmpp.connection = new Strophe.Connection(pmcxmpp.BOSH_SERVICE);
-	if (('rid' in pmcxmpp) && ('sid' in pmcxmpp))
-		pmcxmpp.connection.attach(pmcxmpp.jid, pmcxmpp.sid, pmcxmpp.rid, pmcxmpp.onConnect);
+	jarnxmpp.connection = new Strophe.Connection(jarnxmpp.BOSH_SERVICE);
+	if (('rid' in jarnxmpp) && ('sid' in jarnxmpp))
+		jarnxmpp.connection.attach(jarnxmpp.jid, jarnxmpp.sid, jarnxmpp.rid, jarnxmpp.onConnect);
 	else 
-		pmcxmpp.connection.connect(pmcxmpp.jid, pmcxmpp.password, pmcxmpp.onConnect);
+		jarnxmpp.connection.connect(jarnxmpp.jid, jarnxmpp.password, jarnxmpp.onConnect);
 });

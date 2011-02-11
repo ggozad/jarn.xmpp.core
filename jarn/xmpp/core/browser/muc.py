@@ -21,5 +21,5 @@ class MUCView(BrowserView):
 
     def mucSettings(self):
         return """
-            pmcxmpp.muc.room ='%s';
+            jarnxmpp.muc.room ='%s';
         """ % self.room_jid.full()

@@ -1,4 +1,4 @@
-$(document).bind('pmcxmpp.nodePublished', function (event) {
+$(document).bind('jarnxmpp.nodePublished', function (event) {
 	//XXX If mtype is 'xhtml' we should sanitize
 	$.gritter.add({
 		title: event.author,
