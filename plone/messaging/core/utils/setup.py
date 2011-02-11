@@ -3,7 +3,7 @@ import logging
 from twisted.internet import defer
 from twisted.words.protocols.jabber.jid import JID
 
-from plone.messaging.core.pubsub_utils import content_node_config
+from plone.messaging.core.utils.pubsub import content_node_config
 from plone.messaging.core.utils.pubsub import getAllChildNodes
 from plone.messaging.core.utils.users import setupPrincipal
 

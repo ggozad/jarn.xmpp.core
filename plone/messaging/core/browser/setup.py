@@ -13,7 +13,7 @@ from plone.messaging.core import messageFactory as _
 from plone.messaging.core.interfaces import IAdminClient
 from plone.messaging.core.interfaces import IXMPPSettings
 from plone.messaging.core.interfaces import IPubSubStorage
-from plone.messaging.core.pubsub_utils import content_node_config
+from plone.messaging.core.utils.pubsub import content_node_config
 from plone.messaging.core.subscribers.user_management import onUserCreation
 logger = logging.getLogger('plone.messaging.core')
 

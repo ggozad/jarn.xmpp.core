@@ -8,7 +8,7 @@ from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from wokkel.pubsub import Item
 
 from plone.messaging.core.interfaces import IAdminClient
-from plone.messaging.core.pubsub_utils import content_node_config
+from plone.messaging.core.utils.pubsub import content_node_config
 
 
 def pubsubObjectModified(obj, event):
