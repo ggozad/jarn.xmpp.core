@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="++resource++jarn.xmpp.core.css/onlineusers.css" type="text/css">
+<dl id="online-users" class="portlet"
+    tal:condition="view/available">
+    <script src="++resource++jarn.xmpp.core.js/onlineusers.js"></script>
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <span>Online Users</span>
+        <span class="portletTopRight"></span>
+    </dt>
+</dl>

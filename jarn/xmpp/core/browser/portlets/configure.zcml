@@ -1,0 +1,22 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:plone="http://namespaces.plone.org/plone">
+
+  <plone:portlet
+      name="jarn.xmpp.core.OnlineUsers"
+      interface=".onlineusers.IOnlineUsers"
+      assignment=".onlineusers.Assignment"
+      renderer=".onlineusers.Renderer"
+      addview=".onlineusers.AddForm"
+      />
+
+  <plone:portlet
+      name="jarn.xmpp.core.PubSubNode"
+      interface=".pubsubnode.IPubSubNodePortlet"
+      assignment=".pubsubnode.Assignment"
+      renderer=".pubsubnode.Renderer"
+      addview=".pubsubnode.AddForm"
+      editview=".pubsubnode.EditForm"
+      />
+
+</configure>

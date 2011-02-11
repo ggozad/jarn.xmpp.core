@@ -49,7 +49,7 @@ Setting up a new Plone site
 * Start ejabberd
 * Start the Nginx frontend. ``bin/frontend start``
 * Start your zope instance. You can observe on the console that the reactor has started.
-* Access Zope via Nginx ``http://localhost:8080/`` and create a new Plone site with ``plone.messaging.core``.
+* Access Zope via Nginx ``http://localhost:8080/`` and create a new Plone site with ``jarn.xmpp.core``.
 * Setup the the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://localhost:8081/Plone/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
 
 Experimenting

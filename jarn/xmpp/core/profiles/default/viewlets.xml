@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<object>
+  <order manager="plone.belowcontent" skinname="Plone Default">
+    <viewlet name="jarn.xmpp.core.loader" />
+  </order>
+</object>

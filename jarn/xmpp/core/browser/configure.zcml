@@ -1,0 +1,95 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:plone="http://namespaces.plone.org/plone"
+  i18n_domain="jarn.xmpp.core">
+
+  <include package="plone.app.z3cform" />
+  <include package=".portlets" />
+
+  <browser:page
+    for="*"
+    name="pubsub_publish"
+    class=".pubsub.PublishToNodeForm"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="pubsub-subscribe"
+    class=".pubsub.SubscribeToNodeForm"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="pubsub-unsubscribe"
+    class=".pubsub.UnsubscribeFromNodeForm"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="setup-xmpp"
+    class=".setup.SetupXMPPForm"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="*"
+    name="muc"
+    class=".muc.MUCView"
+    template="muc.pt"
+    permission="zope2.View"
+    />
+
+  <!-- Viewlets -->
+
+  <browser:viewletManager
+      name="jarn.xmpp.core.loader.vm"
+      provides="..interfaces.IXMPPLoaderVM"
+      permission="zope2.View"
+      class="plone.app.viewletmanager.manager.OrderedViewletManager"
+      />
+
+  <browser:viewlet
+    name="jarn.xmpp.core.loader"
+    manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+    class=".loader.XMPPLoader"
+    template="loader.pt"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+    name="jarn.xmpp.core.loader_muc"
+    manager="..interfaces.IXMPPLoaderVM"
+    class=".loader.XMPPLoader"
+    template="loader_muc.pt"
+    permission="zope2.View"
+    />
+
+  <browser:viewlet
+      name="jarn.xmpp.core.content_subscription"
+      for="Products.CMFCore.interfaces.IContentish"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
+      view="plone.app.layout.globals.interfaces.IViewView"
+      class=".content_subscription.ContentSubscriptionViewlet"
+      permission="zope2.View"
+      />
+
+  <browser:resourceDirectory
+    name="jarn.xmpp.core.js"
+    directory="js"
+  />
+
+  <browser:resourceDirectory
+    name="gritter"
+    directory="gritter"
+  />
+
+  <browser:resourceDirectory
+    name="jarn.xmpp.core.css"
+    directory="css"
+  />
+
+</configure>
