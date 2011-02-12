@@ -10,14 +10,14 @@ from jarn.xmpp.core.utils.users import setupPrincipal
 logger = logging.getLogger('jarn.xmpp.core')
 
 
-def setupXMPPEnvironment(admin, member_jids=[],
+def setupXMPPEnvironment(client, member_jids=[],
                          member_passwords={},
                          content_nodes=[]):
 
     def deleteAllNodes(result):
         nodes = sum(result.values(), [])
         if nodes:
-            d = defer.DeferredList([admin.deleteNode(node)
+            d = defer.DeferredList([client.deleteNode(node)
                                     for node in nodes],
                                    consumeErrors=True)
             return d
@@ -26,11 +26,11 @@ def setupXMPPEnvironment(admin, member_jids=[],
     def createCollections(result):
         if not result:
             return False
-        d1 = admin.createNode('people',
+        d1 = client.createNode('people',
             options={'pubsub#node_title': 'All personal feeds',
                      'pubsub#node_type': 'collection',
                      'pubsub#collection': ''})
-        d2 = admin.createNode('content',
+        d2 = client.createNode('content',
             options={'pubsub#node_title': 'All content feeds',
                      'pubsub#node_type': 'collection',
                      'pubsub#collection': ''})
@@ -43,7 +43,7 @@ def setupXMPPEnvironment(admin, member_jids=[],
 
         deferred_list = []
         for uid in content_nodes:
-            d = admin.createNode(uid, options=content_node_config)
+            d = client.createNode(uid, options=content_node_config)
             deferred_list.append(d)
         if deferred_list:
             d = defer.DeferredList(deferred_list, consumeErrors=True)
@@ -57,9 +57,9 @@ def setupXMPPEnvironment(admin, member_jids=[],
         if not result:
             return False
 
-        d1 = admin.createNode('dummy_people_node',
+        d1 = client.createNode('dummy_people_node',
                               options={'pubsub#collection': 'people'})
-        d2 = admin.createNode('dummy_content_node',
+        d2 = client.createNode('dummy_content_node',
                               options={'pubsub#collection': 'content'})
         d = defer.DeferredList([d1, d2], consumeErrors=True)
         return d
@@ -68,10 +68,24 @@ def setupXMPPEnvironment(admin, member_jids=[],
         if not result:
             return False
 
-        d = admin.subscribe('people',
-                            JID(admin.jid.userhost()),
+        d = client.subscribe('people',
+                            JID(client.jid.userhost()),
                             options={'pubsub#subscription_type': 'items',
                                      'pubsub#subscription_depth': 'all'})
+        return d
+
+    def getExistingUsers(result):
+        if not result:
+            return False
+        d = client.admin.getRegisteredUsers()
+        return d
+
+    def deleteUsers(result):
+        if not result:
+            return False
+        jids = [user_dict['jid'] for user_dict in result]
+        jids.remove(client.jid.userhost())
+        d = client.admin.deleteUsers(jids)
         return d
 
     def createUsers(result):
@@ -82,7 +96,7 @@ def setupXMPPEnvironment(admin, member_jids=[],
         deferred_list = []
         roster_jids = []
         for member_jid in member_jids:
-            d = setupPrincipal(admin,
+            d = setupPrincipal(client,
                                member_jid,
                                member_passwords[member_jid],
                                roster_jids)
@@ -93,11 +107,13 @@ def setupXMPPEnvironment(admin, member_jids=[],
             return d
         return True
 
-    d = getAllChildNodes(admin, None)
+    d = getAllChildNodes(client, None)
     d.addCallback(deleteAllNodes)
     d.addCallback(createCollections)
     d.addCallback(createContentNodes)
     d.addCallback(createDummyItemNodes)
     d.addCallback(subscribeAdmin)
+    d.addCallback(getExistingUsers)
+    d.addCallback(deleteUsers)
     d.addCallback(createUsers)
     return d
