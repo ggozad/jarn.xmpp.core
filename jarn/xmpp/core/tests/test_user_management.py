@@ -1,5 +1,7 @@
 import unittest2 as unittest
 
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
@@ -15,14 +17,13 @@ class UserManagementTests(unittest.TestCase):
 
     layer = XMPPCORE_INTEGRATION_TESTING
 
-    def test_add_user(self):
+    def test_add_delete_user(self):
         portal = self.layer['portal']
-        rt = getToolByName(portal, 'portal_registration')
-        user_properties = {'username': 'stpeter',
-                           'fullname': 'Peter Saint-Andre',
-                           'email': 'stpeter@jabber.org'}
-        rt.addMember('stpeter', 'secret', properties=user_properties)
+        setRoles(portal, TEST_USER_ID, ['Manager'])
         client = getUtility(IAdminClient)
+
+        mt = getToolByName(portal, 'portal_membership')
+        mt.addMember('stpeter', 'secret', ['Member'], [])
         wait_on_client_deferreds(client)
 
         # User has been added
@@ -35,3 +36,18 @@ class UserManagementTests(unittest.TestCase):
         d = getAllChildNodes(client, 'people')
         self.assertTrue(wait_on_deferred(d))
         self.assertTrue('stpeter' in d.result['people'])
+
+        mt = getToolByName(portal, 'portal_membership')
+        mt.deleteMembers('stpeter')
+        wait_on_client_deferreds(client)
+
+        # User has been deleted
+        d = client.admin.getRegisteredUsers()
+        self.assertTrue(wait_on_deferred(d))
+        user_jids = [user_dict['jid'] for user_dict in d.result]
+        self.assertTrue('stpeter@localhost' not in user_jids)
+
+        # User's pubsub node has been removed
+        d = getAllChildNodes(client, 'people')
+        self.assertTrue(wait_on_deferred(d))
+        self.assertTrue('stpeter' not in d.result['people'])
