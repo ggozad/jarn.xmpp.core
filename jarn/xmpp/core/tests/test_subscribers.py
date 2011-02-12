@@ -5,12 +5,12 @@ from Products.PluggableAuthService.events import PrincipalCreated
 from jarn.xmpp.twisted.testing import wait_on_deferred
 
 from jarn.xmpp.core.subscribers.user_management import onUserCreation
-from jarn.xmpp.core.testing import PMCORE_INTEGRATION_TESTING
+from jarn.xmpp.core.testing import XMPPCORE_INTEGRATION_TESTING
 
 
 class SubscriberTests(unittest.TestCase):
 
-    layer = PMCORE_INTEGRATION_TESTING
+    layer = XMPPCORE_INTEGRATION_TESTING
 
     def test_add_user(self):
         user = getSecurityManager().getUser()

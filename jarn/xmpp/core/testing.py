@@ -1,5 +1,6 @@
 import commands
 import os
+import time
 
 from plone.testing import z2, Layer
 from plone.app.testing import PloneSandboxLayer
@@ -43,6 +44,7 @@ class EJabberdLayer(Layer):
         if out:
             print "Problem starting ejabberd"
             exit(1)
+        time.sleep(1.0)
 
     def tearDown(self):
         # Stop ejabberd
@@ -53,7 +55,7 @@ class EJabberdLayer(Layer):
 EJABBERD_LAYER = EJabberdLayer()
 
 
-class PMCoreFixture(PloneSandboxLayer):
+class XMPPCoreFixture(PloneSandboxLayer):
 
     defaultBases = (EJABBERD_LAYER, REACTOR_FIXTURE)
 
@@ -91,9 +93,9 @@ class PMCoreFixture(PloneSandboxLayer):
         wait_for_client_state(client, 'disconnected')
 
 
-PMCORE_FIXTURE = PMCoreFixture()
+XMPPCORE_FIXTURE = XMPPCoreFixture()
 
-PMCORE_INTEGRATION_TESTING = IntegrationTesting(bases=(PMCORE_FIXTURE, ),
-    name="PMCoreFixture:Integration")
-PMCORE_FUNCTIONAL_TESTING = FunctionalTesting(bases=(PMCORE_FIXTURE, ),
-    name="PMCoreFixture:Functional")
+XMPPCORE_INTEGRATION_TESTING = IntegrationTesting(bases=(XMPPCORE_FIXTURE, ),
+    name="XMPPCoreFixture:Integration")
+XMPPCORE_FUNCTIONAL_TESTING = FunctionalTesting(bases=(XMPPCORE_FIXTURE, ),
+    name="XMPPCoreFixture:Functional")
