@@ -7,6 +7,7 @@ from jarn.xmpp.core.interfaces import IXMPPSettings
 from jarn.xmpp.core.interfaces import IPubSubStorage
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.utils.users import setupPrincipal
+from jarn.xmpp.core.utils.users import deletePrincipal
 
 logger = logging.getLogger('jarn.xmpp.core')
 
@@ -14,8 +15,8 @@ logger = logging.getLogger('jarn.xmpp.core')
 def onUserCreation(event):
     """Create a jabber account for new user.
     """
-    jsettings = getUtility(IXMPPSettings)
     client = getUtility(IAdminClient)
+    jsettings = getUtility(IXMPPSettings)
     storage = getUtility(IPubSubStorage)
 
     principal = event.principal
@@ -43,29 +44,16 @@ def onUserDeletion(event):
     storage = getUtility(IPubSubStorage)
 
     principal_id = event.principal
-    jid = u'%s@%s' % (principal_id, jsettings.XMPPDomain)
+    principal_jid = jsettings.getUserJID(principal_id)
 
-    def finalResult(result):
-        if result == False:
-            logger.error("Failed onUserDeletion for user %s" % principal_id)
-        logger.info("Succesful onUserDeletion for user %s" % principal_id)
+    if principal_id in storage.leaf_nodes:
+        storage.leaf_nodes.remove(principal_id)
+    if principal_id in storage.publishers:
+        del storage.publishers[principal_id]
+    if principal_id in storage.node_items:
+        del storage.node_items[principal_id]
+    if principal_id in storage.collections['people']:
+        storage.collections['people'].remove(principal_id)
 
-    def deleteUser(result):
-        if result == False:
-            return False
-        if principal_id in storage.leaf_nodes:
-            storage.leaf_nodes.remove(principal_id)
-        if principal_id in storage.publishers:
-            del storage.publishers[principal_id]
-        if principal_id in storage.node_items:
-            del storage.node_items[principal_id]
-        if principal_id in storage.collections['people']:
-            storage.collections['people'].remove(principal_id)
-
-        d = client.admin.deleteUsers([jid])
-        return d
-
-    d = client.deleteNode(principal_id)
-    d.addCallback(deleteUser)
-    d.addCallback(finalResult)
+    d = deletePrincipal(client, principal_jid)
     return d

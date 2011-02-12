@@ -4,8 +4,8 @@ def setupPrincipal(client,
                    principal_jid, principal_password,
                    roster_jids):
     """Create a jabber account for a new user as well
-    as create and configure its associated nodes.
-    """
+       as create and configure its associated nodes."""
+
     principal_id = principal_jid.user
 
     def subscribeToAllUsers(result):
@@ -41,4 +41,20 @@ def setupPrincipal(client,
     d.addCallback(addUserPubSubNode)
     d.addCallback(affiliateUser)
     d.addCallback(subscribeToMainFeed)
+    return d
+
+
+def deletePrincipal(client, principal_jid):
+    """Delete a jabber account as well as remove its associated nodes.
+    """
+    principal_id = principal_jid.user
+
+    def deleteUser(result):
+        if result == False:
+            return False
+        d = client.admin.deleteUsers(principal_jid.userhost())
+        return d
+
+    d = client.deleteNode(principal_id)
+    d.addCallback(deleteUser)
     return d
