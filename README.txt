@@ -4,7 +4,7 @@ Introduction
 Installation
 ============
 
-Before setting up the package you need to have a working XMPP server and access to an administration account on the server. The package has only been tested with ejabberd version 2.1.5 and above so far which is recommended. In any case the following XMPP extensions need to be supported by the server you are going to use:
+Before setting up the package you need to have a working XMPP server and access to an administration account on the server. The package has only been tested with ejabberd version 2.1.5 and above which is recommended. In any case the following XMPP extensions need to be supported by the server you are going to use:
 
 * `XEP-0071`_ XHTML-IM.
 * `XEP-0144`_ Roster Item Exchange.
@@ -38,6 +38,18 @@ Setting up ejabberd (>=2.1.5)
         {last_item_cache, false},
         {nodetree, "dag"},
         {plugins, ["dag", "flat", "hometree", "pep"]}
+        ]},
+
+* In order to test and run custom XMPP components you will need to allow them to connect. This means you should have something similar to this configuration:
+
+  ::
+
+    {5347, ejabberd_service, [
+        {access, all},
+        {shaper_rule, fast},
+        {ip, {127, 0, 0, 1}},
+        {hosts, ["example.localhost", "collaboration.localhost"],
+                [{password, "secret"}]}
         ]},
 
 The rest of the standard options should be fine. In any case a sample ``ejabberd.cfg`` is included in the buildout.
