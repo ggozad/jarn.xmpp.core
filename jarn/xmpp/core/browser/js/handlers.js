@@ -49,6 +49,7 @@ jarnxmpp.Roster = {
                     "type": "subscribe"}));
             }
         });
+        return true;
     }
 };
 
