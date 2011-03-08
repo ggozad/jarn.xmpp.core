@@ -1,12 +1,13 @@
 import logging
 
+from plone.registry.interfaces import IRegistry
 from plone.app.layout.viewlets.common import ViewletBase
-from jarn.xmpp.twisted.client import randomResource
-from jarn.xmpp.twisted.httpb import BOSHClient
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.CMFCore.utils import getToolByName
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
+
+from jarn.xmpp.twisted.client import randomResource
+from jarn.xmpp.twisted.httpb import BOSHClient
 
 from jarn.xmpp.core.interfaces import IXMPPSettings
 
@@ -20,17 +21,18 @@ class XMPPLoader(ViewletBase):
     def update(self):
         super(XMPPLoader, self).update()
         self.settings = getUtility(IXMPPSettings)
+        self.registry = getUtility(IRegistry)
         pm = getToolByName(self.context, 'portal_membership')
         self.user_id = pm.getAuthenticatedMember().getId()
         self.resource = randomResource()
 
     @property
     def bosh(self):
-        return self.settings.BOSHUrl
+        return self.registry['jarn.xmpp.boshURL']
 
     @property
     def jdomain(self):
-        return self.settings.XMPPDomain
+        return self.registry['jarn.xmpp.xmppDomain']
 
     @property
     def jid(self):
@@ -42,7 +44,7 @@ class XMPPLoader(ViewletBase):
 
     @property
     def pubsub_jid(self):
-        return self.settings.PubSubJID
+        return self.registry['jarn.xmpp.pubsubJID']
 
     def prebind(self):
         b_client = BOSHClient(self.jid, self.jpassword, self.bosh)
@@ -77,4 +79,7 @@ class XMPPLoader(ViewletBase):
               password : '%s',
               pubsub_jid : '%s',
             };
-            """ % (self.bosh, self.jid.userhost(), self.jpassword, self.pubsub_jid)
+            """ % (self.bosh,
+                   self.jid.userhost(),
+                   self.jpassword,
+                   self.pubsub_jid)

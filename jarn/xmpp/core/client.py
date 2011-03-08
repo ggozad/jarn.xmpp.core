@@ -1,6 +1,8 @@
 import logging
 
+from plone.registry.interfaces import IRegistry
 from twisted.internet import defer
+from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implements
@@ -164,12 +166,13 @@ class AdminClient(XMPPClient, PubSubClientMixIn):
     implements(IAdminClient)
 
     def __init__(self):
-        jsettings = getUtility(IXMPPSettings)
-        jid = jsettings.getUserJID('admin')
-        jdomain = jsettings.XMPPDomain
-        password = jsettings.getUserPassword('admin')
+        settings = getUtility(IRegistry)
 
-        self.pubsub_jid = jsettings.PubSubJID
+        jid = JID(settings['jarn.xmpp.adminJID'])
+        jdomain = settings['jarn.xmpp.xmppDomain']
+        password = settings['jarn.xmpp.adminPassword']
+
+        self.pubsub_jid = JID(settings['jarn.xmpp.pubsubJID'])
         self.admin = AdminHandler()
         self.pubsub = PubSubHandler()
         self.chat = ChatHandler()

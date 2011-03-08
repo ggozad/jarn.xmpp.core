@@ -2,9 +2,8 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="jarn.xmpp.core">
-<!--
-  <include package="jarn.xmpp.twisted" />
--->
+
+  <include package="plone.app.registry" />
   <include package=".adapters" />
   <include package=".subscribers" />
   <include package=".browser" />
