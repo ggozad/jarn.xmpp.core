@@ -1,11 +1,13 @@
-from plone.testing import z2
+from plone.app.registry.testing import PLONE_APP_REGISTRY_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting, FunctionalTesting
+from plone.testing import z2
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
 from zope.configuration import xmlconfig
 
+from jarn.xmpp.twisted.interfaces import IZopeReactor
 from jarn.xmpp.twisted.testing import REACTOR_FIXTURE
 from jarn.xmpp.twisted.testing import wait_on_deferred
 from jarn.xmpp.twisted.testing import wait_for_client_state
@@ -32,14 +34,20 @@ class XMPPCoreFixture(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         # Install into Plone site using portal_setup
         applyProfile(portal, 'jarn.xmpp.core:default')
+        setupAdminClient(None, None)
+        client = getUtility(IAdminClient)
+        wait_for_client_state(client, 'authenticated')
 
     def tearDownZope(self, app):
         # Uninstall product
         z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
 
     def testSetUp(self):
-        setupAdminClient(None)
         client = getUtility(IAdminClient)
+        if client._state == 'disconnected':
+            zr = getUtility(IZopeReactor)
+            zr.reactor.callFromThread(client.connect)
+
         wait_for_client_state(client, 'authenticated')
         d = setupXMPPEnvironment(client,
             member_jids=[JID('test_user_1_@localhost')],
