@@ -85,6 +85,8 @@ def setupXMPPEnvironment(client, member_jids=[],
             return False
         jids = [user_dict['jid'] for user_dict in result]
         jids.remove(client.jid.userhost())
+        if not jids:
+            return True
         d = client.admin.deleteUsers(jids)
         return d
 
