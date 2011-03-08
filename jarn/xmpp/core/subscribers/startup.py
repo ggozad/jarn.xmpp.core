@@ -1,15 +1,18 @@
 from twisted.internet import defer
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility
+from zope.component import queryUtility
+
 
 from jarn.xmpp.core.client import AdminClient
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubStorage
 
 
-def setupAdminClient(event):
-    gsm = getGlobalSiteManager()
-    gsm.registerUtility(AdminClient(), IAdminClient)
+def setupAdminClient(portal, event):
+    if queryUtility(IAdminClient) is None:
+        gsm = getGlobalSiteManager()
+        gsm.registerUtility(AdminClient(), IAdminClient)
 
 
 def adminConnected(event):
