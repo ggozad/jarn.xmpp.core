@@ -7,19 +7,11 @@ class IXMPPSettings(Interface):
     """ Marker interface for the XMPP tool.
     """
 
-    def getUserPassword():
-        pass
-
-    def XMPPDomain():
-        pass
-
-    def BOSHUrl():
-        pass
-
 
 class IPubSubable(Interface):
     """Interface for objects that can be uniquely linked to pubsub nodes.
     """
+
 
 class IPubSubStorage(Interface):
     """Marker interface for the PubSub storage

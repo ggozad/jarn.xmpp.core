@@ -40,7 +40,7 @@ class SetupXMPPForm(form.Form):
     def setup_xmpp(self, action):
         data, errors = self.extractData()
 
-        jsettings = getUtility(IXMPPSettings)
+        settings = getUtility(IXMPPSettings)
         ct = getToolByName(self.context, 'portal_catalog')
         content_nodes = [brain.UID for brain in
                          ct.unrestrictedSearchResults(
@@ -50,9 +50,9 @@ class SetupXMPPForm(form.Form):
         member_jids = []
         member_passwords = {}
         for member_id in member_ids:
-            member_jid = jsettings.getUserJID(member_id)
+            member_jid = settings.getUserJID(member_id)
             member_jids.append(member_jid)
-            member_passwords[member_jid] = jsettings.getUserPassword(member_id)
+            member_passwords[member_jid] = settings.getUserPassword(member_id)
 
         admin = getUtility(IAdminClient)
 

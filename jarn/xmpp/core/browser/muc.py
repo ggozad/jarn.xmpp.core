@@ -1,10 +1,9 @@
 import random
 
+from plone.registry.interfaces import IRegistry
 from Products.Five.browser import BrowserView
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
-
-from jarn.xmpp.core.interfaces import IXMPPSettings
 
 
 class MUCView(BrowserView):
@@ -16,7 +15,8 @@ class MUCView(BrowserView):
             self.room_jid = JID(room)
         else:
             room = random.randint(0, 4294967295)
-            self.room_jid = getUtility(IXMPPSettings).ConferenceJID
+            registry = getUtility(IRegistry)
+            self.room_jid = JID(registry['jarn.xmpp.conferenceJID'])
             self.room_jid.user = room
 
     def mucSettings(self):

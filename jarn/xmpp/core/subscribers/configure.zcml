@@ -4,9 +4,9 @@
 
   <!-- Start up -->
   <subscriber
-    for="jarn.xmpp.twisted.interfaces.ReactorStarted"
-    handler=".startup.setupAdminClient"
-    />
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot
+         zope.app.publication.interfaces.IBeforeTraverseEvent"
+    handler=".startup.setupAdminClient"/>
 
   <subscriber
     for="jarn.xmpp.core.interfaces.AdminClientConnected"

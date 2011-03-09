@@ -24,9 +24,10 @@ setup(name='jarn.xmpp.core',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'jarn.xmpp.twisted',
+          'plone.app.registry',
           'plone.app.z3cform',
           'pas.plugins.userdeletedevent',
+          'jarn.xmpp.twisted',
 
           # -*- Extra requirements: -*-
       ],
