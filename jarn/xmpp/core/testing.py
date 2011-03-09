@@ -37,6 +37,11 @@ class XMPPCoreFixture(PloneSandboxLayer):
         setupAdminClient(None, None)
         client = getUtility(IAdminClient)
         wait_for_client_state(client, 'authenticated')
+        d = setupXMPPEnvironment(client,
+            member_jids=[JID('test_user_1_@localhost')],
+            member_passwords={JID('test_user_1_@localhost'): 'secret'},
+            content_nodes=[])
+        wait_on_deferred(d)
 
     def tearDownZope(self, app):
         # Uninstall product
@@ -54,6 +59,7 @@ class XMPPCoreFixture(PloneSandboxLayer):
             member_passwords={JID('test_user_1_@localhost'): 'secret'},
             content_nodes=[])
         wait_on_deferred(d)
+
 
     def testTearDown(self):
         client = getUtility(IAdminClient)
