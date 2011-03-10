@@ -16,6 +16,8 @@ def setupXMPPEnvironment(client, member_jids=[],
 
     def deleteAllNodes(result):
         nodes = sum(result.values(), [])
+        # Reverse to delete the children first, then the parents.
+        nodes.reverse()
         if nodes:
             d = defer.DeferredList([client.deleteNode(node)
                                     for node in nodes],
