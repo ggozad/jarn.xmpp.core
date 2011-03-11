@@ -3,7 +3,7 @@ import unittest2 as unittest
 from Products.CMFCore.utils import getToolByName
 from zope.component import getUtility
 
-from jarn.xmpp.twisted.testing import wait_on_deferred
+from jarn.xmpp.twisted.testing import wait_on_client_deferreds
 
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.testing import XMPPCORE_INTEGRATION_TESTING
@@ -21,7 +21,7 @@ class LayerSetupTests(unittest.TestCase):
 
         client = getUtility(IAdminClient)
         d = getAllChildNodes(client, None)
-        self.assertTrue(wait_on_deferred(d))
+        wait_on_client_deferreds(client)
         tree = d.result
 
         self.assertEqual(tree[''], ['content', 'people'])

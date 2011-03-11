@@ -9,7 +9,7 @@ from zope.configuration import xmlconfig
 
 from jarn.xmpp.twisted.interfaces import IZopeReactor
 from jarn.xmpp.twisted.testing import REACTOR_FIXTURE
-from jarn.xmpp.twisted.testing import wait_on_deferred
+from jarn.xmpp.twisted.testing import wait_on_client_deferreds
 from jarn.xmpp.twisted.testing import wait_for_client_state
 
 from jarn.xmpp.core.interfaces import IAdminClient
@@ -37,11 +37,6 @@ class XMPPCoreFixture(PloneSandboxLayer):
         setupAdminClient(None, None)
         client = getUtility(IAdminClient)
         wait_for_client_state(client, 'authenticated')
-        d = setupXMPPEnvironment(client,
-            member_jids=[JID('test_user_1_@localhost')],
-            member_passwords={JID('test_user_1_@localhost'): 'secret'},
-            content_nodes=[])
-        wait_on_deferred(d)
 
     def tearDownZope(self, app):
         # Uninstall product
@@ -54,12 +49,11 @@ class XMPPCoreFixture(PloneSandboxLayer):
             zr.reactor.callFromThread(client.connect)
 
         wait_for_client_state(client, 'authenticated')
-        d = setupXMPPEnvironment(client,
+        setupXMPPEnvironment(client,
             member_jids=[JID('test_user_1_@localhost')],
             member_passwords={JID('test_user_1_@localhost'): 'secret'},
             content_nodes=[])
-        wait_on_deferred(d)
-
+        wait_on_client_deferreds(client)
 
     def testTearDown(self):
         client = getUtility(IAdminClient)
