@@ -8,6 +8,11 @@ class IXMPPSettings(Interface):
     """
 
 
+class IXMPPPasswordStorage(Interface):
+    """ Marker interface for the xmmp user passwords
+    """
+
+
 class IPubSubable(Interface):
     """Interface for objects that can be uniquely linked to pubsub nodes.
     """
