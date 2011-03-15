@@ -10,7 +10,7 @@ from zope.interface import Interface
 
 from jarn.xmpp.core import messageFactory as _
 from jarn.xmpp.core.interfaces import IAdminClient
-from jarn.xmpp.core.interfaces import IXMPPSettings
+from jarn.xmpp.core.interfaces import IXMPPUsers
 from jarn.xmpp.core.subscribers.startup import populatePubSubStorage
 from jarn.xmpp.core.utils.setup import setupXMPPEnvironment
 
@@ -40,7 +40,7 @@ class SetupXMPPForm(form.Form):
     def setup_xmpp(self, action):
         data, errors = self.extractData()
 
-        settings = getUtility(IXMPPSettings)
+        settings = getUtility(IXMPPUsers)
         ct = getToolByName(self.context, 'portal_catalog')
         content_nodes = [brain.UID for brain in
                          ct.unrestrictedSearchResults(

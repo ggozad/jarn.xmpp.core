@@ -8,7 +8,7 @@ from jarn.xmpp.twisted.interfaces import IDeferredXMPPClient
 from jarn.xmpp.twisted.protocols import PubSubHandler
 from zope.component import getUtility
 
-from jarn.xmpp.core.interfaces import IXMPPSettings
+from jarn.xmpp.core.interfaces import IXMPPUsers
 
 content_node_config = {'pubsub#send_last_published_item': 'never',
                        'pubsub#collection': 'content'}
@@ -22,7 +22,7 @@ def publishItemToNode(identifier, content, user_id):
         replaced by js, making the deferred client not used anywhere.
     """
 
-    jsettings = getUtility(IXMPPSettings)
+    jsettings = getUtility(IXMPPUsers)
     user_jid = jsettings.getUserJID(user_id)
     password = jsettings.getUserPassword(user_id)
 

@@ -14,7 +14,7 @@ from jarn.xmpp.core.browser.pubsub import SubscribeToNodeForm
 from jarn.xmpp.core.browser.pubsub import UnsubscribeFromNodeForm
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubable
-from jarn.xmpp.core.interfaces import IXMPPSettings
+from jarn.xmpp.core.interfaces import IXMPPUsers
 
 logger = logging.getLogger('jarn.xmpp.core')
 
@@ -58,7 +58,7 @@ class ContentSubscriptionViewlet(ViewletBase):
         self.available = True
         self._subscribed = None
 
-        settings = getUtility(IXMPPSettings)
+        settings = getUtility(IXMPPUsers)
         self.user_jid = settings.getUserJID(user_id)
 
         d = client.getSubscriptions(self.node)

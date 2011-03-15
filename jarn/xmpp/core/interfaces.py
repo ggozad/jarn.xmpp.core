@@ -3,7 +3,7 @@ from zope.component.interfaces import IObjectEvent, implements
 from zope.viewlet.interfaces import IViewletManager
 
 
-class IXMPPSettings(Interface):
+class IXMPPUsers(Interface):
     """ Marker interface for the XMPP tool.
     """
 

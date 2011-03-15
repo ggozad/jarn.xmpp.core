@@ -8,7 +8,7 @@ from zope.component import getUtility
 
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubStorage
-from jarn.xmpp.core.interfaces import IXMPPSettings
+from jarn.xmpp.core.interfaces import IXMPPUsers
 from jarn.xmpp.core.utils.users import setupPrincipal
 from jarn.xmpp.core.utils.users import deletePrincipal
 
@@ -20,7 +20,7 @@ def onUserCreation(event):
     """Create a jabber account for new user.
     """
     client = getUtility(IAdminClient)
-    settings = getUtility(IXMPPSettings)
+    settings = getUtility(IXMPPUsers)
     storage = getUtility(IPubSubStorage)
     principal = event.principal
     mtool = getToolByName(principal, 'portal_membership')
@@ -45,7 +45,7 @@ def onUserDeletion(event):
     """Delete jabber account when a user is removed.
     """
     client = getUtility(IAdminClient)
-    settings = getUtility(IXMPPSettings)
+    settings = getUtility(IXMPPUsers)
     storage = getUtility(IPubSubStorage)
 
     principal_id = event.principal

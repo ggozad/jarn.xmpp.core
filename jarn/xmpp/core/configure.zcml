@@ -8,7 +8,7 @@
   <include package=".subscribers" />
   <include package=".browser" />
 
-  <utility factory=".settings.XMPPSettings" />
+  <utility factory=".settings.XMPPUsers" />
   <utility factory=".storage.PubSubStorage" />
 
   <genericsetup:registerProfile

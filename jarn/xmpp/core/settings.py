@@ -6,14 +6,14 @@ from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
 from zope.interface import implements
 
-from jarn.xmpp.core.interfaces import IXMPPSettings
+from jarn.xmpp.core.interfaces import IXMPPUsers
 
 chars = string.letters + string.digits
 
 
-class XMPPSettings(object):
+class XMPPUsers(object):
 
-    implements(IXMPPSettings)
+    implements(IXMPPUsers)
 
     def getUserJID(self, user_id):
         registry = getUtility(IRegistry)
