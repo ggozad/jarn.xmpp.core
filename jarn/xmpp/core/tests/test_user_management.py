@@ -9,6 +9,7 @@ from jarn.xmpp.twisted.testing import wait_on_deferred
 from jarn.xmpp.twisted.testing import wait_on_client_deferreds
 
 from jarn.xmpp.core.interfaces import IAdminClient
+from jarn.xmpp.core.interfaces import IXMPPPasswordStorage
 from jarn.xmpp.core.testing import XMPPCORE_INTEGRATION_TESTING
 from jarn.xmpp.core.utils.pubsub import getAllChildNodes
 
@@ -36,18 +37,19 @@ class UserManagementTests(unittest.TestCase):
         d = getAllChildNodes(client, 'people')
         self.assertTrue(wait_on_deferred(d))
         self.assertTrue('stpeter' in d.result['people'])
+        pass_storage = getUtility(IXMPPPasswordStorage)
+        self.assertTrue(pass_storage.get('stpeter') is not None)
 
-        mt = getToolByName(portal, 'portal_membership')
         mt.deleteMembers('stpeter')
         wait_on_client_deferreds(client)
-
         # User has been deleted
         d = client.admin.getRegisteredUsers()
-        self.assertTrue(wait_on_deferred(d))
+        wait_on_client_deferreds(client)
         user_jids = [user_dict['jid'] for user_dict in d.result]
         self.assertTrue('stpeter@localhost' not in user_jids)
+        self.assertTrue(pass_storage.get('stpeter') is None)
 
         # User's pubsub node has been removed
         d = getAllChildNodes(client, 'people')
-        self.assertTrue(wait_on_deferred(d))
+        wait_on_client_deferreds(client)
         self.assertTrue('stpeter' not in d.result['people'])

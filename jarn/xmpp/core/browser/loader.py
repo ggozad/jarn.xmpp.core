@@ -10,7 +10,7 @@ from jarn.xmpp.twisted.client import randomResource
 from jarn.xmpp.twisted.httpb import BOSHClient
 
 from jarn.xmpp.core.interfaces import IAdminClient
-from jarn.xmpp.core.interfaces import IXMPPSettings
+from jarn.xmpp.core.interfaces import IXMPPUsers
 
 logger = logging.getLogger('jarn.xmpp.core')
 
@@ -32,10 +32,14 @@ class XMPPLoader(ViewletBase):
         if self.user_id is None:
             self._available = False
             return
-        self.settings = getUtility(IXMPPSettings)
+
+        self.settings = getUtility(IXMPPUsers)
         self.jid = self.settings.getUserJID(self.user_id)
         self.jid.resource = randomResource()
         self.jpassword = self.settings.getUserPassword(self.user_id)
+        if self.jpassword is None:
+            self._available = False
+            return
 
         self.registry = getUtility(IRegistry)
         try:

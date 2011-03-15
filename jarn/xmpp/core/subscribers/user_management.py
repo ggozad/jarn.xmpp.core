@@ -1,14 +1,17 @@
 import logging
 
 from Products.CMFCore.utils import getToolByName
-from Products.PluggableAuthService.interfaces.events import IPrincipalCreatedEvent
-from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
+from Products.PluggableAuthService.interfaces.events import \
+    IPrincipalCreatedEvent
+from Products.PluggableAuthService.interfaces.events import \
+    IPrincipalDeletedEvent
 from zope.component import adapter
 from zope.component import getUtility
 
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubStorage
-from jarn.xmpp.core.interfaces import IXMPPSettings
+from jarn.xmpp.core.interfaces import IXMPPPasswordStorage
+from jarn.xmpp.core.interfaces import IXMPPUsers
 from jarn.xmpp.core.utils.users import setupPrincipal
 from jarn.xmpp.core.utils.users import deletePrincipal
 
@@ -20,16 +23,17 @@ def onUserCreation(event):
     """Create a jabber account for new user.
     """
     client = getUtility(IAdminClient)
-    settings = getUtility(IXMPPSettings)
+    settings = getUtility(IXMPPUsers)
     storage = getUtility(IPubSubStorage)
     principal = event.principal
     mtool = getToolByName(principal, 'portal_membership')
 
     principal_id = principal.getUserId()
     principal_jid = settings.getUserJID(principal_id)
-    principal_pass = settings.getUserPassword(principal_id)
     members_jids = [settings.getUserJID(member.getUserId())
                     for member in mtool.listMembers()]
+    pass_storage = getUtility(IXMPPPasswordStorage)
+    principal_pass = pass_storage.set(principal_id)
 
     storage.leaf_nodes.append(principal_id)
     storage.node_items[principal_id] = []
@@ -45,7 +49,7 @@ def onUserDeletion(event):
     """Delete jabber account when a user is removed.
     """
     client = getUtility(IAdminClient)
-    settings = getUtility(IXMPPSettings)
+    settings = getUtility(IXMPPUsers)
     storage = getUtility(IPubSubStorage)
 
     principal_id = event.principal
@@ -59,6 +63,9 @@ def onUserDeletion(event):
         del storage.node_items[principal_id]
     if principal_id in storage.collections['people']:
         storage.collections['people'].remove(principal_id)
+
+    pass_storage = getUtility(IXMPPPasswordStorage)
+    pass_storage.remove(principal_id)
 
     d = deletePrincipal(client, principal_jid)
     return d
