@@ -1,3 +1,5 @@
+import logging
+
 from twisted.internet import defer
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility
@@ -8,17 +10,38 @@ from jarn.xmpp.core.client import AdminClient
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubStorage
 
+logger = logging.getLogger('jarn.xmpp.core')
+
 
 def setupAdminClient(portal, event):
     if queryUtility(IAdminClient) is None:
         gsm = getGlobalSiteManager()
-        gsm.registerUtility(AdminClient(), IAdminClient)
+        try:
+            client = AdminClient()
+            gsm.registerUtility(client, IAdminClient)
+        except:
+            logger.error('Could not load AdminClient')
 
 
 def adminConnected(event):
     client = event.object
+    # Since this is our initial connection, populate ram storage with the
+    # pubsub nodes.
     populatePubSubStorage()
     client.admin.sendAnnouncement("Instance started")
+
+    # Register content subscribers
+    import content
+    gsm = getGlobalSiteManager()
+    gsm.registerHandler(content.pubsubObjectAdded)
+    gsm.registerHandler(content.pubsubObjectModified)
+    gsm.registerHandler(content.pubsubWorkfowChanged)
+    gsm.registerHandler(content.pubsubObjectRemoved)
+
+    # Register user subscribers
+    import user_management
+    gsm.registerHandler(user_management.onUserCreation)
+    gsm.registerHandler(user_management.onUserDeletion)
 
 
 def populatePubSubStorage():

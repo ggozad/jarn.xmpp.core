@@ -13,40 +13,4 @@
     handler=".startup.adminConnected"
     />
 
-  <!-- User Management -->
-  <subscriber 
-    for="Products.PluggableAuthService.interfaces.events.IPrincipalCreatedEvent"
-    handler=".user_management.onUserCreation"
-    />
-
-  <subscriber
-    for="Products.PluggableAuthService.interfaces.events.IPrincipalDeletedEvent"
-    handler=".user_management.onUserDeletion"
-    />
-
-  <!-- Content subscriptions -->
-  <subscriber
-    for="Products.ATContentTypes.interfaces.IATContentType
-         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
-    handler=".content.pubsubObjectModified"
-    />
-
-  <subscriber
-    for="Products.ATContentTypes.interfaces.IATContentType
-         Products.CMFCore.interfaces.IActionSucceededEvent"
-    handler=".content.pubsubObjectModified"
-    />
-
-  <subscriber
-    for="Products.ATContentTypes.interfaces.IATContentType
-         zope.lifecycleevent.interfaces.IObjectAddedEvent"
-    handler=".content.pubsubObjectAdded"
-    />
-
-  <subscriber
-    for="Products.ATContentTypes.interfaces.IATContentType
-         zope.lifecycleevent.interfaces.IObjectRemovedEvent"
-    handler=".content.pubsubObjectRemoved"
-    />
-
 </configure>

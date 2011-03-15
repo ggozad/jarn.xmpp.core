@@ -1,6 +1,9 @@
 import logging
 
 from Products.CMFCore.utils import getToolByName
+from Products.PluggableAuthService.interfaces.events import IPrincipalCreatedEvent
+from Products.PluggableAuthService.interfaces.events import IPrincipalDeletedEvent
+from zope.component import adapter
 from zope.component import getUtility
 
 from jarn.xmpp.core.interfaces import IAdminClient
@@ -12,6 +15,7 @@ from jarn.xmpp.core.utils.users import deletePrincipal
 logger = logging.getLogger('jarn.xmpp.core')
 
 
+@adapter(IPrincipalCreatedEvent)
 def onUserCreation(event):
     """Create a jabber account for new user.
     """
@@ -36,6 +40,7 @@ def onUserCreation(event):
     return d
 
 
+@adapter(IPrincipalDeletedEvent)
 def onUserDeletion(event):
     """Delete jabber account when a user is removed.
     """
