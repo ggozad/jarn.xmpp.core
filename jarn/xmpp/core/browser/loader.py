@@ -32,10 +32,14 @@ class XMPPLoader(ViewletBase):
         if self.user_id is None:
             self._available = False
             return
+
         self.settings = getUtility(IXMPPUsers)
         self.jid = self.settings.getUserJID(self.user_id)
         self.jid.resource = randomResource()
         self.jpassword = self.settings.getUserPassword(self.user_id)
+        if self.jpassword is None:
+            self._available = False
+            return
 
         self.registry = getUtility(IRegistry)
         try:

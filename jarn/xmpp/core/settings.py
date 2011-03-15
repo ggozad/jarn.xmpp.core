@@ -1,14 +1,14 @@
-import string
-import random
+import logging
 
 from plone.registry.interfaces import IRegistry
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
 from zope.interface import implements
 
+from jarn.xmpp.core.interfaces import IXMPPPasswordStorage
 from jarn.xmpp.core.interfaces import IXMPPUsers
 
-chars = string.letters + string.digits
+logger = logging.getLogger('jarn.xmpp.core')
 
 
 class XMPPUsers(object):
@@ -21,10 +21,5 @@ class XMPPUsers(object):
         return JID("%s@%s" % (user_id, xmpp_domain))
 
     def getUserPassword(self, user_id):
-        if user_id == 'admin':
-            return 'admin'
-        else:
-            # temp hack until I have a persistent password storage
-            # if we need to create one:
-            # return ''.join([random.choice(chars) for i in range(12)])
-            return 'secret'
+        pass_storage = getUtility(IXMPPPasswordStorage)
+        return pass_storage.get(user_id)
