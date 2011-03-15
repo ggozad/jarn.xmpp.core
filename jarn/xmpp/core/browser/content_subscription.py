@@ -1,9 +1,11 @@
+import logging
 import time
 
 from plone.app.layout.viewlets.common import ViewletBase
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getUtility
+from zope.component import queryUtility
 from zope.component import queryAdapter
 
 from jarn.xmpp.core import messageFactory as _
@@ -13,6 +15,8 @@ from jarn.xmpp.core.browser.pubsub import UnsubscribeFromNodeForm
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubable
 from jarn.xmpp.core.interfaces import IXMPPSettings
+
+logger = logging.getLogger('jarn.xmpp.core')
 
 
 class ContentSubscriptionViewlet(ViewletBase):
@@ -28,8 +32,12 @@ class ContentSubscriptionViewlet(ViewletBase):
         else:
             self._subscribed = False
 
-
     def update(self):
+        client = queryUtility(IAdminClient)
+        if client is None:
+            logger.error('Could not load AdminClient')
+            self.available = False
+            return
         pm = getToolByName(self.context, 'portal_membership')
         user_id = pm.getAuthenticatedMember().getId()
 
@@ -51,7 +59,6 @@ class ContentSubscriptionViewlet(ViewletBase):
         self._subscribed = None
 
         settings = getUtility(IXMPPSettings)
-        client = getUtility(IAdminClient)
         self.user_jid = settings.getUserJID(user_id)
 
         d = client.getSubscriptions(self.node)
@@ -62,7 +69,6 @@ class ContentSubscriptionViewlet(ViewletBase):
         while self._subscribed is None:
             time.sleep(0.01)
         self.createForms()
-
 
     def createForms(self):
         form = None

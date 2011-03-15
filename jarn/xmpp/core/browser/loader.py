@@ -3,12 +3,13 @@ import logging
 from plone.registry.interfaces import IRegistry
 from plone.app.layout.viewlets.common import ViewletBase
 from Products.CMFCore.utils import getToolByName
-from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
+from zope.component import queryUtility
 
 from jarn.xmpp.twisted.client import randomResource
 from jarn.xmpp.twisted.httpb import BOSHClient
 
+from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IXMPPSettings
 
 logger = logging.getLogger('jarn.xmpp.core')
@@ -20,31 +21,32 @@ class XMPPLoader(ViewletBase):
 
     def update(self):
         super(XMPPLoader, self).update()
-        self.settings = getUtility(IXMPPSettings)
-        self.registry = getUtility(IRegistry)
+        self._available = True
+        client = queryUtility(IAdminClient)
+        if client is None:
+            self._available = False
+            return
+
         pm = getToolByName(self.context, 'portal_membership')
         self.user_id = pm.getAuthenticatedMember().getId()
-        self.resource = randomResource()
+        if self.user_id is None:
+            self._available = False
+            return
+        self.settings = getUtility(IXMPPSettings)
+        self.jid = self.settings.getUserJID(self.user_id)
+        self.jid.resource = randomResource()
+        self.jpassword = self.settings.getUserPassword(self.user_id)
+
+        self.registry = getUtility(IRegistry)
+        try:
+            self.bosh = self.registry['jarn.xmpp.boshURL']
+            self.pubsub_jid = self.registry['jarn.xmpp.pubsubJID']
+        except KeyError:
+            self._available = False
 
     @property
-    def bosh(self):
-        return self.registry['jarn.xmpp.boshURL']
-
-    @property
-    def jdomain(self):
-        return self.registry['jarn.xmpp.xmppDomain']
-
-    @property
-    def jid(self):
-        return JID("%s@%s/%s" % (self.user_id, self.jdomain, self.resource))
-
-    @property
-    def jpassword(self):
-        return self.settings.getUserPassword(self.user_id)
-
-    @property
-    def pubsub_jid(self):
-        return self.registry['jarn.xmpp.pubsubJID']
+    def available(self):
+        return self._available
 
     def prebind(self):
         b_client = BOSHClient(self.jid, self.jpassword, self.bosh)
