@@ -7,7 +7,7 @@ $(document).bind('jarnxmpp.message', function (event) {
 });
 
 $(document).bind('jarnxmpp.roomInvitation', function (event) {
-    link = portal_url + '/@@muc?room=' + event.room
+    link = portal_url + '/@@muc?room=' + event.room;
     body = 'You have received an invitation to ' +
            '<a class="muc_join" href="'+ link +'">join</a>' +
            ' a group chat.';

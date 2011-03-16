@@ -14,13 +14,14 @@ jarnxmpp.muc = {
         // Is this for us?
         if (room != jarnxmpp.muc.room) {
             var participating = false;
-            for (var user in jarnxmpp.muc.participants) {
-                var jid = jarnxmpp.muc.participants[user];
-                if (from === jid) {
-                    participating =true;
-                    break
+            for (var user in jarnxmpp.muc.participants)
+                if (jarnxmpp.muc.participants.hasOwnProperty(user)) {
+                    var jid = jarnxmpp.muc.participants[user];
+                    if (from === jid) {
+                        participating =true;
+                        break;
+                    }
                 }
-            }
             if (!participating) {
                 var nick = Strophe.getNodeFromJid(from);
                 if ($(presence).attr('type') !== 'unavailable') {
@@ -28,7 +29,7 @@ jarnxmpp.muc = {
                     $(document).trigger('jarnxmpp.muc.userOnline', nick);
                 }
                 else {
-                    delete jarnxmpp.muc.online[nick]
+                    delete jarnxmpp.muc.online[nick];
                     $(document).trigger('jarnxmpp.muc.userOffline', nick);
                 }
             }
@@ -114,9 +115,9 @@ jarnxmpp.muc = {
             msg = "<div class='message" + delay_css + "'>" +
                   "&lt;<span class='" + nick_class + "'>" +
                                         nick + "</span>&gt;" +
-                  " <span class='body'>" + body + "</span></div>"
+                  " <span class='body'>" + body + "</span></div>";
         } else {
-            msg = "<div class='notice'>*** " + body + "</div>"            
+            msg = "<div class='notice'>*** " + body + "</div>";
         }
 
         // detect if we are scrolled all the way down

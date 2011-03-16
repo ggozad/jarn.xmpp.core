@@ -1,7 +1,7 @@
 jarnxmpp.Messages = {
     messageReceived: function (message) {
         var body = $(message).children('body').text();
-        if (body=="") {
+        if (body==="") {
             return true; // This is a typing notification, we do not handle it here...
         }
         var xhtml_body = $(message).find('html > body').contents();
@@ -11,7 +11,7 @@ jarnxmpp.Messages = {
             event.body = xhtml_body.html();
         } else {
             event.body = body;
-            event.mtype = 'text'
+            event.mtype = 'text';
         }
         event.from = $(message).attr('from');
         $(document).trigger(event);
@@ -79,9 +79,9 @@ jarnxmpp.Presence = {
             } else {
                 var show = $(presence).find('show').text(); 
                 if (show === '' || show === '') {
-                    status = 'online'
+                    status = 'online';
                 } else {
-                    status = 'away'
+                    status = 'away';
                 }
             }
             $(document).trigger('jarnxmpp.presence', [from, status]);
@@ -95,7 +95,7 @@ jarnxmpp.PubSub = {
         var items = $(msg).find('item');
         if (items.length>0) {
             for (var i = 0; i < items.length; i++) {
-                var entry = $(items[i]).children('entry')
+                var entry = $(items[i]).children('entry');
                 var event = jQuery.Event('jarnxmpp.nodePublished');
                 event.author = $(entry).children('author').text();
                 event.published = $(entry).children('published').text();
