@@ -41,7 +41,7 @@ class SetupXMPPForm(form.Form):
     def setup_xmpp(self, action):
         data, errors = self.extractData()
 
-        settings = getUtility(IXMPPUsers)
+        xmpp_users = getUtility(IXMPPUsers)
         pass_storage = getUtility(IXMPPPasswordStorage)
         mt = getToolByName(self.context, 'portal_membership')
         member_ids = mt.listMemberIds()
@@ -49,7 +49,7 @@ class SetupXMPPForm(form.Form):
         member_passwords = {}
         pass_storage.clear()
         for member_id in member_ids:
-            member_jid = settings.getUserJID(member_id)
+            member_jid = xmpp_users.getUserJID(member_id)
             member_jids.append(member_jid)
             member_passwords[member_jid] = pass_storage.set(member_id)
 

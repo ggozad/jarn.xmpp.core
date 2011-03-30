@@ -23,14 +23,14 @@ def onUserCreation(event):
     """Create a jabber account for new user.
     """
     client = getUtility(IAdminClient)
-    settings = getUtility(IXMPPUsers)
+    xmpp_users = getUtility(IXMPPUsers)
     storage = getUtility(IPubSubStorage)
     principal = event.principal
     mtool = getToolByName(principal, 'portal_membership')
 
     principal_id = principal.getUserId()
-    principal_jid = settings.getUserJID(principal_id)
-    members_jids = [settings.getUserJID(member.getUserId())
+    principal_jid = xmpp_users.getUserJID(principal_id)
+    members_jids = [xmpp_users.getUserJID(member.getUserId())
                     for member in mtool.listMembers()]
     pass_storage = getUtility(IXMPPPasswordStorage)
     principal_pass = pass_storage.set(principal_id)
@@ -49,11 +49,11 @@ def onUserDeletion(event):
     """Delete jabber account when a user is removed.
     """
     client = getUtility(IAdminClient)
-    settings = getUtility(IXMPPUsers)
+    xmpp_users = getUtility(IXMPPUsers)
     storage = getUtility(IPubSubStorage)
 
     principal_id = event.principal
-    principal_jid = settings.getUserJID(principal_id)
+    principal_jid = xmpp_users.getUserJID(principal_id)
 
     if principal_id in storage.leaf_nodes:
         storage.leaf_nodes.remove(principal_id)
