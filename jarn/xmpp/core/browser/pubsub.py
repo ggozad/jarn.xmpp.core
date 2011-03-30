@@ -75,8 +75,8 @@ class SubscribeUnsubscribeForm(form.Form):
         else:
             pm = getToolByName(self.context, 'portal_membership')
             user_id = pm.getAuthenticatedMember().getId()
-            settings = getUtility(IXMPPUsers)
-            self.user_jid = settings.getUserJID(user_id)
+            xmpp_users = getUtility(IXMPPUsers)
+            self.user_jid = xmpp_users.getUserJID(user_id)
 
     def updateWidgets(self):
         form.Form.updateWidgets(self)

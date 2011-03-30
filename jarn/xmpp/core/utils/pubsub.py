@@ -1,7 +1,9 @@
 from datetime import datetime
 import logging
 
+from plone.registry.interfaces import IRegistry
 from twisted.internet import defer
+from twisted.words.protocols.jabber.jid import JID
 from twisted.words.xish.domish import Element
 from wokkel.pubsub import Item
 from jarn.xmpp.twisted.interfaces import IDeferredXMPPClient
@@ -19,10 +21,11 @@ def publishItemToNode(identifier, content, user_id):
         replaced by js, making the deferred client not used anywhere.
     """
 
-    jsettings = getUtility(IXMPPUsers)
-    user_jid = jsettings.getUserJID(user_id)
-    password = jsettings.getUserPassword(user_id)
-
+    settings = getUtility(IRegistry)
+    pubsub_jid = JID(settings['jarn.xmpp.pubsubJID'])
+    xmpp_users = getUtility(IXMPPUsers)
+    user_jid = xmpp_users.getUserJID(user_id)
+    password = xmpp_users.getUserPassword(user_id)
     entry = Element(('http://www.w3.org/2005/Atom', 'entry'))
     entry.addElement('content', content=content)
     entry.addElement('author', content=user_id)
@@ -33,9 +36,7 @@ def publishItemToNode(identifier, content, user_id):
 
     def publishItem(xmlstream):
         pubsub_handler = xmlstream.factory.streamManager.handlers[0]
-        result = pubsub_handler.publish(jsettings.PubSubJID,
-                                          identifier,
-                                          items = [item])
+        result = pubsub_handler.publish(pubsub_jid, identifier, items = [item])
         return result
 
     def resultCb(result):
