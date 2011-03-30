@@ -9,7 +9,7 @@
 
   <browser:page
     for="*"
-    name="pubsub_publish"
+    name="pubsub-publish"
     class=".pubsub.PublishToNodeForm"
     permission="zope2.View"
     />
@@ -67,15 +67,6 @@
     template="loader_muc.pt"
     permission="zope2.View"
     />
-
-  <browser:viewlet
-      name="jarn.xmpp.core.content_subscription"
-      for="Products.CMFCore.interfaces.IContentish"
-      manager="plone.app.layout.viewlets.interfaces.IBelowContent"
-      view="plone.app.layout.globals.interfaces.IViewView"
-      class=".content_subscription.ContentSubscriptionViewlet"
-      permission="zope2.View"
-      />
 
   <browser:resourceDirectory
     name="jarn.xmpp.core.js"

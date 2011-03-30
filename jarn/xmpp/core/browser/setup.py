@@ -43,10 +43,6 @@ class SetupXMPPForm(form.Form):
 
         settings = getUtility(IXMPPUsers)
         pass_storage = getUtility(IXMPPPasswordStorage)
-        ct = getToolByName(self.context, 'portal_catalog')
-        content_nodes = [brain.UID for brain in
-                         ct.unrestrictedSearchResults(
-                            object_provides=IATContentType.__identifier__)]
         mt = getToolByName(self.context, 'portal_membership')
         member_ids = mt.listMemberIds()
         member_jids = []
@@ -63,8 +59,6 @@ class SetupXMPPForm(form.Form):
             d = populatePubSubStorage()
             return d
 
-        d = setupXMPPEnvironment(admin,
-                                 member_jids, member_passwords,
-                                 content_nodes)
+        d = setupXMPPEnvironment(admin, member_jids, member_passwords)
         d.addCallback(initPubSubStorage)
         return d

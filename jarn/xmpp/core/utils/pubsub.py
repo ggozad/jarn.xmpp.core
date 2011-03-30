@@ -10,9 +10,6 @@ from zope.component import getUtility
 
 from jarn.xmpp.core.interfaces import IXMPPUsers
 
-content_node_config = {'pubsub#send_last_published_item': 'never',
-                       'pubsub#collection': 'content'}
-
 logger = logging.getLogger('jarn.xmpp.core')
 
 

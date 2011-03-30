@@ -1,4 +1,3 @@
-from plone.app.registry.testing import PLONE_APP_REGISTRY_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting, FunctionalTesting
@@ -51,8 +50,7 @@ class XMPPCoreFixture(PloneSandboxLayer):
         wait_for_client_state(client, 'authenticated')
         setupXMPPEnvironment(client,
             member_jids=[JID('test_user_1_@localhost')],
-            member_passwords={JID('test_user_1_@localhost'): 'secret'},
-            content_nodes=[])
+            member_passwords={JID('test_user_1_@localhost'): 'secret'})
         wait_on_client_deferreds(client)
 
     def testTearDown(self):

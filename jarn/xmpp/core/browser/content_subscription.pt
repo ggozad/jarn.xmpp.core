@@ -1,7 +1,0 @@
-<tal:subscription tal:condition="view/available">
-  <tal:form tal:define="subscr_form view/form_wrapper | nothing" 
-            tal:condition="subscr_form">
-      <form tal:replace="structure subscr_form" />
-  </tal:form>
-
-</tal:subscription>
