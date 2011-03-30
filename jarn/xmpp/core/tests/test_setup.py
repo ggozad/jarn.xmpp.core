@@ -24,6 +24,5 @@ class LayerSetupTests(unittest.TestCase):
         wait_on_client_deferreds(client)
         tree = d.result
 
-        self.assertEqual(tree[''], ['content', 'people'])
+        self.assertEqual(tree[''], ['people'])
         self.assertTrue(member_ids.issubset(set(tree['people'])))
-        self.assertEqual(tree['content'], ['dummy_content_node'])

@@ -3,7 +3,6 @@ import logging
 from twisted.internet import defer
 from twisted.words.protocols.jabber.jid import JID
 
-from jarn.xmpp.core.utils.pubsub import content_node_config
 from jarn.xmpp.core.utils.pubsub import getAllChildNodes
 from jarn.xmpp.core.utils.users import setupPrincipal
 
@@ -11,8 +10,7 @@ logger = logging.getLogger('jarn.xmpp.core')
 
 
 def setupXMPPEnvironment(client, member_jids=[],
-                         member_passwords={},
-                         content_nodes=[]):
+                         member_passwords={}):
 
     def deleteAllNodes(result):
         nodes = sum(result.values(), [])
@@ -28,29 +26,11 @@ def setupXMPPEnvironment(client, member_jids=[],
     def createCollections(result):
         if not result:
             return False
-        d1 = client.createNode('people',
+        d = client.createNode('people',
             options={'pubsub#node_title': 'All personal feeds',
                      'pubsub#node_type': 'collection',
                      'pubsub#collection': ''})
-        d2 = client.createNode('content',
-            options={'pubsub#node_title': 'All content feeds',
-                     'pubsub#node_type': 'collection',
-                     'pubsub#collection': ''})
-        d = defer.DeferredList([d1, d2])
         return d
-
-    def createContentNodes(result):
-        if not result:
-            return False
-
-        deferred_list = []
-        for uid in content_nodes:
-            d = client.createNode(uid, options=content_node_config)
-            deferred_list.append(d)
-        if deferred_list:
-            d = defer.DeferredList(deferred_list, consumeErrors=True)
-            return d
-        return True
 
     def createDummyItemNodes(result):
         """ XXX: This is necessary as ejabberd stupidly considers a node
@@ -59,11 +39,8 @@ def setupXMPPEnvironment(client, member_jids=[],
         if not result:
             return False
 
-        d1 = client.createNode('dummy_people_node',
+        d = client.createNode('dummy_people_node',
                               options={'pubsub#collection': 'people'})
-        d2 = client.createNode('dummy_content_node',
-                              options={'pubsub#collection': 'content'})
-        d = defer.DeferredList([d1, d2], consumeErrors=True)
         return d
 
     def subscribeAdmin(result):
@@ -114,7 +91,6 @@ def setupXMPPEnvironment(client, member_jids=[],
     d = getAllChildNodes(client, None)
     d.addCallback(deleteAllNodes)
     d.addCallback(createCollections)
-    d.addCallback(createContentNodes)
     d.addCallback(createDummyItemNodes)
     d.addCallback(subscribeAdmin)
     d.addCallback(getExistingUsers)

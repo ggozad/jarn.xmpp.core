@@ -30,16 +30,9 @@ def adminConnected(event):
     populatePubSubStorage()
     client.admin.sendAnnouncement("Instance started")
 
-    # Register content subscribers
-    import content
-    gsm = getGlobalSiteManager()
-    gsm.registerHandler(content.pubsubObjectAdded)
-    gsm.registerHandler(content.pubsubObjectModified)
-    gsm.registerHandler(content.pubsubWorkfowChanged)
-    gsm.registerHandler(content.pubsubObjectRemoved)
-
     # Register user subscribers
     import user_management
+    gsm = getGlobalSiteManager()
     gsm.registerHandler(user_management.onUserCreation)
     gsm.registerHandler(user_management.onUserDeletion)
 
