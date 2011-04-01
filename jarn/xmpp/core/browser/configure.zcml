@@ -90,4 +90,9 @@
     directory="css"
   />
 
+  <browser:resourceDirectory
+    name="jarn.xmpp.core.images"
+    directory="images"
+  />
+
 </configure>

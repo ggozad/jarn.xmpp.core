@@ -1,10 +1,27 @@
+#online-users dd {
+	padding-bottom: 32px;
+}
+#online-users dd ul {
+	margin-bottom: -32px;
+	height: 32px;
+}
+#online-users dd ul li a {
+	position:absolute; left:-9999px	
+}
 #online-users .offline {
     opacity: 0.5;
 }
-#online-users button.offline  {
+#online-users img {
+/*	height: 40px;
+	width: 40px;
+*/}
+.online-users-message {
+	position:relative; overflow: hidden; height:32px;
+	background: no-repeat url(++resource++jarn.xmpp.core.images/chat_icon.png);
+}
+.online-users-actions.inactive{
 	display: none;
 }
-#online-users img {
-	height: 40px;
-	width: 40px;
+.online-users-actions.active{
+	display: block;
 }
