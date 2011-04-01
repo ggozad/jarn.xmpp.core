@@ -16,6 +16,14 @@
 
   <browser:page
     for="*"
+    name="sendXMPPMessage"
+    class=".messaging.SendMessageView"
+    template="messaging.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
     name="pubsub-publish"
     class=".pubsub.PublishToNodeForm"
     permission="zope2.View"

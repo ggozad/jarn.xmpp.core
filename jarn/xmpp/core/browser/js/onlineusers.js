@@ -6,24 +6,34 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status) {
         existing.attr('class', status);
     } else {
         member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
-            var dd = $('<dd></dd>').attr('class', status).attr('id', 'online-users-'+userid);
-            var ul = $('<ul class="online-users-actions inactive"><li class="online-users-message"><a>Message</a></li><ul>');
-            dd.append($('<img/>').attr('title', data.fullname).attr('src', data.portrait_url));
-            dd.append(ul);
+            var dd = $('<dd></dd>')
+                .attr('class', status)
+                .attr('id', 'online-users-'+userid)
+                .attr('title', 'Click to chat');
+            var sendMessage = $('<a/>')
+                .attr('class', 'online-users-message')
+                .attr('href','sendXMPPMessage?message-recipient=' + barejid);
+            sendMessage.append($('<img/>').attr('title', data.fullname).attr('src', data.portrait_url));
+            sendMessage.prepOverlay({
+                subtype: 'ajax',
+            });
+            dd.append(sendMessage);
             $('#online-users').append(dd);
         });
     }
 });
 
 $(document).ready(function () {
-    $('#online-users .online').live('hover', function () {
-        if (event.type === 'mouseover') {
-            $(this).find('.online-users-actions').attr('class', 'online-users-actions active');
-        } else {
-            $(this).find('.online-users-actions').attr('class', 'online-users-actions inactive');
-        }
+    $('#online-users .online').live('mouseover', function () {
+        $("#"+this.id+"[title]").tooltip();
     });
-    $('.online-users-message').live('click', function() {
-        alert('message');
+    $('#sendXMPPMessage').live('submit', function () {
+        var text = $(this).find('input[name="message"]').attr('value');
+        var recipient = $(this).find('input[name="message-recipient"]').attr('value');
+        var message = $msg({to: recipient, type: 'chat'})
+            .c('body').t(text);
+        jarnxmpp.connection.send(message);
+        $(this).parents('.overlay').data('overlay').close();
+        return false;
     });
 });
