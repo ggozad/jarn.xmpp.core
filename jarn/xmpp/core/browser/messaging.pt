@@ -1,0 +1,6 @@
+<form id="sendXMPPMessage" action="" method="post">
+<label i18n:translate="">Message user</label>
+<input type="hidden" name="message-recipient" tal:attributes="value here/REQUEST/message-recipient | nothing"/>
+<input type="text" name="message"/>
+<input type="submit" value="Send" name="sendButton" />
+</form>

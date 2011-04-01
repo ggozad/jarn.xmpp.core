@@ -1,6 +1,7 @@
 #online-users .offline {
     opacity: 0.5;
 }
-#online-users button.offline  {
-	display: none;
+#online-users img {
+/*	height: 40px;
+	width: 40px;*/
 }

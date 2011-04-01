@@ -7,6 +7,21 @@
   <include package="plone.app.z3cform" />
   <include package=".portlets" />
 
+  <browser:view
+    for="*"
+    name="xmpp-userinfo"
+    class=".userinfo.XMPPUserInfoView"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="sendXMPPMessage"
+    class=".messaging.SendMessageView"
+    template="messaging.pt"
+    permission="zope2.View"
+    />
+
   <browser:page
     for="*"
     name="pubsub-publish"
@@ -81,6 +96,11 @@
   <browser:resourceDirectory
     name="jarn.xmpp.core.css"
     directory="css"
+  />
+
+  <browser:resourceDirectory
+    name="jarn.xmpp.core.images"
+    directory="images"
   />
 
 </configure>
