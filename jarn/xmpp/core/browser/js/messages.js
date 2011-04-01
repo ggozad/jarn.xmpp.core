@@ -1,8 +1,11 @@
 $(document).bind('jarnxmpp.message', function (event) {
-    //XXX If mtype is 'xhtml' we should sanitize
-    $.gritter.add({
-        title: event.from,
-        text: event.body,
+    var userid = Strophe.getNodeFromJid(event.from);
+    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
+        $.gritter.add({
+            title: data.fullname,
+            text: event.body,
+            image: data.portrait_url
+        });
     });
 });
 

@@ -1,8 +1,9 @@
 $(document).bind('jarnxmpp.nodePublished', function (event) {
-	//XXX If mtype is 'xhtml' we should sanitize
-	$.gritter.add({
-		title: event.author,
-		text: event.content,
-		image: portal_url+'/portal_memberdata/portraits/'+event.author,
-	});
+    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+event.author, function(data) {
+        $.gritter.add({
+            title: data.fullname,
+            text: event.content,
+            image: data.portrait_url
+        });
+    });
 });
