@@ -18,7 +18,7 @@
     for="*"
     name="sendXMPPMessage"
     class=".messaging.SendMessageView"
-    template="messaging.pt"
+    template="send_message.pt"
     permission="zope2.View"
     />
 
