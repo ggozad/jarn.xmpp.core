@@ -98,6 +98,8 @@ jarnxmpp.Presence = {
                     if (pos >= 0) {
                         jarnxmpp.Presence.online[jid].splice(pos, 1);
                     }
+                    if (jarnxmpp.Presence.online[jid].length === 0)
+                        delete jarnxmpp.Presence.online[jid];
                 }
             }
             $(document).trigger('jarnxmpp.presence', [from, status]);
