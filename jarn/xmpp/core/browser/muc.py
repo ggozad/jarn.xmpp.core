@@ -21,7 +21,5 @@ class MUCView(BrowserView):
 
     def mucSettings(self):
         return """
-            $(document).ready(function () {
-            jarnxmpp.muc.room ='%s';
-            });
+            jarnxmpp.muc.joinRoom('%s');
         """ % self.room_jid.full()

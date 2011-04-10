@@ -15,9 +15,9 @@ $(document).bind('jarnxmpp.message', function (event) {
             image: data.portrait_url,
             sticky: true,
             after_open: function (e) {
-                // e.find('.chat-link').prepOverlay({
-                //     subtype: 'ajax',
-                // });
+                e.find('.chat-link').prepOverlay({
+                    subtype: 'ajax',
+                });
             },
         });
     });
