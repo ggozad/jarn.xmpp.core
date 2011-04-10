@@ -24,13 +24,23 @@ $(document).bind('jarnxmpp.message', function (event) {
 });
 
 $(document).bind('jarnxmpp.roomInvitation', function (event) {
-    link = portal_url + '/@@muc?room=' + event.room;
-    body = 'You have received an invitation to ' +
-           '<a class="muc_join" href="'+ link +'">join</a>' +
+    var userid = Strophe.getNodeFromJid(event.from);
+    var link = '@@muc?room=' + event.room;
+    var body = 'You have received an invitation to ' +
+           '<a class="chat-link" href="'+ link +'">join</a>' +
            ' a group chat.';
-    $.gritter.add({
-        title: event.from,
-        text: body,
-        sticky: true,
+
+    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
+        $.gritter.add({
+            title: data.fullname,
+            text: body,
+            image: data.portrait_url,
+            sticky: true,
+            after_open: function (e) {
+                e.find('.chat-link').prepOverlay({
+                    subtype: 'ajax',
+                });
+            },
+        });
     });
 });

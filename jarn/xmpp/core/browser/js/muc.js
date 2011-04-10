@@ -10,6 +10,12 @@ jarnxmpp.muc = {
     joinRoom: function (room) {
         jarnxmpp.muc.room=room; 
         jarnxmpp.muc.nickname = Strophe.getNodeFromJid(jarnxmpp.jid);
+        for (var user in jarnxmpp.Presence.online) {
+            if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
+                jarnxmpp.muc.online[user] = jarnxmpp.Presence.online[user];
+                $(document).trigger('jarnxmpp.muc.userOnline', user);
+            }
+        }
         jarnxmpp.connection.send(
             $pres({
                 to: jarnxmpp.muc.room+'/'+jarnxmpp.muc.nickname
