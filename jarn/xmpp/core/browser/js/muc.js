@@ -150,13 +150,13 @@ $(document).bind('jarnxmpp.connected', function () {
                                 null, "message", "groupchat");
 
     // Room creation
-    jarnxmpp.connection.send($pres());
-    jarnxmpp.muc.nickname = Strophe.getNodeFromJid(jarnxmpp.jid);
-    jarnxmpp.connection.send(
-        $pres({
-            to: jarnxmpp.muc.room+'/'+jarnxmpp.muc.nickname
-        }).c('x', {xmlns: jarnxmpp.muc.NS_MUC}));
-
+    if (jarnxmpp.muc.room!==null) {
+        jarnxmpp.muc.nickname = Strophe.getNodeFromJid(jarnxmpp.jid);
+        jarnxmpp.connection.send(
+            $pres({
+                to: jarnxmpp.muc.room+'/'+jarnxmpp.muc.nickname
+            }).c('x', {xmlns: jarnxmpp.muc.NS_MUC}));
+    }
 });
 
 $(document).bind('jarnxmpp.muc.roomJoined', function () {
@@ -206,7 +206,7 @@ $(document).bind('jarnxmpp.muc.userOffline', function (ev, nick) {
 });
 
 $(document).ready(function () {
-    $('#input').keypress(function (ev) {
+    $('#muc-input').keypress(function (ev) {
         if (ev.which === 13) {
             ev.preventDefault();
 

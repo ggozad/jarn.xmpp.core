@@ -1,45 +1,16 @@
-<metal:page define-macro="master">
-<metal:block define-slot="top_slot" />
-
-<tal:doctype tal:replace="structure string:&lt;!DOCTYPE html PUBLIC
-  &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot;
-  &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;" />
-
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      xml:lang="en"
       lang="en"
-      tal:define="portal_state context/@@plone_portal_state;
-                  context_state context/@@plone_context_state;
-                  plone_view context/@@plone;
-                  lang portal_state/language;
-                  view nocall:view | nocall: plone_view;
-                  dummy python: plone_view.mark_view(view);
-                  portal_url portal_state/portal_url;
-                  checkPermission nocall: context/portal_membership/checkPermission;
-                  site_properties context/portal_properties/site_properties;"
-      tal:attributes="lang lang;
-                      xml:lang lang">
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+<body>
 
-  <metal:cache use-macro="context/global_cache_settings/macros/cacheheaders">
-    Get the global cache headers located in global_cache_settings.
-  </metal:cache>
+<metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
 
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="generator" content="Plone - http://plone.org" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-    <base tal:attributes="href plone_view/renderBase" /><!--[if lt IE 7]></base><![endif]-->
-
-    <div tal:replace="structure provider:plone.htmlhead" />
-    <link tal:replace="structure provider:plone.htmlhead.links" />
-    <meta http-equiv="imagetoolbar" content="no" />
     <link rel="stylesheet" href="++resource++jarn.xmpp.core.css/muc.css" type="text/css">
-  </head>
-  <body>
 
 
           <h1>Chat</h1>
@@ -50,7 +21,7 @@
               <div id='room-name'></div>
               <div id='room-topic'></div>
               <div id='chat'></div>
-              <textarea id='input'></textarea>
+              <textarea id='muc-input'></textarea>
             </div>
     
             <div id='participants'>
@@ -61,11 +32,11 @@
             </div>
           </div>
 
-    <div tal:replace="structure provider:jarn.xmpp.core.loader.vm" />
     <script tal:content="view/mucSettings"></script>
 
-    <!-- -->
+    </metal:content-core>
+</metal:content-core>
 
-  </body>
+</body>
 </html>
-</metal:page>
+

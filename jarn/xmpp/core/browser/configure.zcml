@@ -60,26 +60,11 @@
 
   <!-- Viewlets -->
 
-  <browser:viewletManager
-      name="jarn.xmpp.core.loader.vm"
-      provides="..interfaces.IXMPPLoaderVM"
-      permission="zope2.View"
-      class="plone.app.viewletmanager.manager.OrderedViewletManager"
-      />
-
   <browser:viewlet
     name="jarn.xmpp.core.loader"
     manager="plone.app.layout.viewlets.interfaces.IBelowContent"
     class=".loader.XMPPLoader"
     template="loader.pt"
-    permission="zope2.View"
-    />
-
-  <browser:viewlet
-    name="jarn.xmpp.core.loader_muc"
-    manager="..interfaces.IXMPPLoaderVM"
-    class=".loader.XMPPLoader"
-    template="loader_muc.pt"
     permission="zope2.View"
     />
 

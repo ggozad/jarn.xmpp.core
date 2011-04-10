@@ -34,11 +34,3 @@ $(document).bind('jarnxmpp.roomInvitation', function (event) {
         sticky: true,
     });
 });
-
-$(document).ready(function () {
-    $('.muc_join').live('click', function () {
-        var invitee = $(this).attr('value');
-        window.open($(this).attr('href'), "Chat",
-                    "menubar=0,resizable=0,width=800,height=500");
-    });
-});
