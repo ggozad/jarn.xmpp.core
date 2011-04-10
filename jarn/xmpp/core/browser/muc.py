@@ -11,6 +11,7 @@ class MUCView(BrowserView):
     def __init__(self, context, request):
         super(MUCView, self).__init__(context, request)
         room = request.get('room', None)
+        self.invitee = request.get('invitee', None)
         if room is not None:
             self.room_jid = JID(room)
         else:
@@ -20,6 +21,7 @@ class MUCView(BrowserView):
             self.room_jid.user = room
 
     def mucSettings(self):
-        return """
-            jarnxmpp.muc.joinRoom('%s');
-        """ % self.room_jid.full()
+        script = "jarnxmpp.muc.joinRoom('%s');" % self.room_jid.full()
+        if self.invitee:
+            script+="jarnxmpp.muc.inviteToRoom('%s');" % self.invitee
+        return script
