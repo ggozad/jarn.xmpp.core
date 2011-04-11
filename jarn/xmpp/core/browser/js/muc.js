@@ -7,6 +7,12 @@ jarnxmpp.muc = {
     participants: {},
     online: {},
 
+    leaveRoom: function() {
+        jarnxmpp.connection.send($pres({
+            to: jarnxmpp.muc.room,
+            'type': 'unavailable'}));
+    },
+
     joinRoom: function (room) {
         jarnxmpp.muc.room=room; 
         jarnxmpp.muc.nickname = Strophe.getNodeFromJid(jarnxmpp.jid);
@@ -22,6 +28,8 @@ jarnxmpp.muc = {
         // Public messages
         jarnxmpp.connection.addHandler(jarnxmpp.muc.publicMessageReceived,
                                     null, "message", "groupchat");
+
+        $('#chat-container').parents('.overlay').bind('onClose', jarnxmpp.muc.leaveRoom);
 
         $('#muc-input').bind('keypress', function (ev) {
             if (ev.which === 13) {
