@@ -54,6 +54,8 @@ jarnxmpp.Roster = {
 };
 
 jarnxmpp.Presence = {
+    online: {},
+
     presenceReceived: function (presence) {
         var ptype = $(presence).attr('type');
         var from = $(presence).attr('from');
@@ -82,6 +84,22 @@ jarnxmpp.Presence = {
                     status = 'online';
                 } else {
                     status = 'away';
+                }
+            }
+            var jid = Strophe.getNodeFromJid(from);
+            if (status !== 'offline') {
+                if (jarnxmpp.Presence.online.hasOwnProperty(jid))
+                    jarnxmpp.Presence.online[jid].push(from);
+                else
+                    jarnxmpp.Presence.online[jid] = [from];
+            } else {
+                if (jarnxmpp.Presence.online.hasOwnProperty(jid)) {
+                    var pos = jarnxmpp.Presence.online[jid].indexOf(from);
+                    if (pos >= 0) {
+                        jarnxmpp.Presence.online[jid].splice(pos, 1);
+                    }
+                    if (jarnxmpp.Presence.online[jid].length === 0)
+                        delete jarnxmpp.Presence.online[jid];
                 }
             }
             $(document).trigger('jarnxmpp.presence', [from, status]);

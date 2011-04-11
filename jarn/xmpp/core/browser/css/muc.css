@@ -1,7 +1,7 @@
 #chat-container {
 	clear: both;
-	
 }
+
 #chat-area {
     float: left;
     width: 500px;
@@ -28,7 +28,7 @@
 	display: block;
 }
 
-#input {
+#muc-input {
     width: 95%;
     font-size: 120%;
 }
