@@ -3,9 +3,9 @@ jarnxmpp.muc = {
     NS_MUC_USER: "http://jabber.org/protocol/muc#user",
     room: null,
     nickname: null,
-    joined: null,
-    participants: null,
-    online: null,
+    joined: false,
+    participants: {},
+    online: {},
 
     joinRoom: function (room) {
         jarnxmpp.muc.room=room; 
@@ -16,6 +16,31 @@ jarnxmpp.muc = {
                 $(document).trigger('jarnxmpp.muc.userOnline', user);
             }
         }
+        // Presence
+        jarnxmpp.connection.addHandler(jarnxmpp.muc.presenceReceived,
+                                      null, "presence");
+        // Public messages
+        jarnxmpp.connection.addHandler(jarnxmpp.muc.publicMessageReceived,
+                                    null, "message", "groupchat");
+
+        $('#muc-input').bind('keypress', function (ev) {
+            if (ev.which === 13) {
+                ev.preventDefault();
+                var body = $(this).val();
+                jarnxmpp.connection.send(
+                    $msg({
+                        to: jarnxmpp.muc.room,
+                        type: "groupchat"}).c('body').t(body));
+                $(this).val('');
+            }
+        });
+
+        $('.invite').live('click', function () {
+            var nick = $(this).parent().find('span').text();
+            var jid = jarnxmpp.muc.online[nick];
+            jarnxmpp.muc.inviteToRoom(jid);
+        });
+
         jarnxmpp.connection.send(
             $pres({
                 to: jarnxmpp.muc.room+'/'+jarnxmpp.muc.nickname
@@ -149,20 +174,6 @@ jarnxmpp.muc = {
 
 };
 
-$(document).bind('jarnxmpp.connected', function () {
-    // Initialize
-    jarnxmpp.muc.joined = false;
-    jarnxmpp.muc.participants = {};
-    jarnxmpp.muc.online = {};
-    // Presence
-    jarnxmpp.connection.addHandler(jarnxmpp.muc.presenceReceived,
-                                  null, "presence");
-    // Public messages
-    jarnxmpp.connection.addHandler(jarnxmpp.muc.publicMessageReceived,
-                                null, "message", "groupchat");
-
-});
-
 $(document).bind('jarnxmpp.muc.roomJoined', function () {
     jarnxmpp.muc.joined = true;
     $('#room-name').text(jarnxmpp.muc.room);
@@ -209,22 +220,3 @@ $(document).bind('jarnxmpp.muc.userOffline', function (ev, nick) {
     });
 });
 
-$(document).ready(function () {
-    $('#muc-input').live('keypress', function (ev) {
-        if (ev.which === 13) {
-            ev.preventDefault();
-            var body = $(this).val();
-            jarnxmpp.connection.send(
-                $msg({
-                    to: jarnxmpp.muc.room,
-                    type: "groupchat"}).c('body').t(body));
-            $(this).val('');
-        }
-    });
-
-    $('.invite').live('click', function () {
-        var nick = $(this).parent().find('span').text();
-        var jid = jarnxmpp.muc.online[nick];
-        jarnxmpp.muc.inviteToRoom(jid);
-    });
-});
