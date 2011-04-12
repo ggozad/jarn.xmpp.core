@@ -80,7 +80,7 @@ jarnxmpp.Presence = {
                 status = 'offline';
             } else {
                 var show = $(presence).find('show').text(); 
-                if (show === '' || show === '') {
+                if (show === '') {
                     status = 'online';
                 } else {
                     status = 'away';
@@ -102,7 +102,7 @@ jarnxmpp.Presence = {
                         delete jarnxmpp.Presence.online[jid];
                 }
             }
-            $(document).trigger('jarnxmpp.presence', [from, status]);
+            $(document).trigger('jarnxmpp.presence', [from, status, presence]);
         }
         return true;
     }

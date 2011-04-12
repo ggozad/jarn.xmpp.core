@@ -1,4 +1,4 @@
-$(document).bind('jarnxmpp.presence', function (event, jid, status) {
+$(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var userid = Strophe.getNodeFromJid(jid);
     var barejid = Strophe.getBareJidFromJid(jid);
     var existing = $('#online-users').find('#online-users-'+userid);
