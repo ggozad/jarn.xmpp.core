@@ -11,8 +11,8 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status) {
             .attr('class', status)
             .attr('id', 'online-users-'+userid)
             .attr('title', 'Click to chat');
-        $('#online-users').append(dd);
         member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
+            if (data===null) return;
             var sendMessage = $('<a/>')
                 .attr('class', 'online-users-message')
                 .attr('href','sendXMPPMessage?message-recipient=' + barejid);
@@ -21,6 +21,7 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status) {
                 subtype: 'ajax',
             });
             dd.append(sendMessage);
+            $('#online-users').append(dd);
         });
     }
 });
