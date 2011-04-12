@@ -1,23 +1,33 @@
+#online-users .offline {
+    opacity: 0.5;
+}
+#online-users img {
+/*	height: 40px;
+	width: 40px;*/
+}
 #chat-container {
 	clear: both;
+	width: 75em;
+	height: 50em;
 }
 
 #chat-area {
     float: left;
-    width: 500px;
+	margin: 1em;
+	width: 50em;
 }
 
 #chat {
     overflow: auto;
-    height: 400px;
+    height: 40em;
     border: solid 1px #ccc;
 }
 
 #participants {
     float: left;
-    width: 200px;
-    height: 500px;
+    height: 20em;
     overflow: auto;
+	margin:1em;
 }
 
 #participant-list {
@@ -29,6 +39,8 @@
 }
 
 #muc-input {
+	margin-top: 1em;
+	width: 50em;
     width: 95%;
     font-size: 120%;
 }
