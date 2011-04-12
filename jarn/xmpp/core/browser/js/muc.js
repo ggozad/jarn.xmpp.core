@@ -5,7 +5,6 @@ jarnxmpp.muc = {
     nickname: null,
     joined: false,
     participants: {},
-    online: {},
 
     leaveRoom: function() {
         jarnxmpp.connection.send($pres({
@@ -16,21 +15,17 @@ jarnxmpp.muc = {
     joinRoom: function (room) {
         jarnxmpp.muc.room=room; 
         jarnxmpp.muc.nickname = Strophe.getNodeFromJid(jarnxmpp.jid);
+
         for (var user in jarnxmpp.Presence.online) {
-            if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
-                jarnxmpp.muc.online[user] = jarnxmpp.Presence.online[user];
+            if (jarnxmpp.Presence.online.hasOwnProperty(user) && user!==Strophe.getNodeFromJid(jarnxmpp.connection.jid)) {
                 $(document).trigger('jarnxmpp.muc.userOnline', user);
             }
         }
-        // Presence
-        jarnxmpp.connection.addHandler(jarnxmpp.muc.presenceReceived,
-                                      null, "presence");
         // Public messages
         jarnxmpp.connection.addHandler(jarnxmpp.muc.publicMessageReceived,
                                     null, "message", "groupchat");
 
         $('#chat-container').parents('.overlay').bind('onClose', jarnxmpp.muc.leaveRoom);
-
         $('#muc-input').bind('keypress', function (ev) {
             if (ev.which === 13) {
                 ev.preventDefault();
@@ -42,78 +37,55 @@ jarnxmpp.muc = {
                 $(this).val('');
             }
         });
-
         $('.invite').live('click', function () {
             var nick = $(this).parent().find('span').text();
-            var jid = jarnxmpp.muc.online[nick];
+            var jid = Strophe.getBareJidFromJid(jarnxmpp.Presence.online[nick][0]);
             jarnxmpp.muc.inviteToRoom(jid);
         });
 
+        $(document).bind('jarnxmpp.presence', jarnxmpp.muc.presenceReceived);
         jarnxmpp.connection.send(
             $pres({
                 to: jarnxmpp.muc.room+'/'+jarnxmpp.muc.nickname
             }).c('x', {xmlns: jarnxmpp.muc.NS_MUC}));
     },
 
-    presenceReceived: function (presence) {
-        var from = $(presence).attr('from');
-        var room = Strophe.getBareJidFromJid(from);
-
+    presenceReceived: function (event, jid, status, presence) {
+        var bare_jid = Strophe.getBareJidFromJid(jid);
         // Is this for us?
-        if (room != jarnxmpp.muc.room) {
-            var participating = false;
-            for (var participant in jarnxmpp.muc.participants)
-                if (jarnxmpp.muc.participants.hasOwnProperty(participant)) {
-                    var jid = jarnxmpp.muc.participants[participant];
-                    if (from === jid) {
-                        participating =true;
-                        break;
-                    }
-                }
-            if (!participating) {
-                var user = Strophe.getNodeFromJid(from);
-                if ($(presence).attr('type') !== 'unavailable') {
-                    jarnxmpp.muc.online[user] = from;
-                    $(document).trigger('jarnxmpp.muc.userOnline', user);
-                }
-                else {
-                    delete jarnxmpp.muc.online[user];
-                    $(document).trigger('jarnxmpp.muc.userOffline', user);
-                }
-            }
+        if (bare_jid != jarnxmpp.muc.room) {
+            var userid = Strophe.getNodeFromJid(bare_jid);
+            if (userid in jarnxmpp.muc.participants)
+                return;
+            if (status === 'online')
+                $(document).trigger('jarnxmpp.muc.userOnline', userid);
+            else if (!(userid in jarnxmpp.Presence.online))
+                $(document).trigger('jarnxmpp.muc.userOffline', userid);
             return true;
         }
 
-        var nick = Strophe.getResourceFromJid(from);
+        var nick = Strophe.getResourceFromJid(jid);
 
         if (!jarnxmpp.muc.participants[nick] &&
             $(presence).attr('type') !== 'unavailable') {
-
             // add to participant list
-            var user_jid = $(presence).find('item').attr('jid');
-            jarnxmpp.muc.participants[nick] = user_jid || true;
-
-            if (jarnxmpp.muc.joined) {
+            jarnxmpp.muc.participants[nick] = jid || true;
+            if (jarnxmpp.muc.joined) 
                 $(document).trigger('jarnxmpp.muc.userJoined', nick);
-            }
-        } else if (jarnxmpp.muc.participants[nick] &&
-                   $(presence).attr('type') === 'unavailable') {
+
+        } else if (jarnxmpp.muc.participants[nick] && $(presence).attr('type') === 'unavailable') {
             delete jarnxmpp.muc.participants[nick];
             $(document).trigger('jarnxmpp.muc.userLeft', nick);
         }
 
-        if ($(presence).attr('type') !== 'error' &&
-                   !jarnxmpp.muc.joined) {
-            if ($(presence).find("status[code='210']").length > 0) {
-                jarnxmpp.muc.nickname = Strophe.getResourceFromJid(from);
-            }
+        if ($(presence).attr('type') !== 'error' && !jarnxmpp.muc.joined) {
+            if ($(presence).find("status[code='210']").length > 0)
+                jarnxmpp.muc.nickname = nick;
             // room join complete
-            $(document).trigger("jarnxmpp.muc.roomJoined");
+            $(document).trigger("jarnxmpp.muc.roomJoined", [nick]);
             
-        } else if ($(presence).attr('type') === 'error' &&
-                   !jarnxmpp.muc.joined) {
+        } else if ($(presence).attr('type') === 'error' && !jarnxmpp.muc.joined) {
             // error joining room
-            jarnxmpp.connection.disconnect();
         }
         return true;
     },
@@ -137,7 +109,6 @@ jarnxmpp.muc = {
 
         var delayed = $(message).children("delay").length > 0  ||
             $(message).children("x[xmlns='jabber:x:delay']").length > 0;
-
 
         jarnxmpp.muc.addMessage(body, nick, notice, delayed);
         return true;
@@ -182,24 +153,20 @@ jarnxmpp.muc = {
 
 };
 
-$(document).bind('jarnxmpp.muc.roomJoined', function () {
+$(document).bind('jarnxmpp.muc.roomJoined', function (ev, owner) {
     jarnxmpp.muc.joined = true;
     $('#room-name').text(jarnxmpp.muc.room);
-    $('#participant-list')
-        .append('<li>')
-        .attr('id', 'muc-participant-'+jarnxmpp.muc.nickname)
-        .text(jarnxmpp.muc.nickname);
+    var li = $('<li>').attr('id', 'muc-participant-'+owner).text(owner);
+    $('#participant-list').append(li);
+    $('#muc-online-'+owner).remove();
     jarnxmpp.muc.addMessage("Room joined.", null, true, false);
 });
 
 $(document).bind('jarnxmpp.muc.userJoined', function (ev, nick) {
-    $('#participant-list').append('<li>' + nick + '</li>');
-    $('#online-list li').each(function () {
-        if (nick === $(this).text()) {
-            $(this).remove();
-            return false;
-        }
-    });
+    var li = $('<li>').attr('id', 'muc-participant-'+nick).text(nick);
+    $('#participant-list').append(li);
+
+    $('#muc-online-'+nick).remove();
     jarnxmpp.muc.addMessage(nick +" joined.", null, true, false);
 });
 
@@ -210,7 +177,7 @@ $(document).bind('jarnxmpp.muc.userLeft', function (ev, nick) {
 });
 
 $(document).bind('jarnxmpp.muc.userOnline', function (ev, nick) {
-    if (!(nick in jarnxmpp.muc.participants) && $('#muc-online-'+nick).length === 0) {
+    if ($('#muc-online-'+nick).length === 0) {
         var li = $('<li>').attr('id', 'muc-online-'+nick);
         li.append($('<span>').text(nick));
         li.append($('<button>').attr('class', 'invite').text('invite'));
@@ -219,7 +186,6 @@ $(document).bind('jarnxmpp.muc.userOnline', function (ev, nick) {
 });
 
 $(document).bind('jarnxmpp.muc.userOffline', function (ev, nick) {
-    if (!(nick in jarnxmpp.Presence.online))
-        $('#muc-online-'+nick).remove();
+    $('#muc-online-'+nick).remove();
 });
 
