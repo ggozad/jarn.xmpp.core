@@ -149,5 +149,5 @@ $(document).bind('jarnxmpp.dataReceived', function (ev) {
 });
 
 $(document).bind('jarnxmpp.dataSent', function (ev) {
-    $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));    
+    $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));
 });
