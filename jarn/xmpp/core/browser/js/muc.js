@@ -109,9 +109,7 @@ jarnxmpp.muc = {
         if (room != jarnxmpp.muc.room) return true;
 
         var notice = !nick;
-
         var body = $(message).children('body').text();
-
         var delayed = $(message).children("delay").length > 0  ||
             $(message).children("x[xmlns='jabber:x:delay']").length > 0;
 
@@ -133,24 +131,25 @@ jarnxmpp.muc = {
             var delay_css = delayed ? " delayed" : "";
             // messages from ourself will be styled differently
             var nick_class = "nick";
-            if (nick === jarnxmpp.muc.nickname) {
+            if (nick === jarnxmpp.muc.nickname)
                 nick_class += " self";
-            }
-            msg = "<div class='message" + delay_css + "'>" +
-                  "&lt;<span class='" + nick_class + "'>" +
-                                        nick + "</span>&gt;" +
-                  " <span class='body'>" + body + "</span></div>";
-        } else {
-            msg = "<div class='notice'>*** " + body + "</div>";
-        }
+
+            msg = $('<div>').addClass('message').addClass(delay_css);
+            msg.append($('<span>')
+                .addClass(nick_class)
+                .text('<' + nick + '>'));
+            msg.append($('<span>')
+                .addClass('body')
+                .text(body));
+
+        } else
+            msg = $('<div>').addClass('notice').text(body);
 
         // detect if we are scrolled all the way down
         var chat = $('#chat').get(0);
-        var at_bottom = chat.scrollTop >= chat.scrollHeight -
-            chat.clientHeight;
+        var at_bottom = chat.scrollTop >= chat.scrollHeight - chat.clientHeight;
         $('#chat').append(msg);
         // if we were at the bottom, keep us at the bottom
-
         if (at_bottom) {
             chat.scrollTop = chat.scrollHeight;
         }
@@ -170,7 +169,6 @@ $(document).bind('jarnxmpp.muc.roomJoined', function (ev, owner) {
 $(document).bind('jarnxmpp.muc.userJoined', function (ev, nick) {
     var li = $('<li>').attr('id', 'muc-participant-'+nick).text(nick);
     $('#participant-list').append(li);
-
     $('#muc-online-'+nick).remove();
     jarnxmpp.muc.addMessage(nick +" joined.", null, true, false);
 });
