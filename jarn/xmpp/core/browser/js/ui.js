@@ -145,9 +145,9 @@ $(document).bind('jarnxmpp.muc.userOffline', function (ev, nick) {
 // Logging
 
 $(document).bind('jarnxmpp.dataReceived', function (ev) {
-    $('#xmpp-log').append($('<div>').addClass('xmpp-dataRcvd').text(ev.data));
+    $('#xmpp-log').append($('<div>').addClass('xmpp-dataRcvd').text(ev.text));
 });
 
 $(document).bind('jarnxmpp.dataSent', function (ev) {
-    $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.data));
+    $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));    
 });

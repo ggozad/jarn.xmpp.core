@@ -2,13 +2,13 @@ jarnxmpp = {};
 
 jarnxmpp.rawInput = function(data) {
     var event = jQuery.Event('jarnxmpp.dataReceived');
-    event.data = data;
+    event.text = data;
     $(document).trigger(event);
 };
 
 jarnxmpp.rawOutput = function (data) {
     var event = jQuery.Event('jarnxmpp.dataSent');
-    event.data = data;
+    event.text = data;
     $(document).trigger(event);
 };
 

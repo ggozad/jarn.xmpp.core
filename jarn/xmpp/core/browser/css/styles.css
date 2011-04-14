@@ -1,3 +1,13 @@
+.xmpp-dataSent {
+	color: green;
+	margin-top: 1em;
+}
+
+.xmpp-dataRcvd {
+	color: blue;
+	margin-top: 1em;
+}
+
 #online-users .offline {
     opacity: 0.5;
 }
