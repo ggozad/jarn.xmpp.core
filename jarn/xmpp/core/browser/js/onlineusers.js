@@ -1,19 +1,19 @@
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var userid = Strophe.getNodeFromJid(jid);
     var barejid = Strophe.getBareJidFromJid(jid);
-    var existing = $('#online-users').find('#online-users-'+userid);
-    if (existing.length > 0) {
+    var existing_element = $('#online-users-'+userid);
+    if (existing_element.length) {
         if (status==='offline' && jarnxmpp.Presence.online.hasOwnProperty(userid))
              return;
-        existing.attr('class', status);
+        existing_element.attr('class', status);
     } else {
-        var dd = $('<dd></dd>')
+        var dd = $('<dd>')
             .attr('class', status)
             .attr('id', 'online-users-'+userid)
             .attr('title', 'Click to chat');
         member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
             if (data===null) return;
-            var sendMessage = $('<a/>')
+            var sendMessage = $('<a>')
                 .attr('class', 'online-users-message')
                 .attr('href','sendXMPPMessage?message-recipient=' + barejid);
             sendMessage.append($('<img/>').attr('title', data.fullname).attr('src', data.portrait_url));
