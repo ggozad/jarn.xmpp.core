@@ -36,13 +36,13 @@ class PublishToNodeForm(form.Form):
 
     def __init__(self, context, request, node=None):
         super(PublishToNodeForm, self).__init__(context, request)
-        self.node = node
+        self.node = node or request.get('node', None)
 
     def updateWidgets(self):
         form.Form.updateWidgets(self)
 
         if self.node:
-            # Hide fields which we don't want to bother user with
+            # Hide fields which we don't want to bother the user with
             self.widgets["node"].value = self.node
             self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
 

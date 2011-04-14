@@ -1,3 +1,31 @@
+// Messages
+$(document).bind('jarnxmpp.message', function (event) {
+    var userid = Strophe.getNodeFromJid(event.from);
+    var jid = Strophe.getBareJidFromJid(event.from);
+    var text_p = $('<p>').text(event.body);
+    var chat_p = $('<p>');
+    var chat_link = $('<a>')
+        .attr('class', 'chat-link')
+        .attr('href', 'muc?invitee=' + jid)
+        .text('Chat');
+    chat_p.append(chat_link);
+    var text = $('<div>').append(text_p).append(chat_p).remove().html();
+
+    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
+        $.gritter.add({
+            title: data.fullname,
+            text: text,
+            image: data.portrait_url,
+            sticky: true,
+            after_open: function (e) {
+                e.find('.chat-link').prepOverlay({
+                    subtype: 'ajax',
+                });
+            },
+        });
+    });
+});
+
 // Pub-Sub
 $(document).bind('jarnxmpp.nodePublished', function (event) {
     var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+event.author, function(data) {
@@ -6,6 +34,12 @@ $(document).bind('jarnxmpp.nodePublished', function (event) {
             text: event.content,
             image: data.portrait_url
         });
+    });
+});
+
+$(document).ready(function () {
+    $('.pubsub-post').prepOverlay({
+        subtype: 'ajax',
     });
 });
 
@@ -50,34 +84,6 @@ $(document).ready(function () {
         jarnxmpp.connection.send(message);
         $(this).parents('.overlay').data('overlay').close();
         return false;
-    });
-});
-
-// Messages
-$(document).bind('jarnxmpp.message', function (event) {
-    var userid = Strophe.getNodeFromJid(event.from);
-    var jid = Strophe.getBareJidFromJid(event.from);
-    var text_p = $('<p>').text(event.body);
-    var chat_p = $('<p>');
-    var chat_link = $('<a>')
-        .attr('class', 'chat-link')
-        .attr('href', 'muc?invitee=' + jid)
-        .text('Chat');
-    chat_p.append(chat_link);
-    var text = $('<div>').append(text_p).append(chat_p).remove().html();
-
-    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
-        $.gritter.add({
-            title: data.fullname,
-            text: text,
-            image: data.portrait_url,
-            sticky: true,
-            after_open: function (e) {
-                e.find('.chat-link').prepOverlay({
-                    subtype: 'ajax',
-                });
-            },
-        });
     });
 });
 

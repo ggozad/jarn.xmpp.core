@@ -11,8 +11,6 @@ from zope.interface import implements
 
 from jarn.xmpp.core import messageFactory as _
 from jarn.xmpp.core.interfaces import IPubSubStorage
-from jarn.xmpp.core.browser.pubsub import PublishToNodeForm
-from jarn.xmpp.core.browser.formwrapper import WrappedFormView
 
 
 class IPubSubNodePortlet(IPortletDataProvider):
@@ -52,22 +50,6 @@ class Renderer(base.Renderer):
 
     _template = ViewPageTemplateFile('pubsubnode.pt')
 
-    def __init__(self, context, request, view, manager, data):
-        base.Renderer.__init__(self, context, request, view, manager, data)
-        self.createForms()
-
-    def createForms(self):
-        context = self.context.aq_inner
-        publish_form = PublishToNodeForm(context,
-                                         self.request,
-                                         node=self.data.node)
-        # Wrap a form in Plone view
-        publish_view = WrappedFormView(context, self.request)
-        # Make sure acquisition chain is respected
-        publish_view = publish_view.__of__(context)
-        publish_view.form_instance = publish_form
-        self.publish_form_wrapper = publish_view
-
     def render(self):
         return xhtml_compress(self._template())
 
@@ -77,6 +59,10 @@ class Renderer(base.Renderer):
 
     @property
     def title(self):
+        return self.data.node
+
+    @property
+    def node(self):
         return self.data.node
 
     def items(self):

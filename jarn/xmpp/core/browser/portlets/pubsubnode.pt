@@ -29,12 +29,11 @@
             tal:content="python:toLocalizedTime(updated)">May 5</span>
     </dd>
     </tal:pubsubitems>
-
-    <dd class="portletItem odd" tal:condition="view/showPublishForm">
-        <form tal:replace="structure view/publish_form_wrapper" />
-    </dd>
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
+        <a class="pubsub-post"
+          tal:condition="view/showPublishForm"
+          tal:attributes="href string:@@pubsub-publish?node=${view/node}">Post</a>
         <span class="portletBottomRight"></span>
     </dd>
 </dl>
