@@ -4,9 +4,7 @@
   <script src="++resource++jarn.xmpp.core.js/strophe.pubsub.js"></script>
   <script src="++resource++jarn.xmpp.core.js/logging.js"></script>
   <script src="++resource++jarn.xmpp.core.js/handlers.js"></script>
-  <script src="++resource++jarn.xmpp.core.js/messages.js"></script>
-  <script src="++resource++jarn.xmpp.core.js/pubsub.js"></script>
   <script src="++resource++jarn.xmpp.core.js/muc.js"></script>
-
+  <script src="++resource++jarn.xmpp.core.js/ui.js"></script>
   <div id='log'></div>
 </tal:viewlet>
