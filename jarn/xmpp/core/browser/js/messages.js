@@ -3,8 +3,10 @@ $(document).bind('jarnxmpp.message', function (event) {
     var jid = Strophe.getBareJidFromJid(event.from);
     var text_p = $('<p>').text(event.body);
     var chat_p = $('<p>');
-    var chat_link = $('<a class="chat-link" href="muc?invitee=' + jid + '">Chat</a>');
-
+    var chat_link = $('<a>')
+        .attr('class', 'chat-link')
+        .attr('href', 'muc?invitee=' + jid)
+        .text('Chat');
     chat_p.append(chat_link);
     var text = $('<div>').append(text_p).append(chat_p).remove().html();
 
