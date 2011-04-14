@@ -142,5 +142,12 @@ $(document).bind('jarnxmpp.muc.userOffline', function (ev, nick) {
     $('#muc-online-'+nick).remove();
 });
 
+// Logging
 
+$(document).bind('jarnxmpp.dataReceived', function (ev) {
+    $('#xmpp-log').append($('<div>').addClass('xmpp-dataRcvd').text(ev.data));
+});
 
+$(document).bind('jarnxmpp.dataSent', function (ev) {
+    $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.data));
+});

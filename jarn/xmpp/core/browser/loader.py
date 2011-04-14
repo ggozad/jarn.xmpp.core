@@ -1,8 +1,9 @@
 import logging
+import json
 
 from plone.registry.interfaces import IRegistry
-from plone.app.layout.viewlets.common import ViewletBase
 from Products.CMFCore.utils import getToolByName
+from Products.Five.browser import BrowserView
 from zope.component import getUtility
 from zope.component import queryUtility
 
@@ -15,12 +16,12 @@ from jarn.xmpp.core.interfaces import IXMPPUsers
 logger = logging.getLogger('jarn.xmpp.core')
 
 
-class XMPPLoader(ViewletBase):
+class XMPPLoader(BrowserView):
     """
     """
 
-    def update(self):
-        super(XMPPLoader, self).update()
+    @property
+    def available(self):
         self._available = True
         client = queryUtility(IAdminClient)
         if client is None:
@@ -48,8 +49,6 @@ class XMPPLoader(ViewletBase):
         except KeyError:
             self._available = False
 
-    @property
-    def available(self):
         return self._available
 
     def prebind(self):
@@ -58,34 +57,23 @@ class XMPPLoader(ViewletBase):
             return b_client.rid, b_client.sid
         return ('', '')
 
-    def boshSettings(self):
-        if not self.user_id:
+    def __call__(self):
+        if not self.available:
             return ""
         rid, sid = self.prebind()
         if rid and sid:
             logger.info('Pre-binded %s' % self.jid.full())
+            return json.dumps({
+                'BOSH_SERVICE': self.bosh,
+                'rid': int(rid),
+                'sid': sid,
+                'jid': self.jid.full(),
+                'pubsub_jid': self.pubsub_jid})
 
-            return """
-            var jarnxmpp = {
-              connection : null,
-              BOSH_SERVICE : '%s',
-              rid: %i,
-              sid: '%s',
-              jid : '%s',
-              pubsub_jid : '%s',
-            };
-            """ % (self.bosh, int(rid), sid, self.jid.full(), self.pubsub_jid)
         else:
             logger.error('Could not pre-bind %s' % self.jid.full())
-            return """
-            var jarnxmpp = {
-              connection : null,
-              BOSH_SERVICE : '%s',
-              jid : '%s',
-              password : '%s',
-              pubsub_jid : '%s',
-            };
-            """ % (self.bosh,
-                   self.jid.userhost(),
-                   self.jpassword,
-                   self.pubsub_jid)
+            return json.dumps({
+                'BOSH_SERVICE': self.bosh,
+                'jid': self.jid.userhost(),
+                'password': self.jpassword,
+                'pubsub_jid': self.pubsub_jid})

@@ -9,6 +9,13 @@
 
   <browser:view
     for="*"
+    name="xmpp-loader"
+    class=".loader.XMPPLoader"
+    permission="zope2.View"
+    />
+
+  <browser:view
+    for="*"
     name="xmpp-userinfo"
     class=".userinfo.XMPPUserInfoView"
     permission="zope2.View"
@@ -59,14 +66,6 @@
     />
 
   <!-- Viewlets -->
-
-  <browser:viewlet
-    name="jarn.xmpp.core.loader"
-    manager="plone.app.layout.viewlets.interfaces.IBelowContent"
-    class=".loader.XMPPLoader"
-    template="loader.pt"
-    permission="zope2.View"
-    />
 
   <browser:resourceDirectory
     name="jarn.xmpp.core.js"
