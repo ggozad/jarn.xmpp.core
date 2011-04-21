@@ -143,6 +143,8 @@ jarnxmpp.onConnect = function (status) {
         $(window).bind('beforeunload', function() {
             var event = jQuery.Event('jarnxmpp.disconnecting');
             $(document).trigger(event);
+            var presence = $pres({type: 'unavailable'});
+            jarnxmpp.connection.send(presence);
             jarnxmpp.connection.flush();
             jarnxmpp.connection.disconnect();
         });
