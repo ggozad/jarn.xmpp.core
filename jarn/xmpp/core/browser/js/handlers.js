@@ -163,7 +163,7 @@ $(document).bind('jarnxmpp.connected', function () {
     jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
     jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');
     // Presence
-    jarnxmpp.connection.addHandler(jarnxmpp.Presence.presenceReceived, 'jabber:client', 'presence', null);
+    jarnxmpp.connection.addHandler(jarnxmpp.Presence.presenceReceived, null, 'presence', null);
     // PubSub
     jarnxmpp.connection.addHandler(jarnxmpp.PubSub.eventReceived, null, 'message', null, null, jarnxmpp.pubsub_jid);
     jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterSuggestedItem, 'http://jabber.org/protocol/rosterx', 'message', null);
