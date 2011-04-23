@@ -141,12 +141,10 @@ jarnxmpp.onConnect = function (status) {
     if ((status === Strophe.Status.ATTACHED) ||
         (status === Strophe.Status.CONNECTED)) {
         $(window).bind('beforeunload', function() {
-            var event = jQuery.Event('jarnxmpp.disconnecting');
-            $(document).trigger(event);
             var presence = $pres({type: 'unavailable'});
             jarnxmpp.connection.send(presence);
-            jarnxmpp.connection.flush();
             jarnxmpp.connection.disconnect();
+            jarnxmpp.connection.flush();
         });
         $(document).trigger('jarnxmpp.connected');
     } else if (status === Strophe.Status.DISCONNECTED) {
