@@ -8,6 +8,11 @@
 	margin-top: 1em;
 }
 
+.portletPubSubNode .portrait {
+	float:left;
+	height: 100px;
+	width: 75px;
+}
 #online-users .offline {
     opacity: 0.5;
 }

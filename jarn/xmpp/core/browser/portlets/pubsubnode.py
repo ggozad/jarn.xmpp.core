@@ -65,6 +65,10 @@ class Renderer(base.Renderer):
     def node(self):
         return self.data.node
 
+    @property
+    def nodeType(self):
+        return self.data.node_type
+
     def items(self):
         storage = getUtility(IPubSubStorage)
         if self.data.node not in storage.node_items:
