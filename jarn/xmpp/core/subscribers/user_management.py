@@ -22,6 +22,7 @@ logger = logging.getLogger('jarn.xmpp.core')
 def onUserCreation(event):
     """Create a jabber account for new user.
     """
+
     client = getUtility(IAdminClient)
     xmpp_users = getUtility(IXMPPUsers)
     storage = getUtility(IPubSubStorage)

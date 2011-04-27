@@ -1,6 +1,7 @@
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting, FunctionalTesting
+from plone.registry.interfaces import IRegistry
 from plone.testing import z2
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
@@ -33,6 +34,12 @@ class XMPPCoreFixture(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         # Install into Plone site using portal_setup
         applyProfile(portal, 'jarn.xmpp.core:default')
+        registry = getUtility(IRegistry)
+        registry['jarn.xmpp.adminJID'] = 'admin@localhost'
+        registry['jarn.xmpp.pubsubJID'] = 'pubsub.localhost'
+        registry['jarn.xmpp.conferenceJID'] = 'conference.localhost'
+        registry['jarn.xmpp.xmppDomain'] = 'localhost'
+
         setupAdminClient(None, None)
         client = getUtility(IAdminClient)
         wait_for_client_state(client, 'authenticated')

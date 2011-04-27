@@ -13,7 +13,6 @@ from jarn.xmpp.twisted.protocols import AdminHandler
 from jarn.xmpp.twisted.protocols import PubSubHandler
 from jarn.xmpp.twisted.protocols import ChatHandler
 
-from jarn.xmpp.core.interfaces import IXMPPUsers
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubStorage
 from jarn.xmpp.core.interfaces import AdminClientConnected
