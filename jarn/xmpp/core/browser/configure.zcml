@@ -67,13 +67,15 @@
 
   <!-- Viewlets -->
 
+  <!--
+  Uncomment to show client-side xmpp logging
   <browser:viewlet
       name="jarn.xmpp.core.logger"
       manager="plone.app.layout.viewlets.interfaces.IPortalFooter"
       template="logger.pt"
       permission="zope2.View"
       />
-
+  -->
   <browser:resourceDirectory
     name="jarn.xmpp.core.js"
     directory="js"

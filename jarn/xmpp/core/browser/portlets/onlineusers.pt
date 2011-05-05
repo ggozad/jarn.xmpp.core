@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="++resource++jarn.xmpp.core.css/onlineusers.css" type="text/css">
 <dl id="online-users" class="portlet"
     tal:condition="view/available">
     <dt class="portletHeader">
