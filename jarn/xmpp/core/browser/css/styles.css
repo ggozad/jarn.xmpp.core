@@ -11,13 +11,25 @@
 .portletPubSubNode .portrait {
 	float:left;
 }
+
 #online-users .offline {
-    opacity: 0.5;
+	opacity: 0.5;
 }
+
 #online-users img {
 /*	height: 40px;
 	width: 40px;*/
 }
+
+.tooltip {
+	position:absolute;
+	border:1px solid #333;
+	background:#f7f5d1;
+	padding:2px 5px;
+	color:#333;
+	display:none;
+}
+
 #chat-container {
 	clear: both;
 	width: 75em;
@@ -25,26 +37,26 @@
 }
 
 #chat-area {
-    float: left;
+	float: left;
 	margin: 1em;
 	width: 50em;
 }
 
 #chat {
-    overflow: auto;
-    height: 40em;
-    border: solid 1px #ccc;
+	overflow: auto;
+	height: 40em;
+	border: solid 1px #ccc;
 }
 
 #participants {
-    float: left;
-    height: 20em;
-    overflow: auto;
+	float: left;
+	height: 20em;
+	overflow: auto;
 	margin:1em;
 }
 
 #participant-list {
-    list-style: none;
+	list-style: none;
 }
 
 #participant-list li {
@@ -54,36 +66,36 @@
 #muc-input {
 	margin-top: 1em;
 	width: 50em;
-    width: 95%;
-    font-size: 120%;
+	width: 95%;
+	font-size: 120%;
 }
 
 .notice {
-    font-style: italic;
-    font-weight: bold;
-    color: #3d3;
+	font-style: italic;
+	font-weight: bold;
+	color: #3d3;
 }
 
 .error {
-    color: #d33;
+	color: #d33;
 }
 
 .message {
-    color: #aaa;
+	color: #aaa;
 }
 
 .nick {
-    color: #66f;
+	color: #66f;
 }
 
 .self {
-    color: #f66;
+	color: #f66;
 }
 
 .body {
-    color: #000;
+	color: #000;
 }
 
 .delayed {
-    opacity: 0.5;
+	opacity: 0.5;
 }
