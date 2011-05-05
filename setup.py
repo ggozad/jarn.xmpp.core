@@ -8,12 +8,13 @@ setup(name='jarn.xmpp.core',
       description="Core package for jarn.xmpp",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
-      # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
+        "Development Status :: 3 - Alpha",
         "Framework :: Plone",
+        "Intended Audience :: Developers",
         "Programming Language :: Python",
         ],
-      keywords='',
+      keywords='plone xmpp twisted microblogging',
       author='Yiorgis Gozadinos',
       author_email='ggozad@jarn.com',
       url='https://github.com/ggozad/jarn.xmpp.core',
@@ -28,8 +29,6 @@ setup(name='jarn.xmpp.core',
           'plone.app.z3cform',
           'pas.plugins.userdeletedevent',
           'jarn.xmpp.twisted',
-
-          # -*- Extra requirements: -*-
       ],
       extras_require = {
           'test': [
