@@ -1,6 +1,6 @@
 // Messages
 $(document).bind('jarnxmpp.message', function (event) {
-    var userid = Strophe.getNodeFromJid(event.from);
+    var user_id = Strophe.getNodeFromJid(event.from);
     var jid = Strophe.getBareJidFromJid(event.from);
     var text_p = $('<p>').text(event.body);
     var chat_p = $('<p>');
@@ -10,8 +10,7 @@ $(document).bind('jarnxmpp.message', function (event) {
         .text('Chat');
     chat_p.append(chat_link);
     var text = $('<div>').append(text_p).append(chat_p).remove().html();
-
-    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
+    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
         $.gritter.add({
             title: data.fullname,
             text: text,
@@ -28,7 +27,7 @@ $(document).bind('jarnxmpp.message', function (event) {
 
 // Pub-Sub
 $(document).bind('jarnxmpp.nodePublished', function (event) {
-    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+event.author, function(data) {
+    jarnxmpp.Presence.getUserInfo(event.author, function(data) {
         $.gritter.add({
             title: data.fullname,
             text: event.content,
@@ -45,20 +44,20 @@ $(document).ready(function () {
 
 // Online users portlet
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
-    var userid = Strophe.getNodeFromJid(jid);
+    var user_id = Strophe.getNodeFromJid(jid);
     var barejid = Strophe.getBareJidFromJid(jid);
-    var existing_element = $('#online-users-'+userid);
+    var existing_element = $('#online-users-'+user_id);
     if (existing_element.length) {
-        if (status==='offline' && jarnxmpp.Presence.online.hasOwnProperty(userid))
+        if (status==='offline' && jarnxmpp.Presence.online.hasOwnProperty(user_id))
              return;
         existing_element.attr('class', status);
     } else {
         var dd = $('<dd>')
             .attr('class', status)
-            .attr('id', 'online-users-'+userid)
+            .attr('id', 'online-users-'+user_id)
             .attr('title', 'Send message');
         $('#online-users').append(dd);
-        member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
+        jarnxmpp.Presence.getUserInfo(user_id, function(data) {
             if (data===null) return;
             var sendMessage = $('<a>')
                 .attr('class', 'online-users-message')
@@ -89,13 +88,13 @@ $(document).ready(function () {
 
 // Room invites
 $(document).bind('jarnxmpp.roomInvitation', function (event) {
-    var userid = Strophe.getNodeFromJid(event.from);
+    var user_id = Strophe.getNodeFromJid(event.from);
     var link = '@@muc?room=' + event.room;
     var body = 'You have received an invitation to ' +
            '<a class="chat-link" href="'+ link +'">join</a>' +
            ' a group chat.';
 
-    var member_info = $.getJSON(portal_url+"/xmpp-userinfo?user_id="+userid, function(data) {
+    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
         $.gritter.add({
             title: data.fullname,
             text: body,

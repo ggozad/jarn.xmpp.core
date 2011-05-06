@@ -69,6 +69,7 @@ jarnxmpp.Roster = {
 
 jarnxmpp.Presence = {
     online: {},
+    _user_info: {},
 
     presenceReceived: function (presence) {
         var ptype = $(presence).attr('type');
@@ -117,6 +118,17 @@ jarnxmpp.Presence = {
             $(document).trigger('jarnxmpp.presence', [from, status, presence]);
         }
         return true;
+    },
+
+    getUserInfo: function(user_id, callback) {
+        if (user_id in jarnxmpp.Presence._user_info) {
+            callback(jarnxmpp.Presence._user_info[user_id]);
+        } else {
+            $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
+                jarnxmpp.Presence._user_info[user_id] = data;
+                callback(data);
+            });
+        }
     }
 };
 
