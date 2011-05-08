@@ -101,6 +101,17 @@ So assuming you run ``nginx`` as a proxy at port ``80`` for the domain ``myserve
 
 Again, it might help you to have a look at the sample buildout provided in `jarn.xmpp.buildout`_.
 
+Setting up your Plone instances
+-------------------------------
+Your instances will need to maintain a connection to the administrator account of your XMPP server. This is accomplished through ``Twisted`` and you will need to run a Twisted reactor on each of them. To do so include this in your instance section of your buildout:
+
+  ::
+
+    zcml-additional =
+      <configure xmlns="http://namespaces.zope.org/zope">  
+        <include package="jarn.xmpp.twisted" file="reactor.zcml" />
+      </configure>
+
 Setting up a new Plone site
 ---------------------------
 * Start ejabberd
@@ -111,6 +122,8 @@ Setting up a new Plone site
 * Restart your Plone instance.
 * Upon the first request the administrator will log to his account. You should see things happening in the logs and if there are any errors something might be wrong with your installation.
 * Setup the the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://myserver/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
+
+If you are going to use this on an existing site, you only need to perform the last step after making sure that your XMPP admin is connected.
 
 Experimenting
 =============
