@@ -27,7 +27,7 @@ Before setting up the package you need to have a working XMPP server and access 
 Setting up ejabberd (>=2.1.5)
 -----------------------------
 
-* Download `ejabberd`_ installer
+* Download the `ejabberd`_ installer
 * We assume that your xmpp domain is ``myserver``. There should exist an administrator account ``admin@myserver``. In addition if you intend to run some of the tests in any of the ``jarn.xmpp.*`` packages you will need to be running an additional XMPP node on ``localhost``. You can safely remove any references to ``localhost`` if you are not interested in doing that.
 * You will need two hosts (one if you are not running tests, see above).
 
@@ -130,6 +130,12 @@ Usage
 * On the *online users* portlet click on a user. This allows you to message him and he can start a chat session.
 * Each user is able to post a message to his node. Others will receive in real time. The portlets will be updated on the next request.
 
+
+Credits
+=======
+
+* Most of this work was done using the 10% time available to `Jarn AS`_ employees for the development of open-source projects.
+
 .. _XEP-0071: http://xmpp.org/extensions/xep-0071.html
 .. _XEP-0144: http://xmpp.org/extensions/xep-0144.html
 .. _XEP-0060: http://xmpp.org/extensions/xep-0060.html
@@ -137,12 +143,6 @@ Usage
 .. _XEP-0133: http://xmpp.org/extensions/xep-0133.html
 .. _XEP-0124: http://xmpp.org/extensions/xep-0124.html
 .. _ejabberd: http://www.ejabberd.im
-
-Credits
-=======
-
-* Most of this work was done using the 10% time available to `Jarn AS`_ employees for the development of open-source projects.
-
 .. _Jarn AS: http://jarn.com
 .. _jarn.xmpp.buildout: http://github.com/ggozad/jarn.xmpp.buildout
 .. _jarn.xmpp.twisted: http://pypi.python.org/pypi/jarn.xmpp.twisted
