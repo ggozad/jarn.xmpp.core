@@ -3,7 +3,7 @@ Introduction
 
 ``jarn.xmpp.core`` provides the following basic functionality based on XMPP services:
 
-* Integration of plone user accounts with XMPP accounts.
+* Integration of plone user accounts with XMPP accounts and secure authentication.
 * Basic messaging and multi-user chat.
 * A minimal microblogging environment based on XMPP PubSub.
 
@@ -15,19 +15,20 @@ It is part of a suite of packages aiming to provide XMPP services to Plone. The 
 Installation
 ============
 
-Before setting up the package you need to have a working XMPP server and access to an administration account on the server. The package has only been tested with ejabberd version 2.1.5 and above which is recommended. In any case the following XMPP extensions need to be supported by the server you are going to use:
+Before setting up the package you need to have a working XMPP server and access to the administration account on the server. The package has only been tested with ejabberd version 2.1.5 and above which is recommended. In any case the following XMPP extensions need to be supported by the server you are going to use:
 
 * `XEP-0071`_ XHTML-IM.
 * `XEP-0144`_ Roster Item Exchange.
 * `XEP-0060`_ Publish-Subscribe.
 * `XEP-0248`_ PubSub Collection Nodes.
 * `XEP-0133`_ Service Administration.
+* `XEP-0124`_ Bidirectional-streams Over Synchronous HTTP (BOSH)
 
 Setting up ejabberd (>=2.1.5)
 -----------------------------
 
 * Download `ejabberd`_ installer
-* We assume that your xmpp domain is ``myserver``. There should exist an administrator account ``admin@myserver``. In addition if you intend to run tests you will need to be running an additional XMPP node on ``localhost``. You can safely remove any references to ``localhost`` if you do not want to do that.
+* We assume that your xmpp domain is ``myserver``. There should exist an administrator account ``admin@myserver``. In addition if you intend to run some of the tests in any of the ``jarn.xmpp.*`` packages you will need to be running an additional XMPP node on ``localhost``. You can safely remove any references to ``localhost`` if you are not interested in doing that.
 * You will need two hosts (one if you are not running tests, see above).
 
   ::
@@ -43,7 +44,7 @@ Setting up ejabberd (>=2.1.5)
          web_admin
          ]}
 
-* Because ejabberd's implementation of XEP-0060 is not standard use of the ``dag`` module is necessary. So, make sure your pubsub module is configured appropriately:
+* Because ejabberd's implementation of XEP-0060 is not standard use of the ejabberd's ``dag`` module is necessary. So, make sure your pubsub module is configured appropriately:
 
   ::
 
@@ -74,6 +75,32 @@ The rest of the standard options should be fine. In any case a sample ``ejabberd
 
 Test that you can access your ejabberd by logging to the admin interface (typically ``http://host:5280/admin``). You should also be able to access the ``http-bind`` interface at ``http://host:5280/http-bind``.
 
+Setting up your front-end proxy
+-------------------------------
+On the client-side every authenticated user will be connected to your jabber server through an emulated bidirectional stream through HTTP. To allow for this you need a proxy in front of Plone that will be redirecting the XMPP stream to your XMPP server. It is possible to do without one using the inferior solution of Flash plugins but this is not going to be supported. 
+
+So assuming you run ``nginx`` as a proxy at port ``80`` for the domain ``myserver``, Plone listens on ``8081`` and your ejabberd has the ``http_bind`` configured for port ``5280``, your ``nginx`` configuration will look like this:
+
+    ::
+
+        http {
+            server {
+                listen       80;
+                server_name  myserver;
+
+                location ~ ^/http-bind/ {
+                    proxy_pass http://myserver:5280;
+                }
+
+                location / {
+                    proxy_pass http://myserver:8081/VirtualHostBase/http/myserver:80/Plone/VirtualHostRoot/;
+                }
+
+            }
+          }
+
+Again, it might help you to have a look at the sample buildout provided in `jarn.xmpp.buildout`_.
+
 Setting up a new Plone site
 ---------------------------
 * Start ejabberd
@@ -81,6 +108,7 @@ Setting up a new Plone site
 * Start your zope instance.
 * Access Zope via Nginx ``http://myserver/`` and create a new Plone site with ``jarn.xmpp.core``.
 * Go to the Plone control panel, into the registry settings. Edit the jarn.xmpp.* settings to reflect your installation, passwords etc.
+* Restart your Plone instance.
 * Upon the first request the administrator will log to his account. You should see things happening in the logs and if there are any errors something might be wrong with your installation.
 * Setup the the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://myserver/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
 
@@ -98,7 +126,7 @@ Setup
 Usage
 -----
 
-* Login several users in different browsers. Note the ugly logs at the bottom with the XMPP stanzas exchanged.
+* Login several users in different browsers.
 * On the *online users* portlet click on a user. This allows you to message him and he can start a chat session.
 * Each user is able to post a message to his node. Others will receive in real time. The portlets will be updated on the next request.
 
@@ -107,6 +135,7 @@ Usage
 .. _XEP-0060: http://xmpp.org/extensions/xep-0060.html
 .. _XEP-0248: http://xmpp.org/extensions/xep-0248.html
 .. _XEP-0133: http://xmpp.org/extensions/xep-0133.html
+.. _XEP-0124: http://xmpp.org/extensions/xep-0124.html
 .. _ejabberd: http://www.ejabberd.im
 
 Credits
