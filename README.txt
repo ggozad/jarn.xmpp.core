@@ -23,6 +23,7 @@ Before setting up the package you need to have a working XMPP server and access 
 * `XEP-0248`_ PubSub Collection Nodes.
 * `XEP-0133`_ Service Administration.
 * `XEP-0124`_ Bidirectional-streams Over Synchronous HTTP (BOSH)
+* `XEP-0206`_ XMPP over BOSH
 
 Setting up ejabberd (>=2.1.5)
 -----------------------------
@@ -143,6 +144,14 @@ Usage
 * On the *online users* portlet click on a user. This allows you to message him and he can start a chat session.
 * Each user is able to post a message to his node. Others will receive in real time. The portlets will be updated on the next request.
 
+Security
+========
+
+``jarn.xmpp.twisted`` includes an implementation of an authenticating client over BOSH according to `XEP-0206`_. This practically means that the javascript client never needs to know the password of the XMPP user. Instead, the user is authenticated directly between the XMPP server and the Plone instance. A pair of secret tokens are exchanged, valid for a short time (~2 minutes). It is this pair that is given to the javascript client and not the password.
+
+When a user is created (either through the Plone interface or by running ``@@setup-xmpp`` for existing users), a random password is generated and stored internally in a persistent utility.
+
+If you do not need to access the XMPP accounts outside of the Plone instance you can additionally hide the entire XMPP service behind a firewall and only allow connections to it from the Plone instances. This in combination with HTTPS should be enough for the paranoid among us.
 
 Credits
 =======
@@ -155,6 +164,7 @@ Credits
 .. _XEP-0248: http://xmpp.org/extensions/xep-0248.html
 .. _XEP-0133: http://xmpp.org/extensions/xep-0133.html
 .. _XEP-0124: http://xmpp.org/extensions/xep-0124.html
+.. _XEP-0206: http://xmpp.org/extensions/xep-0206.html
 .. _ejabberd: http://www.ejabberd.im
 .. _Jarn AS: http://jarn.com
 .. _jarn.xmpp.buildout: http://github.com/ggozad/jarn.xmpp.buildout
