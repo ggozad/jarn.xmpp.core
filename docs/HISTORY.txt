@@ -1,7 +1,8 @@
 Changelog
 =========
 
-0.1dev (unreleased)
--------------------
+0.1a1 - 2010-05-09
+------------------
 
 - Initial release
+  [ggozad]

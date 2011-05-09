@@ -1,9 +1,9 @@
 Introduction
 ============
 
-``jarn.xmpp.core`` provides the following basic functionality based on XMPP services:
+``jarn.xmpp.core`` is a Plone add-on providing the following functionality based on XMPP services:
 
-* Integration of plone user accounts with XMPP accounts and secure authentication.
+* Integration of plone user accounts with XMPP accounts and authentication.
 * Basic messaging and multi-user chat.
 * A minimal microblogging environment based on XMPP PubSub.
 
@@ -112,6 +112,8 @@ Your instances will need to maintain a connection to the administrator account o
       <configure xmlns="http://namespaces.zope.org/zope">  
         <include package="jarn.xmpp.twisted" file="reactor.zcml" />
       </configure>
+
+Again, use `jarn.xmpp.buildout`_ as a starting point!
 
 Setting up a new Plone site
 ---------------------------
