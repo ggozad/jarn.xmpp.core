@@ -6,7 +6,7 @@ version = '0.1a2-dev'
 setup(name='jarn.xmpp.core',
       version=version,
       description="Core package for jarn.xmpp",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
         "Development Status :: 3 - Alpha",
