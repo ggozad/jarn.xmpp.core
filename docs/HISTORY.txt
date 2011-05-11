@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.1a2 
+-----------------
+
+- Updated documentation on how to add a recent wokkel.
+  [ggozad]
+
 0.1a1 - 2010-05-09
 ------------------
 
