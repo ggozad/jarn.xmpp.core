@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.1a3 - Unreleased
+------------------
+- Run tests requiring the EJABBERD layer only when level 2 is specified on the
+  testrunner.
+  [ggozad]
+
 0.1a2 - 2010-05-11
 ------------------
 

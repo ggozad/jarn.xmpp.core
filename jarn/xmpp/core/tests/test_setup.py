@@ -13,6 +13,7 @@ from jarn.xmpp.core.utils.pubsub import getAllChildNodes
 class LayerSetupTests(unittest.TestCase):
 
     layer = XMPPCORE_INTEGRATION_TESTING
+    level = 2
 
     def test_nodes(self):
         portal = self.layer['portal']

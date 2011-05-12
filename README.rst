@@ -163,6 +163,15 @@ When a user is created (either through the Plone interface or by running ``@@set
 
 If you do not need to access the XMPP accounts outside of the Plone instance you can additionally hide the entire XMPP service behind a firewall and only allow connections to it from the Plone instances. This in combination with HTTPS should be enough for the paranoid among us.
 
+Testing
+=======
+
+Some of the included tests are functional tests that require a XMPP server running on ``localhost`` as well as an administrator account setup up on this server with JID ``admin@localhost`` and password ``admin``. If you wish to run those you have to specify a *level* 2 on your testrunner, i.e.
+
+    ::
+
+    ./bin/test -a 2 -s jarn.xmpp.core
+
 Credits
 =======
 

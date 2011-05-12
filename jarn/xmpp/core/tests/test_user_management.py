@@ -17,6 +17,7 @@ from jarn.xmpp.core.utils.pubsub import getAllChildNodes
 class UserManagementTests(unittest.TestCase):
 
     layer = XMPPCORE_INTEGRATION_TESTING
+    level = 2
 
     def test_add_delete_user(self):
         portal = self.layer['portal']
