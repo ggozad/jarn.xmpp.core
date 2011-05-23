@@ -81,8 +81,11 @@ Setting up ejabberd (>=2.1.5)
              ]},
 
 The rest of the standard options should be fine. In any case a sample ``ejabberd.cfg`` is included in the `jarn.xmpp.buildout`_ package.
+If you have setup ejabberd through the installer with a different domain you might need to create manually the administrator account. In the ejabberd folder execute::
 
-Test that you can access your ejabberd by logging to the admin interface (typically ``http://host:5280/admin``). You should also be able to access the ``http-bind`` interface at ``http://host:5280/http-bind``.
+    ./bin/ejabberdctl register admin myserver your_password
+
+Test that you can access your ejabberd by logging to the admin interface (typically ``http://myserver:5280/admin``). You should also be able to access the ``http-bind`` interface at ``http://host:5280/http-bind``.
 
 Setting up your front-end proxy
 -------------------------------
