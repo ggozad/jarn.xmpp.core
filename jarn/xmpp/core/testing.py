@@ -1,3 +1,4 @@
+from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting, FunctionalTesting
@@ -17,9 +18,9 @@ from jarn.xmpp.core.subscribers.startup import setupAdminClient
 from jarn.xmpp.core.utils.setup import setupXMPPEnvironment
 
 
-class XMPPCoreFixture(PloneSandboxLayer):
+class XMPPCoreNoReactorFixture(PloneSandboxLayer):
 
-    defaultBases = (REACTOR_FIXTURE, )
+    defaultBases = (PLONE_FIXTURE, )
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
@@ -40,13 +41,29 @@ class XMPPCoreFixture(PloneSandboxLayer):
         registry['jarn.xmpp.conferenceJID'] = 'conference.localhost'
         registry['jarn.xmpp.xmppDomain'] = 'localhost'
 
-        setupAdminClient(None, None)
-        client = getUtility(IAdminClient)
-        wait_for_client_state(client, 'authenticated')
-
     def tearDownZope(self, app):
         # Uninstall product
         z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
+
+
+XMPPCORE_NO_REACTOR_FIXTURE = XMPPCoreNoReactorFixture()
+
+XMPPCORE_NO_REACTOR_INTEGRATION_TESTING = IntegrationTesting(
+    bases=(XMPPCORE_NO_REACTOR_FIXTURE, ),
+    name="XMPPCoreNoReactorFixture:Integration")
+XMPPCORE_NO_REACTOR_FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(XMPPCORE_NO_REACTOR_FIXTURE, ),
+    name="XMPPCoreNoReactorFixture:Functional")
+
+
+class XMPPCoreFixture(PloneSandboxLayer):
+
+    defaultBases = (REACTOR_FIXTURE, XMPPCORE_NO_REACTOR_FIXTURE, )
+
+    def setUpPloneSite(self, portal):
+        setupAdminClient(None, None)
+        client = getUtility(IAdminClient)
+        wait_for_client_state(client, 'authenticated')
 
     def testSetUp(self):
         client = getUtility(IAdminClient)
