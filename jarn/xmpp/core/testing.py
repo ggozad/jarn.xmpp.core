@@ -1,4 +1,3 @@
-from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting, FunctionalTesting
@@ -9,7 +8,7 @@ from zope.component import getUtility
 from zope.configuration import xmlconfig
 
 from jarn.xmpp.twisted.interfaces import IZopeReactor
-from jarn.xmpp.twisted.testing import REACTOR_FIXTURE
+from jarn.xmpp.twisted.testing import REACTOR_FIXTURE, NO_REACTOR_FIXTURE
 from jarn.xmpp.twisted.testing import wait_on_client_deferreds
 from jarn.xmpp.twisted.testing import wait_for_client_state
 
@@ -20,7 +19,7 @@ from jarn.xmpp.core.utils.setup import setupXMPPEnvironment
 
 class XMPPCoreNoReactorFixture(PloneSandboxLayer):
 
-    defaultBases = (PLONE_FIXTURE, )
+    defaultBases = (NO_REACTOR_FIXTURE, )
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
@@ -58,12 +57,33 @@ XMPPCORE_NO_REACTOR_FUNCTIONAL_TESTING = FunctionalTesting(
 
 class XMPPCoreFixture(PloneSandboxLayer):
 
-    defaultBases = (REACTOR_FIXTURE, XMPPCORE_NO_REACTOR_FIXTURE, )
+    defaultBases = (REACTOR_FIXTURE, )
+
+    def setUpZope(self, app, configurationContext):
+        # Load ZCML
+        import jarn.xmpp.core
+        import pas.plugins.userdeletedevent
+        xmlconfig.file('configure.zcml', jarn.xmpp.core,
+                       context=configurationContext)
+        xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent,
+                       context=configurationContext)
+        z2.installProduct(app, 'pas.plugins.userdeletedevent')
 
     def setUpPloneSite(self, portal):
+        # Install into Plone site using portal_setup
+        applyProfile(portal, 'jarn.xmpp.core:default')
+        registry = getUtility(IRegistry)
+        registry['jarn.xmpp.adminJID'] = 'admin@localhost'
+        registry['jarn.xmpp.pubsubJID'] = 'pubsub.localhost'
+        registry['jarn.xmpp.conferenceJID'] = 'conference.localhost'
+        registry['jarn.xmpp.xmppDomain'] = 'localhost'
         setupAdminClient(None, None)
         client = getUtility(IAdminClient)
         wait_for_client_state(client, 'authenticated')
+
+    def tearDownZope(self, app):
+        # Uninstall product
+        z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
 
     def testSetUp(self):
         client = getUtility(IAdminClient)
