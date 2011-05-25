@@ -3,6 +3,9 @@ Changelog
 
 0.1a3 - Unreleased
 ------------------
+- Added some basic tests for pubsub.
+  [ggozad]
+
 - Run tests requiring the EJABBERD layer only when level 2 is specified on the
   testrunner.
   [ggozad]
