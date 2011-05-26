@@ -3,6 +3,11 @@ Changelog
 
 0.1a3 - Unreleased
 ------------------
+
+- Included recipe to generate a working ejabberd.cfg using 
+  collective.recipe.template.
+  [ggozad]
+
 - Added some basic tests for pubsub.
   [ggozad]
 
