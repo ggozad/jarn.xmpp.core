@@ -25,6 +25,7 @@ Before setting up the package you need to have a working XMPP server and access 
 * `XEP-0124`_ Bidirectional-streams Over Synchronous HTTP (BOSH)
 * `XEP-0206`_ XMPP over BOSH
 
+--------
 Buildout
 --------
 A sample buildout you can use as a starting point can be found at `jarn.xmpp.buildout`_. Wokkel on which ``jarn.xmpp.twisted`` depends upon has not had a release for a while, so you will need to either use a development version or add::
@@ -33,10 +34,34 @@ A sample buildout you can use as a starting point can be found at `jarn.xmpp.bui
 
 to your buildout to get an updated version.
 
+-----------------------------
 Setting up ejabberd (>=2.1.5)
 -----------------------------
 
+Automatic configuration
+-----------------------
 * Download the `ejabberd`_ installer
+* A minimal configuration for ejabberd can be generated for convenience by the ``ejabberd.cfg`` part of `jarn.xmpp.buildout`_. You will need to copy the ``templates`` directory and modify the recipe configuration accordingly::
+
+    [ejabberd.cfg]
+    recipe = collective.recipe.template
+    input = templates/ejabberd.cfg.in
+    output = ${buildout:parts-directory}/etc/ejabberd.cfg
+
+    xmppdomain = myserver
+    admin_userid = admin
+    certfile = /path_to/cert.pem
+    collaboration_allowed_subnet = 0,0,0,0
+    collaboration_port = 5347
+    component_password = secret
+
+
+where ``xmppdomain`` is the domain (or virtual host) running on your XMPP server, ``admin_userid`` is the id the the administrator account that Plone is going to use to interact with the server and ``certfile`` is the full path to your certificate for client-server communications. The rest of the options are  used by ``jarn.xmpp.collaboration`` for the collaborative editing component connecting to the XMPP server. Here, ``collaboration_allowed_subnet`` specifies from which IPs the XMPP server is going to accept connections and should match the IPs your Plone instances are going to be using. Leaving it to ``0,0,0,0`` will allow all IPs, ``127,0,0,1`` will allow only ``localhost``. Finally ``collaboration_port`` is the port to which the collaboration component is going to connect to and ``component_password`` is the shared password between the component and the XMPP server. 
+
+Manual configuration
+--------------------
+If you already run an XMPP server here are some hints on how to set it up:
+
 * We assume that your xmpp domain is ``myserver``. There should exist an administrator account ``admin@myserver``. In addition if you intend to run some of the tests in any of the ``jarn.xmpp.*`` packages you will need to be running an additional XMPP node on ``localhost``. You can safely remove any references to ``localhost`` if you are not interested in doing that.
 * You will need two hosts (one if you are not running tests, see above).
 
@@ -80,13 +105,17 @@ Setting up ejabberd (>=2.1.5)
               }
              ]},
 
-The rest of the standard options should be fine. In any case a sample ``ejabberd.cfg`` is included in the `jarn.xmpp.buildout`_ package.
-If you have setup ejabberd through the installer with a different domain you might need to create manually the administrator account. In the ejabberd folder execute::
+The rest of the standard options should be fine.
+
+Administrator account
+---------------------
+If you have not done so during installation you might need to create manually the administrator account. In the ejabberd folder execute::
 
     ./bin/ejabberdctl register admin myserver your_password
 
 Test that you can access your ejabberd by logging to the admin interface (typically ``http://myserver:5280/admin``). You should also be able to access the ``http-bind`` interface at ``http://host:5280/http-bind``.
 
+-------------------------------
 Setting up your front-end proxy
 -------------------------------
 On the client-side every authenticated user will be connected to your jabber server through an emulated bidirectional stream through HTTP. To allow for this you need a proxy in front of Plone that will be redirecting the XMPP stream to your XMPP server. It is possible to do without one using the inferior solution of Flash plugins but this is not going to be supported. 
@@ -113,6 +142,7 @@ So assuming you run ``nginx`` as a proxy at port ``80`` for the domain ``myserve
 
 Again, it might help you to have a look at the sample buildout provided in `jarn.xmpp.buildout`_.
 
+-------------------------------
 Setting up your Plone instances
 -------------------------------
 Your instances will need to maintain a connection to the administrator account of your XMPP server. This is accomplished through ``Twisted`` and you will need to run a Twisted reactor on each of them. To do so include this in your instance section of your buildout:
@@ -126,6 +156,7 @@ Your instances will need to maintain a connection to the administrator account o
 
 Again, use `jarn.xmpp.buildout`_ as a starting point!
 
+---------------------------
 Setting up a new Plone site
 ---------------------------
 * Start ejabberd
@@ -142,6 +173,7 @@ If you are going to use this on an existing site, you only need to perform the l
 Experimenting
 =============
 
+-----
 Setup
 -----
 
@@ -150,6 +182,7 @@ Setup
 * Add a *Pubsub node* portlet, where the node name is ``people`` and the type is ``collection``. This is the collective feed of all users.
 * For each user you added add a *Pubsub node* portlet, where the node name is the user's id and the type is ``leaf``. This is the personal feed of the respective user.
 
+-----
 Usage
 -----
 
