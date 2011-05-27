@@ -108,12 +108,16 @@ jarnxmpp.muc = {
 
         if (room != jarnxmpp.muc.room) return true;
 
-        var notice = !nick;
         var body = $(message).children('body').text();
         var delayed = $(message).children("delay").length > 0  ||
             $(message).children("x[xmlns='jabber:x:delay']").length > 0;
 
-        jarnxmpp.muc.addMessage(body, nick, notice, delayed);
+        var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
+        event.body = body;
+        event.nick = nick;
+        event.notice = !nick;
+        event.delayed = delayed;
+        $(document).trigger(event);
         return true;
     },
 
@@ -122,37 +126,8 @@ jarnxmpp.muc = {
             .c('x', {xmlns: jarnxmpp.muc.NS_MUC_USER})
             .c('invite', {to: Strophe.getBareJidFromJid(jid)});
         jarnxmpp.connection.send(invitation);
-        jarnxmpp.muc.addMessage("Invitation sent.", null, true, false);
+        //jarnxmpp.muc.addMessage("Invitation sent.", null, true, false);
+        $(document).trigger('jarnxmpp.muc.displayPublicMessage', "Invitation sent.", null, true, false);
     },
-
-    addMessage: function (body, nick, notice, delayed) {
-        var msg = "";
-        if (!notice) {
-            var delay_css = delayed ? " delayed" : "";
-            // messages from ourself will be styled differently
-            var nick_class = "nick";
-            if (nick === jarnxmpp.muc.nickname)
-                nick_class += " self";
-
-            msg = $('<div>').addClass('message').addClass(delay_css);
-            msg.append($('<span>')
-                .addClass(nick_class)
-                .text('<' + nick + '>'));
-            msg.append($('<span>')
-                .addClass('body')
-                .text(body));
-
-        } else
-            msg = $('<div>').addClass('notice').text(body);
-
-        // detect if we are scrolled all the way down
-        var chat = $('#chat').get(0);
-        var at_bottom = chat.scrollTop >= chat.scrollHeight - chat.clientHeight;
-        $('#chat').append(msg);
-        // if we were at the bottom, keep us at the bottom
-        if (at_bottom) {
-            chat.scrollTop = chat.scrollHeight;
-        }
-    }
 
 };
