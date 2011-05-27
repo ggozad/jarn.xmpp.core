@@ -111,25 +111,64 @@ $(document).bind('jarnxmpp.roomInvitation', function (event) {
 
 // MUC
 
+$(document).bind('jarnxmpp.muc.displayPublicMessage', function (ev) {
+    var msg = "";
+    if (!ev.notice) {
+        var delay_css = ev.delayed ? " delayed" : "";
+        // messages from ourself will be styled differently
+        var nick_class = "nick";
+        if (ev.nick === jarnxmpp.muc.nickname)
+            nick_class += " self";
+
+        msg = $('<div>').addClass('message').addClass(delay_css);
+        msg.append($('<span>')
+            .addClass(nick_class)
+            .text('<' + ev.nick + '>'));
+        msg.append($('<span>')
+            .addClass('body')
+            .text(ev.body));
+
+    } else
+        msg = $('<div>').addClass('notice').text(ev.body);
+
+    // detect if we are scrolled all the way down
+    var chat = $('#chat').get(0);
+    var at_bottom = chat.scrollTop >= chat.scrollHeight - chat.clientHeight;
+    $('#chat').append(msg);
+    // if we were at the bottom, keep us at the bottom
+    if (at_bottom) {
+        chat.scrollTop = chat.scrollHeight;
+    }
+});
+
 $(document).bind('jarnxmpp.muc.roomJoined', function (ev, owner) {
     jarnxmpp.muc.joined = true;
     $('#room-name').text(jarnxmpp.muc.room);
     var li = $('<li>').attr('id', 'muc-participant-'+owner).text(owner);
     $('#participant-list').append(li);
     $('#muc-online-'+owner).remove();
-    jarnxmpp.muc.addMessage("Room joined.", null, true, false);
+    var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
+    event.body = "Room joined";
+    event.notice = true;
+    $(document).trigger(event);
 });
 
 $(document).bind('jarnxmpp.muc.userJoined', function (ev, nick) {
     var li = $('<li>').attr('id', 'muc-participant-'+nick).text(nick);
     $('#participant-list').append(li);
     $('#muc-online-'+nick).remove();
-    jarnxmpp.muc.addMessage(nick +" joined.", null, true, false);
+    var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
+    event.body = nick +" joined.";
+    event.notice = true;
+    $(document).trigger(event);
 });
 
 $(document).bind('jarnxmpp.muc.userLeft', function (ev, nick) {
     $('#muc-participant-'+nick).remove();
-    jarnxmpp.muc.addMessage(nick +" left.", null, true, false);
+    var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
+    event.body = nick +" left.";
+    event.notice = true;
+    $(document).trigger(event);
     if (nick in jarnxmpp.Presence.online)
         $(document).trigger('jarnxmpp.muc.userOnline', [nick]);  
 });
