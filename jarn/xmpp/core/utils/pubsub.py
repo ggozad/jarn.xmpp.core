@@ -22,6 +22,7 @@ def publishItemToNode(identifier, content, user_id):
     """
 
     settings = getUtility(IRegistry)
+    xmpp_domain = settings['jarn.xmpp.xmppDomain']
     pubsub_jid = JID(settings['jarn.xmpp.pubsubJID'])
     xmpp_users = getUtility(IXMPPUsers)
     user_jid = xmpp_users.getUserJID(user_id)
@@ -46,7 +47,7 @@ def publishItemToNode(identifier, content, user_id):
             logger.error("Failure in publishing to node %s" % identifier)
 
     jabber_client = getUtility(IDeferredXMPPClient)
-    d = jabber_client.execute(user_jid, password,
+    d = jabber_client.execute(user_jid, password, xmpp_domain,
                               publishItem, extra_handlers=[PubSubHandler()])
     d.addCallback(resultCb)
     return d
