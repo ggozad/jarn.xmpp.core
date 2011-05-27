@@ -126,8 +126,10 @@ jarnxmpp.muc = {
             .c('x', {xmlns: jarnxmpp.muc.NS_MUC_USER})
             .c('invite', {to: Strophe.getBareJidFromJid(jid)});
         jarnxmpp.connection.send(invitation);
-        //jarnxmpp.muc.addMessage("Invitation sent.", null, true, false);
-        $(document).trigger('jarnxmpp.muc.displayPublicMessage', "Invitation sent.", null, true, false);
+        var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
+        event.body = "Invitation sent.";
+        event.notice = true;
+        $(document).trigger(event);
     },
 
 };

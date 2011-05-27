@@ -165,9 +165,10 @@ $(document).bind('jarnxmpp.muc.userJoined', function (ev, nick) {
 
 $(document).bind('jarnxmpp.muc.userLeft', function (ev, nick) {
     $('#muc-participant-'+nick).remove();
-
-    //jarnxmpp.muc.addMessage(nick +" left.", null, true, false);
-    $(document).trigger('jarnxmpp.muc.displayPublicMessage', nick +" left.", null, true, false);
+    var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
+    event.body = nick +" left.";
+    event.notice = true;
+    $(document).trigger(event);
     if (nick in jarnxmpp.Presence.online)
         $(document).trigger('jarnxmpp.muc.userOnline', [nick]);  
 });
