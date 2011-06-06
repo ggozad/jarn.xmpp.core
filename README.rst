@@ -1,3 +1,4 @@
+============
 Introduction
 ============
 
@@ -12,6 +13,7 @@ It is part of a suite of packages aiming to provide XMPP services to Plone. The 
 * `jarn.xmpp.twisted`_, provides XMPP-specific protocol implementation for twisted.
 * `jarn.xmpp.collaboration`_ provides an XMPP protocol to do real-time collaborative editing as well as a Plone-targeted implementation.
 
+============
 Installation
 ============
 
@@ -170,6 +172,7 @@ Setting up a new Plone site
 
 If you are going to use this on an existing site, you only need to perform the last step after making sure that your XMPP admin is connected.
 
+=============
 Experimenting
 =============
 
@@ -190,6 +193,7 @@ Usage
 * On the *online users* portlet click on a user. This allows you to message him and he can start a chat session.
 * Each user is able to post a message to his node. Others will receive in real time. The portlets will be updated on the next request.
 
+========
 Security
 ========
 
@@ -199,6 +203,7 @@ When a user is created (either through the Plone interface or by running ``@@set
 
 If you do not need to access the XMPP accounts outside of the Plone instance you can additionally hide the entire XMPP service behind a firewall and only allow connections to it from the Plone instances. This in combination with HTTPS should be enough for the paranoid among us.
 
+=======
 Testing
 =======
 
@@ -208,6 +213,7 @@ Some of the included tests are functional tests that require a XMPP server runni
 
     ./bin/test -a 2 -s jarn.xmpp.core
 
+=======
 Credits
 =======
 

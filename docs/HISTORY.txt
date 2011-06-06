@@ -1,7 +1,9 @@
+=========
 Changelog
 =========
 
-0.1a3 - Unreleased
+------------------
+0.1a3 - 2010-06-06
 ------------------
 
 - Included recipe to generate a working ejabberd.cfg using 
@@ -15,12 +17,14 @@ Changelog
   testrunner.
   [ggozad]
 
+------------------
 0.1a2 - 2010-05-11
 ------------------
 
 - Updated documentation on how to add a recent wokkel.
   [ggozad]
 
+------------------
 0.1a1 - 2010-05-09
 ------------------
 
