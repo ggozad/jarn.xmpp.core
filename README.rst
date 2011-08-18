@@ -48,7 +48,7 @@ Automatic configuration
     [ejabberd.cfg]
     recipe = collective.recipe.template
     input = templates/ejabberd.cfg.in
-    output = ${buildout:parts-directory}/etc/ejabberd.cfg
+    output = ${buildout:directory}/etc/ejabberd.cfg
     xmppdomain = myserver
     admin_userid = admin
     collaboration_allowed_subnet = 0,0,0,0
