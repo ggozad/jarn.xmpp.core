@@ -42,23 +42,21 @@ Setting up ejabberd (>=2.1.5)
 
 Automatic configuration
 -----------------------
-* Download the `ejabberd`_ installer
+* Download the `ejabberd`_ installer or use the recipe provided in `jarn.xmpp.buildout`_ (in which case you will need to have erlang installed).
 * A minimal configuration for ejabberd can be generated for convenience by the ``ejabberd.cfg`` part of `jarn.xmpp.buildout`_. You will need to copy the ``templates`` directory and modify the recipe configuration accordingly::
 
     [ejabberd.cfg]
     recipe = collective.recipe.template
     input = templates/ejabberd.cfg.in
     output = ${buildout:parts-directory}/etc/ejabberd.cfg
-
     xmppdomain = myserver
     admin_userid = admin
-    certfile = /path_to/cert.pem
     collaboration_allowed_subnet = 0,0,0,0
     collaboration_port = 5347
     component_password = secret
 
 
-where ``xmppdomain`` is the domain (or virtual host) running on your XMPP server, ``admin_userid`` is the id the the administrator account that Plone is going to use to interact with the server and ``certfile`` is the full path to your certificate for client-server communications. The rest of the options are  used by ``jarn.xmpp.collaboration`` for the collaborative editing component connecting to the XMPP server. Here, ``collaboration_allowed_subnet`` specifies from which IPs the XMPP server is going to accept connections and should match the IPs your Plone instances are going to be using. Leaving it to ``0,0,0,0`` will allow all IPs, ``127,0,0,1`` will allow only ``localhost``. Finally ``collaboration_port`` is the port to which the collaboration component is going to connect to and ``component_password`` is the shared password between the component and the XMPP server. 
+where ``xmppdomain`` is the domain (or virtual host) running on your XMPP server and ``admin_userid`` is the id the the administrator account that Plone is going to use to interact with the server. The rest of the options are  used by ``jarn.xmpp.collaboration`` for the collaborative editing component connecting to the XMPP server. Here, ``collaboration_allowed_subnet`` specifies from which IPs the XMPP server is going to accept connections and should match the IPs your Plone instances are going to be using. Leaving it to ``0,0,0,0`` will allow all IPs, ``127,0,0,1`` will allow only ``localhost``. Finally ``collaboration_port`` is the port to which the collaboration component is going to connect to and ``component_password`` is the shared password between the component and the XMPP server.
 
 Manual configuration
 --------------------
