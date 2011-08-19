@@ -1,0 +1,18 @@
+<div id="xmpp-viewlet-wrapper"
+     i18n:domain="jarn.xmpp.core">
+
+<dl id="portal-xmpp"
+    tal:condition="not: view/anonymous">
+    <a href="">
+      <span i18n:translate="">Online:</span>
+    </a>
+    <span id="online_counter">0</span>
+    <a 
+      tal:attributes="href string:@@pubsub-feed?node=people">Site feed</a>
+    <a class="pubsub-post"
+      tal:attributes="href string:@@pubsub-publish?node=${view/personal_node}">Post</a>
+
+    <dl id="online-users" class="deactivated" >
+    </dl>
+</dl>
+</div>

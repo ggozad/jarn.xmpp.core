@@ -54,27 +54,31 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     } else {
         var dd = $('<dd>')
             .attr('class', status)
-            .attr('id', 'online-users-'+user_id)
-            .attr('title', 'Send message');
+            .attr('id', 'online-users-'+user_id);
         $('#online-users').append(dd);
         jarnxmpp.Presence.getUserInfo(user_id, function(data) {
             if (data===null) return;
+            var portrait = $('<img/>')
+                .attr('title', data.fullname)
+                .attr('src', data.portrait_url)
+                .attr('width','48')
+                .attr('height', '64');
             var sendMessage = $('<a>')
                 .attr('class', 'online-users-message')
-                .attr('href','sendXMPPMessage?message-recipient=' + barejid);
-            sendMessage.append($('<img/>').attr('title', data.fullname).attr('src', data.portrait_url));
+                .attr('href','sendXMPPMessage?message-recipient=' + barejid).text("Message");
             sendMessage.prepOverlay({
                 subtype: 'ajax',
             });
+            dd.append(portrait);
             dd.append(sendMessage);
         });
     }
 });
 
 $(document).ready(function () {
-    $('#online-users .online').live('mouseover', function () {
-        $("#"+this.id+"[title]").tooltip({position: 'center center',});
-    });
+    //$('#online-users .online').live('mouseover', function () {
+    //    $("#"+this.id+"[title]").tooltip({position: 'center center',});
+    //});
     $('#sendXMPPMessage').live('submit', function () {
         var text = $(this).find('input[name="message"]').attr('value');
         var recipient = $(this).find('input[name="message-recipient"]').attr('value');

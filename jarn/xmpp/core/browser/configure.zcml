@@ -76,6 +76,14 @@
       permission="zope2.View"
       />
   -->
+  <browser:viewlet
+      name="jarn.xmpp.core.ui"
+      manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+      class=".viewlet.XMPPViewlet"
+      permission="zope2.View"
+      />
+
+  <!-- Resources -->
   <browser:resourceDirectory
     name="jarn.xmpp.core.js"
     directory="js"
