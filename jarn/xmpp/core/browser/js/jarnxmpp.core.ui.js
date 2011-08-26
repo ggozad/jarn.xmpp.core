@@ -42,7 +42,8 @@ $(document).ready(function () {
     });
 });
 
-// Online users portlet
+// Online users
+
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var user_id = Strophe.getNodeFromJid(jid);
     var barejid = Strophe.getBareJidFromJid(jid);
@@ -58,27 +59,37 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         $('#online-users').append(dd);
         jarnxmpp.Presence.getUserInfo(user_id, function(data) {
             if (data===null) return;
-            var portrait = $('<img/>')
+            var portrait = $('<div>').attr('class', 'avatar').append($('<img/>')
                 .attr('title', data.fullname)
                 .attr('src', data.portrait_url)
-                .attr('width','48')
-                .attr('height', '64');
+                .attr('class','portrait'));
+            var actions = $('<div>').attr('class', 'online-user-actions');
+            var personalFeed = $('<a>')
+                .attr('href', '@@pubsub-feed?node=' + user_id)
+                .text(data.fullname);
             var sendMessage = $('<a>')
-                .attr('class', 'online-users-message')
-                .attr('href','sendXMPPMessage?message-recipient=' + barejid).text("Message");
+                .attr('href', 'sendXMPPMessage?message-recipient=' + barejid);
+            sendMessage.append($('<img>')
+                .attr('src', '++resource++jarn.xmpp.core.images/chat_icon.png')
+            );
             sendMessage.prepOverlay({
                 subtype: 'ajax',
             });
             dd.append(portrait);
-            dd.append(sendMessage);
+            actions.append($('<div>').append(personalFeed));
+            actions.append($('<div>').append(sendMessage));
+            dd.append(actions);
         });
     }
+    var counter = 0;
+    for (key in jarnxmpp.Presence.online) {
+        if (jarnxmpp.Presence.online.hasOwnProperty(key))
+            counter++;
+    }
+    $('#online-count').text(counter);
 });
 
 $(document).ready(function () {
-    //$('#online-users .online').live('mouseover', function () {
-    //    $("#"+this.id+"[title]").tooltip({position: 'center center',});
-    //});
     $('#sendXMPPMessage').live('submit', function () {
         var text = $(this).find('input[name="message"]').attr('value');
         var recipient = $(this).find('input[name="message-recipient"]').attr('value');
@@ -88,6 +99,11 @@ $(document).ready(function () {
         $(this).parents('.overlay').data('overlay').close();
         return false;
     });
+    $('#toggle-online-users').bind('click', function (el) {
+        $('#online-users').toggleClass('deactivated');
+        return false;
+    });
+
 });
 
 // Room invites

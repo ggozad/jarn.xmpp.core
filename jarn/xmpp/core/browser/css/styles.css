@@ -1,35 +1,79 @@
-.xmpp-dataSent {
-	color: green;
-	margin-top: 1em;
+/* XMPP viewlet */
+#xmpp-viewlet {
+	float:right;
 }
 
-.xmpp-dataRcvd {
-	color: blue;
-	margin-top: 1em;
+#xmpp-viewlet-container {
+	height: 15px;
+	background-color: #E3E3E3;
+	font-size: 80%;
+
+	margin-right: 0.5em;
+	padding: 0.25em 0.5em;
+	border-bottom-right-radius: 0.5em;
+	border-bottom-left-radius: 0.5em;
+	-webkit-border-bottom-right-radius: 0.5em;
+	-webkit-border-bottom-left-radius: 0.5em;
+	-moz-border-radius-bottomleft: 0.5em;
+	-moz-border-radius-bottomright: 0.5em;	
 }
 
-.portletPubSubNode .portrait {
+#xmpp-viewlet a {
+	margin-right: 0.25em;
+}
+
+#online-users {
+	z-index: auto;
+	position: absolute;
+	background-color: #E3E3E3;
+	border-bottom-right-radius: 0.5em;
+	border-bottom-left-radius: 0.5em;
+	-webkit-border-bottom-right-radius: 0.5em;
+	-webkit-border-bottom-left-radius: 0.5em;
+	-moz-border-radius-bottomleft: 0.5em;
+	-moz-border-radius-bottomright: 0.5em;	
+}
+
+#online-users.deactivated {
+	display: none;
+}
+
+#online-users.activated {
+	display: block;
+}
+#toggle-online-users:after {
+    content: " ▼";
+}
+#online-users .avatar {
+	display: block;
+	float:left;
+}
+#online-users .avatar img {
+	height: 64px;
+	vertical-align: middle;
+}
+
+#online-users dd {
+	display: block;
+	float: left;
+	margin: 0.5em;
+}
+
+#online-users .online-user-actions {
 	float:left;
 }
 
 #online-users .offline {
 	opacity: 0.5;
 }
-
-#online-users img {
-/*	height: 40px;
-	width: 40px;*/
+/* PubSub feed */
+.pubsubAvatar {
+	float:left;
+	display: block;
+	margin: 0.5em;
+	width:100px;
 }
-
-.tooltip {
-	position:absolute;
-	border:1px solid #333;
-	background:#f7f5d1;
-	padding:2px 5px;
-	color:#333;
-	display:none;
-}
-
+/* Chat */
 #chat-container {
 	clear: both;
 	width: 75em;
@@ -98,4 +142,15 @@
 
 .delayed {
 	opacity: 0.5;
+}
+
+/* Logging */
+.xmpp-dataSent {
+	color: green;
+	margin-top: 1em;
+}
+
+.xmpp-dataRcvd {
+	color: blue;
+	margin-top: 1em;
 }
