@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="jarn.xmpp.core">
+<head>
+    <metal:block fill-slot="top_slot"
+                 tal:define="dummy python:request.set('disable_border',1);" />
+</head>
+
+<body>
+<metal:main fill-slot="main"
+  tal:define="node view/node;
+              isLeaf python: view.nodeType=='leaf';
+              member_tool context/portal_membership">
+
+    <div id="content-core">
+      <div class="pubsubAvatar" tal:condition="isLeaf">
+          <img class="portrait"
+               tal:define="portrait python:context.portal_membership.getPersonalPortrait(view.node);"
+               tal:condition="portrait"
+               tal:attributes="src portrait/absolute_url">
+      </div>
+
+      <h1 class="documentFirstHeading" tal:content="python: view.fullname(node) or node">St. Peter</h1>
+      <div class="visualClear"><!-- --></div>
+
+      <dl class="pubSubNode">
+        <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
+                                      plone_view context/@@plone;"
+                          tal:repeat="obj view/items">
+          <dd class="pubsubItem"
+              tal:define="oddrow repeat/obj/odd;
+                          author obj/author;
+                          fullname python: view.fullname(author) or author;
+                          content obj/content;
+                          updated obj/updated;"
+              tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+            <div class="pubsubAvatar" tal:condition="not: isLeaf">
+               <img class="portrait"
+                    tal:define="portrait python:member_tool.getPersonalPortrait(author);"
+                    tal:condition="portrait"
+                    tal:attributes="src portrait/absolute_url"/>
+            </div>
+            <div class="pubsubItemContent">
+              <h4 tal:condition="not: isLeaf" tal:content="fullname">Saint Andre</h4>
+              <span tal:replace="structure content">xmpp ftw!</span>
+              <div class="pubsubItemDetails">
+                <span class="discreet" tal:content="python:toLocalizedTime(updated)">May 5</span>
+              </div>
+
+            </div>
+            <div class="visualClear"><!-- --></div>
+          </dd>
+        <div class="visualClear"><!-- --></div>
+        </tal:pubsubitems>
+      </dl>
+
+    </div>
+
+</metal:main>
+</body>
+</html>

@@ -31,6 +31,14 @@
 
   <browser:page
     for="*"
+    name="pubsub-feed"
+    class=".pubsub.PubSubFeedView"
+    template="pubsub_feed.pt"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
     name="pubsub-publish"
     class=".pubsub.PublishToNodeForm"
     permission="zope2.View"
@@ -76,6 +84,14 @@
       permission="zope2.View"
       />
   -->
+  <browser:viewlet
+      name="jarn.xmpp.core.ui"
+      manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+      class=".viewlet.XMPPViewlet"
+      permission="zope2.View"
+      />
+
+  <!-- Resources -->
   <browser:resourceDirectory
     name="jarn.xmpp.core.js"
     directory="js"

@@ -2,14 +2,17 @@ from z3c.form import form
 from z3c.form import field
 from z3c.form import button
 
-from Products.CMFCore.utils import getToolByName
 from zope import schema
 from zope.component import getUtility
 from zope.interface import Interface
 
+from Products.CMFCore.utils import getToolByName
+from Products.Five.browser import BrowserView
+
 from jarn.xmpp.core import messageFactory as _
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IXMPPUsers
+from jarn.xmpp.core.interfaces import IPubSubStorage
 from jarn.xmpp.core.utils.pubsub import publishItemToNode
 
 
@@ -26,6 +29,40 @@ class ISubscribeToNode(Interface):
 
     node = schema.ASCIILine(title=_(u'Node'),
                             required=True)
+
+
+class PubSubFeedView(BrowserView):
+
+    def __init__(self, context, request):
+        super(PubSubFeedView, self).__init__(context, request)
+        self.storage = getUtility(IPubSubStorage)
+        self.node = request.get('node', None)
+        if self.node in self.storage.leaf_nodes:
+            self.nodeType = 'leaf'
+        else:
+            self.nodeType = 'collection'
+        self.mt = getToolByName(self.context, 'portal_membership')
+        self.fullnames = dict()
+
+    def fullname(self, author):
+        if author in self.fullnames:
+            return self.fullnames[author]
+        else:
+            member = self.mt.getMemberById(author)
+            if member is None:
+                return ''
+            fullname = member.getProperty('fullname', None)
+            if fullname is None:
+                return ''
+            self.fullnames[author] = fullname
+            return fullname
+
+    def items(self, node=None, count=10):
+        if node is None:
+            node = self.node
+        if node not in self.storage.node_items:
+            return []
+        return self.storage.node_items[node][:count]
 
 
 class PublishToNodeForm(form.Form):

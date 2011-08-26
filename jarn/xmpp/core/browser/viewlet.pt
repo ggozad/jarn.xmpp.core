@@ -1,0 +1,14 @@
+<div id="xmpp-viewlet"
+     i18n:domain="jarn.xmpp.core"
+     tal:condition="not: view/anonymous">
+<div id="xmpp-viewlet-container">
+  <a id="toggle-online-users" href="">
+    <span i18n:translate="">Online users:</span>
+    <span id="online-count">0</span>
+  </a>
+  <a tal:attributes="href string:@@pubsub-feed?node=people">Site stream</a>
+  <a class="pubsub-post"
+    tal:attributes="href string:@@pubsub-publish?node=${view/personal_node}">Post to stream</a>
+ </div>
+  <dl id="online-users" class="user-container deactivated" ></dl>
+</div>
