@@ -91,7 +91,7 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
 
 $(document).ready(function () {
     $('#sendXMPPMessage').live('submit', function () {
-        var text = $(this).find('input[name="message"]').attr('value');
+        var text = $(this).find('textarea[name="message"]').attr('value');
         var recipient = $(this).find('input[name="message-recipient"]').attr('value');
         var message = $msg({to: recipient, type: 'chat'})
             .c('body').t(text);

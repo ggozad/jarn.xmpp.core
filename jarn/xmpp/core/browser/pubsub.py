@@ -69,6 +69,7 @@ class PublishToNodeForm(form.Form):
 
     fields = field.Fields(IPublishToNode)
     label = _("Post message")
+    description = _("The message posted will be visible to all users in your stream, as well as the global site's feed.")
     ignoreContext = True
 
     def __init__(self, context, request, node=None):
