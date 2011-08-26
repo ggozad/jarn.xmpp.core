@@ -6,6 +6,16 @@ Changelog
 0.1a4
 -----
 
+- A viewlet is now available through which all actions can be performed.
+  [ggozad]
+
+- Added recipe in buildout to build ejabberd. Requires a working erlang
+  installation.
+  [ggozad]
+
+- JS fixes
+  [ggozad]
+
 ------------------
 0.1a3 - 2010-06-06
 ------------------
