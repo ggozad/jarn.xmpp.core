@@ -1,3 +1,5 @@
+import re
+
 from z3c.form import form
 from z3c.form import field
 from z3c.form import button
@@ -57,12 +59,18 @@ class PubSubFeedView(BrowserView):
             self.fullnames[author] = fullname
             return fullname
 
-    def items(self, node=None, count=10):
+    def items(self, node=None, count=100):
         if node is None:
             node = self.node
         if node not in self.storage.node_items:
             return []
-        return self.storage.node_items[node][:count]
+        result = self.storage.node_items[node][:count]
+        for index, item in enumerate(result):
+            urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
+            if urls:
+                item['urls'] = urls
+            result[index] = item
+        return result
 
 
 class PublishToNodeForm(form.Form):
@@ -96,6 +104,7 @@ class PublishToNodeForm(form.Form):
                                      message).getData()
         pm = getToolByName(self.context, 'portal_membership')
         user = str(pm.getAuthenticatedMember())
+        message = message.decode('utf-8')
         publishItemToNode(node, message, user)
         return self.request.response.redirect(self.context.absolute_url())
 
