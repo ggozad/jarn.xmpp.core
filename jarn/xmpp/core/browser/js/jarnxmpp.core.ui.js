@@ -1,4 +1,3 @@
-// Messages
 $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from);
     var jid = Strophe.getBareJidFromJid(event.from);
@@ -18,9 +17,9 @@ $(document).bind('jarnxmpp.message', function (event) {
             sticky: true,
             after_open: function (e) {
                 e.find('.chat-link').prepOverlay({
-                    subtype: 'ajax',
+                    subtype: 'ajax'
                 });
-            },
+            }
         });
     });
 });
@@ -38,7 +37,7 @@ $(document).bind('jarnxmpp.nodePublished', function (event) {
 
 $(document).ready(function () {
     $('.pubsub-post').prepOverlay({
-        subtype: 'ajax',
+        subtype: 'ajax'
     });
 });
 
@@ -82,7 +81,7 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         });
     }
     var counter = 0;
-    for (key in jarnxmpp.Presence.online) {
+    for (var key in jarnxmpp.Presence.online) {
         if (jarnxmpp.Presence.online.hasOwnProperty(key))
             counter++;
     }
