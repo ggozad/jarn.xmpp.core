@@ -5,8 +5,8 @@ Introduction
 ``jarn.xmpp.core`` is a Plone add-on providing the following functionality based on XMPP services:
 
 * Integration of plone user accounts with XMPP accounts and authentication.
+* A microblogging environment based on XMPP PubSub.
 * Basic messaging and multi-user chat.
-* A minimal microblogging environment based on XMPP PubSub.
 
 It is part of a suite of packages aiming to provide XMPP services to Plone. The other two packages are
 
@@ -42,7 +42,7 @@ Setting up ejabberd (>=2.1.5)
 
 Automatic configuration
 -----------------------
-* Download the `ejabberd`_ installer or use the recipe provided in `jarn.xmpp.buildout`_ (in which case you will need to have erlang installed).
+* Use the recipe provided in `jarn.xmpp.buildout`_ (in which case you will need to have erlang installed) or ownload the `ejabberd`_ installer.
 * A minimal configuration for ejabberd can be generated for convenience by the ``ejabberd.cfg`` part of `jarn.xmpp.buildout`_. You will need to copy the ``templates`` directory and modify the recipe configuration accordingly::
 
     [ejabberd.cfg]
@@ -159,7 +159,7 @@ Again, use `jarn.xmpp.buildout`_ as a starting point!
 ---------------------------
 Setting up a new Plone site
 ---------------------------
-* Start ejabberd
+* Start ejabberd (if you used the recipe to build ejabberd, ``bin/ejabberd`` will do the job).
 * Start the Nginx frontend. ``sudo bin/frontend start``
 * Start your zope instance.
 * Access Zope via Nginx ``http://myserver/`` and create a new Plone site with ``jarn.xmpp.core``.
@@ -174,14 +174,13 @@ If you are going to use this on an existing site, you only need to perform the l
 Experimenting
 =============
 
------
-Setup
------
+-------------
+Setup & usage
+-------------
 
 * Add a few users.
-* Add the *Online users* portlet.
-* Add a *Pubsub node* portlet, where the node name is ``people`` and the type is ``collection``. This is the collective feed of all users.
-* For each user you added add a *Pubsub node* portlet, where the node name is the user's id and the type is ``leaf``. This is the personal feed of the respective user.
+* All actions are performed through the viewlet on the top right: ``Online users`` will display the users currently logged in. Clicking it will give you the list of users. You can message them directly by clicking the chat icon next to them or look at their personal feed by clicking their name.
+* Try posting an entry to your feed. Links will be transformed automatically. As soon as you submit other logged-in users will receive a notification in real-time.
 
 -----
 Usage
