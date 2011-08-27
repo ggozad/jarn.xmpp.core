@@ -72,6 +72,13 @@
     permission="zope2.View"
     />
 
+  <browser:view
+    for="*"
+    name="magic-links"
+    class=".magic_links.MagicLinksView"
+    permission="zope.Public"
+    />
+
   <!-- Viewlets -->
 
   <!--

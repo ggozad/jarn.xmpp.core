@@ -42,7 +42,8 @@
                           author obj/author;
                           fullname python: view.fullname(author) or author;
                           content obj/content;
-                          updated obj/updated;"
+                          updated obj/updated;
+                          links obj/urls | nothing"
               tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
             <div class="pubsubAvatar" tal:condition="not: isLeaf">
                <img class="portrait"
@@ -55,6 +56,15 @@
               <span tal:replace="structure content">xmpp ftw!</span>
               <div class="pubsubItemDetails">
                 <span class="discreet" tal:content="python:toLocalizedTime(updated)">May 5</span>
+                <ul class="pubsub-item-links" tal:condition="links">
+                  <li tal:repeat="url links">
+                    <a tal:attributes="href url" class="magic-link external-link">
+                      <img src="" height="16" width="16" class="magic-favicon"/>
+                      <h6 class="magic-link-title">Title</h6>
+                      <span class="magic-link-descr">Description</span>
+                    </a>
+                  </li>
+                </ul>
               </div>
 
             </div>

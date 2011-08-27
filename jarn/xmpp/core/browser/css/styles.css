@@ -71,7 +71,28 @@
 	float:left;
 	display: block;
 	margin: 0.5em;
+	height: 100%;
 	width:100px;
+}
+
+.pubsubItemContent {
+	float: left;
+}
+
+#content ul.pubsub-item-links {
+	margin: 1em 0 0 0;
+	margin-left: 0px;
+	padding: 0em;
+}
+
+.pubsub-item-links li {
+	list-style-type: none;
+}
+.pubsub-item-links li img {
+	display: block;
+	float: left;
+	padding-right:0.25em;
+	border: none;
 }
 /* Chat */
 #chat-container {

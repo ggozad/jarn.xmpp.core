@@ -36,9 +36,24 @@ $(document).bind('jarnxmpp.nodePublished', function (event) {
 });
 
 $(document).ready(function () {
+    var text = "asdasd sdlfjsdlfkj <a href='hello world'>Hello world</a>";
     $('.pubsub-post').prepOverlay({
         subtype: 'ajax'
     });
+
+    $('a.magic-link').each(function () {
+        var link = this;
+        $(link).hide();
+        $(link).children('.magic-favicon').hide();
+        $.getJSON(portal_url+"/magic-links?url="+$(link).attr('href'), function(data) {
+            $(link).children('.magic-link-title').text(data.title);
+            $(link).children('.magic-link-descr').text(data.description);
+            $(link).children('.magic-favicon').attr('src', data.favicon_url);
+            $(link).children('.magic-favicon').show();
+            $(link).show();
+        });
+    });
+ 
 });
 
 // Online users
