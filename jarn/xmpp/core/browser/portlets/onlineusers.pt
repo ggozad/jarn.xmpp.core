@@ -1,8 +1,0 @@
-<dl id="online-users" class="portlet"
-    tal:condition="view/available">
-    <dt class="portletHeader">
-        <span class="portletTopLeft"></span>
-        <span>Online Users</span>
-        <span class="portletTopRight"></span>
-    </dt>
-</dl>

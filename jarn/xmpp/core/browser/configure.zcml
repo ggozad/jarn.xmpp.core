@@ -5,7 +5,6 @@
   i18n_domain="jarn.xmpp.core">
 
   <include package="plone.app.z3cform" />
-  <include package=".portlets" />
 
   <browser:view
     for="*"
