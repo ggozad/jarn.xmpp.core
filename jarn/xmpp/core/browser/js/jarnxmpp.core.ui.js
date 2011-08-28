@@ -1,62 +1,8 @@
-$(document).bind('jarnxmpp.message', function (event) {
-    var user_id = Strophe.getNodeFromJid(event.from);
-    var jid = Strophe.getBareJidFromJid(event.from);
-    var text_p = $('<p>').text(event.body);
-    var chat_p = $('<p>');
-    var chat_link = $('<a>')
-        .attr('class', 'chat-link')
-        .attr('href', 'muc?invitee=' + jid)
-        .text('Chat');
-    chat_p.append(chat_link);
-    var text = $('<div>').append(text_p).append(chat_p).remove().html();
-    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
-        $.gritter.add({
-            title: data.fullname,
-            text: text,
-            image: data.portrait_url,
-            sticky: true,
-            after_open: function (e) {
-                e.find('.chat-link').prepOverlay({
-                    subtype: 'ajax'
-                });
-            }
-        });
-    });
-});
+/*
+    Event handlers
+*/
 
-// Pub-Sub
-$(document).bind('jarnxmpp.nodePublished', function (event) {
-    jarnxmpp.Presence.getUserInfo(event.author, function(data) {
-        $.gritter.add({
-            title: data.fullname,
-            text: event.content,
-            image: data.portrait_url
-        });
-    });
-});
-
-$(document).ready(function () {
-    var text = "asdasd sdlfjsdlfkj <a href='hello world'>Hello world</a>";
-    $('.pubsub-post').prepOverlay({
-        subtype: 'ajax'
-    });
-
-    $('a.magic-link').each(function () {
-        var link = this;
-        $(link).hide();
-        $(link).children('.magic-favicon').hide();
-        $.getJSON(portal_url+"/magic-links?url="+$(link).attr('href'), function(data) {
-            $(link).children('.magic-link-title').text(data.title);
-            $(link).children('.magic-link-descr').text(data.description);
-            $(link).children('.magic-favicon').attr('src', data.favicon_url);
-            $(link).children('.magic-favicon').show();
-            $(link).show();
-        });
-    });
- 
-});
-
-// Online users
+// Presence handler
 
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var user_id = Strophe.getNodeFromJid(jid);
@@ -103,22 +49,45 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     $('#online-count').text(counter);
 });
 
-$(document).ready(function () {
-    $('#sendXMPPMessage').live('submit', function () {
-        var text = $(this).find('textarea[name="message"]').attr('value');
-        var recipient = $(this).find('input[name="message-recipient"]').attr('value');
-        var message = $msg({to: recipient, type: 'chat'})
-            .c('body').t(text);
-        jarnxmpp.connection.send(message);
-        $(this).parents('.overlay').data('overlay').close();
-        return false;
+$(document).bind('jarnxmpp.message', function (event) {
+    var user_id = Strophe.getNodeFromJid(event.from);
+    var jid = Strophe.getBareJidFromJid(event.from);
+    var text_p = $('<p>').text(event.body);
+    var chat_p = $('<p>');
+    var chat_link = $('<a>')
+        .attr('class', 'chat-link')
+        .attr('href', 'muc?invitee=' + jid)
+        .text('Chat');
+    chat_p.append(chat_link);
+    var text = $('<div>').append(text_p).append(chat_p).remove().html();
+    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
+        $.gritter.add({
+            title: data.fullname,
+            text: text,
+            image: data.portrait_url,
+            sticky: true,
+            after_open: function (e) {
+                e.find('.chat-link').prepOverlay({
+                    subtype: 'ajax'
+                });
+            }
+        });
     });
-    $('#toggle-online-users').bind('click', function (el) {
-        $('#online-users').toggleClass('deactivated');
-        return false;
-    });
-
 });
+
+// Pub-Sub
+$(document).bind('jarnxmpp.nodePublished', function (event) {
+    jarnxmpp.Presence.getUserInfo(event.author, function(data) {
+        $.gritter.add({
+            title: data.fullname,
+            text: event.content,
+            image: data.portrait_url
+        });
+    });
+});
+
+
+// MUC
 
 // Room invites
 $(document).bind('jarnxmpp.roomInvitation', function (event) {
@@ -142,8 +111,6 @@ $(document).bind('jarnxmpp.roomInvitation', function (event) {
         });
     });
 });
-
-// MUC
 
 $(document).bind('jarnxmpp.muc.displayPublicMessage', function (ev) {
     var msg = "";
@@ -228,4 +195,40 @@ $(document).bind('jarnxmpp.dataReceived', function (ev) {
 
 $(document).bind('jarnxmpp.dataSent', function (ev) {
     $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));
+});
+
+$(document).ready(function () {
+
+    $('#sendXMPPMessage').live('submit', function () {
+        var text = $(this).find('textarea[name="message"]').attr('value');
+        var recipient = $(this).find('input[name="message-recipient"]').attr('value');
+        var message = $msg({to: recipient, type: 'chat'})
+            .c('body').t(text);
+        jarnxmpp.connection.send(message);
+        $(this).parents('.overlay').data('overlay').close();
+        return false;
+    });
+
+    $('#toggle-online-users').bind('click', function (el) {
+        $('#online-users').toggleClass('deactivated');
+        return false;
+    });
+
+    $('.pubsub-post').prepOverlay({
+        subtype: 'ajax'
+    });
+
+    $('a.magic-link').each(function () {
+        var link = this;
+        $(link).hide();
+        $(link).children('.magic-favicon').hide();
+        $.getJSON(portal_url+"/magic-links?url="+$(link).attr('href'), function(data) {
+            $(link).children('.magic-link-title').text(data.title);
+            $(link).children('.magic-link-descr').text(data.description);
+            $(link).children('.magic-favicon').attr('src', data.favicon_url);
+            $(link).children('.magic-favicon').show();
+            $(link).show();
+        });
+    }); 
+
 });
