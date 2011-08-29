@@ -25,7 +25,7 @@ setup(name='jarn.xmpp.core',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'html5lib',
+          'BeautifulSoup',
           'plone.app.registry',
           'plone.app.z3cform',
           'pas.plugins.userdeletedevent',
