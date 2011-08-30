@@ -3,8 +3,13 @@ Changelog
 =========
 
 -----
-0.1a4
+0.1b1
 -----
+
+- The admin client now handles failures to connect as well as getting
+  disconnected. When this happens, the admin client utility will
+  get unregistered and will retry on the next request.
+  [ggozad]
 
 - A viewlet is now available through which all actions can be performed.
   [ggozad]

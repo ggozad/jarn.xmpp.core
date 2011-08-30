@@ -29,11 +29,23 @@ class IAdminClient(Interface):
 
 
 class IAdminClientConnected(IObjectEvent):
-    """Pubsub client has connected.
+    """Admin client has connected.
     """
 
 
 class AdminClientConnected(object):
+    implements(IAdminClientConnected)
+
+    def __init__(self, obj):
+        self.object = obj
+
+
+class IAdminClientDisconnected(IObjectEvent):
+    """Admin client has connected.
+    """
+
+
+class AdminClientDisconnected(object):
     implements(IAdminClientConnected)
 
     def __init__(self, obj):

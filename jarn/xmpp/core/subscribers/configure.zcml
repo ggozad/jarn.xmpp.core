@@ -13,4 +13,9 @@
     handler=".startup.adminConnected"
     />
 
+  <subscriber
+    for="jarn.xmpp.core.interfaces.AdminClientDisconnected"
+    handler=".startup.adminDisconnected"
+    />
+
 </configure>

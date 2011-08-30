@@ -5,6 +5,7 @@ from zope.component import getGlobalSiteManager
 from zope.component import getUtility
 from zope.component import queryUtility
 
+from jarn.xmpp.twisted.interfaces import IZopeReactor
 
 from jarn.xmpp.core.client import AdminClient
 from jarn.xmpp.core.interfaces import IAdminClient
@@ -14,27 +15,41 @@ logger = logging.getLogger('jarn.xmpp.core')
 
 
 def setupAdminClient(portal, event):
-    if queryUtility(IAdminClient) is None:
+    client = queryUtility(IAdminClient)
+    if client is None:
         gsm = getGlobalSiteManager()
-        try:
-            client = AdminClient()
-            gsm.registerUtility(client, IAdminClient)
-        except:
-            logger.error('Could not load AdminClient')
+        client = AdminClient()
+        gsm.registerUtility(client, IAdminClient)
+
+        def checkAdminClientConnected():
+            if client.state != 'authenticated':
+                logger.error('XMPP admin client has not been able to authenticate. ' \
+                    'Client state is "%s". Will retry on the next request.' % client.state)
+                gsm.unregisterUtility(client, IAdminClient)
+
+        zr = getUtility(IZopeReactor)
+        zr.reactor.callLater(10, checkAdminClientConnected)
 
 
 def adminConnected(event):
-    client = event.object
+    logger.info('XMPP admin client has authenticated succesfully.')
     # Since this is our initial connection, populate ram storage with the
     # pubsub nodes.
     populatePubSubStorage()
-    client.admin.sendAnnouncement("Instance started")
 
     # Register user subscribers
     import user_management
     gsm = getGlobalSiteManager()
     gsm.registerHandler(user_management.onUserCreation)
     gsm.registerHandler(user_management.onUserDeletion)
+
+
+def adminDisconnected(event):
+    client = queryUtility(IAdminClient)
+    logger.error('XMPP admin client disconnected.')
+    if client:
+        gsm = getGlobalSiteManager()
+        gsm.unregisterUtility(client, IAdminClient)
 
 
 def populatePubSubStorage():

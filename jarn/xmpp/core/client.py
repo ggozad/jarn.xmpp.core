@@ -16,6 +16,7 @@ from jarn.xmpp.twisted.protocols import ChatHandler
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IPubSubStorage
 from jarn.xmpp.core.interfaces import AdminClientConnected
+from jarn.xmpp.core.interfaces import AdminClientDisconnected
 
 
 logger = logging.getLogger('jarn.xmpp.core')
@@ -189,4 +190,9 @@ class AdminClient(XMPPClient, PubSubClientMixIn):
         super(AdminClient, self)._authd(xs)
         self.presence.available()
         ev = AdminClientConnected(self)
+        notify(ev)
+
+    def _disconnected(self, reason):
+        super(AdminClient, self)._disconnected(reason)
+        ev = AdminClientDisconnected(self)
         notify(ev)
