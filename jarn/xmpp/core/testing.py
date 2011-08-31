@@ -25,6 +25,7 @@ class XMPPCoreNoReactorFixture(PloneSandboxLayer):
         # Load ZCML
         import jarn.xmpp.core
         import pas.plugins.userdeletedevent
+
         xmlconfig.file('configure.zcml', jarn.xmpp.core,
                        context=configurationContext)
         xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent,
@@ -55,6 +56,10 @@ XMPPCORE_NO_REACTOR_FUNCTIONAL_TESTING = FunctionalTesting(
     name="XMPPCoreNoReactorFixture:Functional")
 
 
+def _doNotUnregisterOnDisconnect(event):
+    pass
+
+
 class XMPPCoreFixture(PloneSandboxLayer):
 
     defaultBases = (REACTOR_FIXTURE, )
@@ -63,6 +68,13 @@ class XMPPCoreFixture(PloneSandboxLayer):
         # Load ZCML
         import jarn.xmpp.core
         import pas.plugins.userdeletedevent
+
+        # Normally on a client disconnect we unregister the AdminClient
+        # utility. We can't do that here as we need to disconnect the
+        # client and clean up to keep twisted happy.
+        jarn.xmpp.core.subscribers.startup.adminDisconnected = \
+            _doNotUnregisterOnDisconnect
+
         xmlconfig.file('configure.zcml', jarn.xmpp.core,
                        context=configurationContext)
         xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent,
