@@ -42,14 +42,14 @@ Setting up ejabberd (>=2.1.5)
 
 Automatic configuration
 -----------------------
-* Use the recipe provided in `jarn.xmpp.buildout`_ (in which case you will need to have erlang installed) or ownload the `ejabberd`_ installer.
+* Use the recipe provided in `jarn.xmpp.buildout`_ (in which case you will need to have erlang installed) or download the `ejabberd`_ installer.
 * A minimal configuration for ejabberd can be generated for convenience by the ``ejabberd.cfg`` part of `jarn.xmpp.buildout`_. You will need to copy the ``templates`` directory and modify the recipe configuration accordingly::
 
     [ejabberd.cfg]
     recipe = collective.recipe.template
     input = templates/ejabberd.cfg.in
     output = ${buildout:directory}/etc/ejabberd.cfg
-    xmppdomain = myserver
+    xmppdomain = localhost
     admin_userid = admin
     collaboration_allowed_subnet = 0,0,0,0
     collaboration_port = 5347
@@ -62,12 +62,7 @@ Manual configuration
 --------------------
 If you already run an XMPP server here are some hints on how to set it up:
 
-* We assume that your xmpp domain is ``myserver``. There should exist an administrator account ``admin@myserver``. In addition if you intend to run some of the tests in any of the ``jarn.xmpp.*`` packages you will need to be running an additional XMPP node on ``localhost``. You can safely remove any references to ``localhost`` if you are not interested in doing that.
-* You will need two hosts (one if you are not running tests, see above).
-
-  ::
-
-  {hosts, ["myserver", "localhost"]}.
+* We assume that your xmpp domain is ``localhost``. There should exist an administrator account ``admin@localhost``. In addition if you intend to run some of the tests in any of the ``jarn.xmpp.*`` packages you will need to be running an additional XMPP node on ``localhost`` if you use some other domain for production. You can safely remove any references to ``localhost`` if you are not interested in doing that.
 
 * Make sure you have enabled the `http_bind` module, as this is what the javascript clients will use to connect. You should have  something like this in your ejabberd.cfg:
 
@@ -99,8 +94,7 @@ If you already run an XMPP server here are some hints on how to set it up:
               {shaper_rule, fast},
               {ip, {127, 0, 0, 1}},
               {hosts,
-               ["collaboration.myserver",
-                "collaboration.localhost"],
+               ["collaboration.localhost"],
                [{password, "secret"}]
               }
              ]},
@@ -111,36 +105,32 @@ Administrator account
 ---------------------
 If you have not done so during installation you might need to create manually the administrator account. In the ejabberd folder execute::
 
-    ./bin/ejabberdctl register admin myserver your_password
+    ./bin/ejabberdctl register admin localhost your_password
 
-Test that you can access your ejabberd by logging to the admin interface (typically ``http://myserver:5280/admin``). You should also be able to access the ``http-bind`` interface at ``http://host:5280/http-bind``.
+Test that you can access your ejabberd by logging to the admin interface (typically ``http://localhost:5280/admin``). You should also be able to access the ``http-bind`` interface at ``http://localhost:5280/http-bind``.
 
 -------------------------------
 Setting up your front-end proxy
 -------------------------------
 On the client-side every authenticated user will be connected to your jabber server through an emulated bidirectional stream through HTTP. To allow for this you need a proxy in front of Plone that will be redirecting the XMPP stream to your XMPP server. It is possible to do without one using the inferior solution of Flash plugins but this is not going to be supported. 
 
-So assuming you run ``nginx`` as a proxy at port ``80`` for the domain ``myserver``, Plone listens on ``8081`` and your ejabberd has the ``http_bind`` configured for port ``5280``, your ``nginx`` configuration will look like this:
+So assuming you run ``nginx`` as a proxy at port ``8080`` for the domain ``localhost``, Zope listens on ``8081``, there exists a Plone site with id  ``Plone`` and your ejabberd has the ``http_bind`` configured for port ``5280``, your ``nginx`` configuration will look like this:
 
     ::
 
         http {
             server {
-                listen       80;
-                server_name  myserver;
-
+                listen       8080;
+                server_name  localhost;
                 location ~ ^/http-bind/ {
-                    proxy_pass http://myserver:5280;
+                    proxy_pass http://localhost:5280;
                 }
 
                 location / {
-                    proxy_pass http://myserver:8081/VirtualHostBase/http/myserver:80/Plone/VirtualHostRoot/;
+                    proxy_pass http://localhost:8081/VirtualHostBase/http/localhost:8080/Plone/VirtualHostRoot/;
                 }
-
             }
           }
-
-Again, it might help you to have a look at the sample buildout provided in `jarn.xmpp.buildout`_.
 
 -------------------------------
 Setting up your Plone instances
@@ -154,41 +144,63 @@ Your instances will need to maintain a connection to the administrator account o
         <include package="jarn.xmpp.twisted" file="reactor.zcml" />
       </configure>
 
-Again, use `jarn.xmpp.buildout`_ as a starting point!
+Again, it will help you to have a look at the sample buildout provided in `jarn.xmpp.buildout`_.
 
 ---------------------------
 Setting up a new Plone site
 ---------------------------
 * Start ejabberd (if you used the recipe to build ejabberd, ``bin/ejabberd`` will do the job).
-* Start the Nginx frontend. ``sudo bin/frontend start``
+* Start the Nginx frontend. ``bin/frontend start``
 * Start your zope instance.
-* Access Zope via Nginx ``http://myserver/`` and create a new Plone site with ``jarn.xmpp.core``.
+* Access Zope directly at ``http://localhost:8081/manage`` and create a new Plone site with ``jarn.xmpp.core``.
 * Go to the Plone control panel, into the registry settings. Edit the jarn.xmpp.* settings to reflect your installation, passwords etc.
 * Restart your Plone instance.
 * Upon the first request the administrator will log to his account. You should see things happening in the logs and if there are any errors something might be wrong with your installation.
-* Setup the the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://myserver/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
+* Setup the the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://localhost:8080/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
 
 If you are going to use this on an existing site, you only need to perform the last step after making sure that your XMPP admin is connected.
+
+--------------------------
+Making sure things work ;)
+--------------------------
+
+This is a complex infrastructure so it can be hard to know what goes wrong sometimes. Do not despair, here are a few things to try:
+
+* Make sure your ejabberd is running. Connect to it normal client as the admin user.
+* Verify that http-binding is setup properly. Visiting ``http://localhost:8080/http-bind/`` should tell you it's working.
+* When you start your Zope instance in foreground you can verify the Twisted reactor is running fine:
+
+  ::
+
+    2011-09-01 14:37:38 INFO jarn.xmpp.twisted Starting Twisted reactor...
+    2011-09-01 14:37:38 INFO jarn.xmpp.twisted Twisted reactor started
+    2011-09-01 14:37:38 INFO Zope Ready to handle requests
+
+* After the first request to the site, you should also see in the logs:
+
+  ::
+
+    2011-09-01 14:45:48 INFO jarn.xmpp.core XMPP admin client has authenticated succesfully.
+
+* After having run ``@@setup-xmpp``, logging-in to the Plone site with a user should also authenticate him with the XMPP server. This is indicated in the logs by:
+
+  ::
+
+    2011-09-01 14:45:50 INFO jarn.xmpp.core Pre-binded ggozad@localhost/auto-QravOoyEeE
 
 =============
 Experimenting
 =============
 
 -------------
-Setup & usage
+Usage
 -------------
 
 * Add a few users.
+* Login as one of them, and in a different browser as some other. Use the frontend to access the site, if you used the settings above this should be ``http://localhost:8080``.
 * All actions are performed through the viewlet on the top right: ``Online users`` will display the users currently logged in. Clicking it will give you the list of users. You can message them directly by clicking the chat icon next to them or look at their personal feed by clicking their name.
 * Try posting an entry to your feed. Links will be transformed automatically. As soon as you submit other logged-in users will receive a notification in real-time.
-
------
-Usage
------
-
-* Login several users in different browsers.
-* On the *online users* portlet click on a user. This allows you to message him and he can start a chat session.
-* Each user is able to post a message to his node. Others will receive in real time. The portlets will be updated on the next request.
+* You can see all posts by clicking on ``Site feed`` on the viewlet.
 
 ========
 Security

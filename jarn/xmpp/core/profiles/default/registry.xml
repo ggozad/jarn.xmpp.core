@@ -5,14 +5,14 @@
     <field type="plone.registry.field.ASCIILine">
       <title>XMPP Domain</title>
     </field>
-    <value>myserver</value>
+    <value>localhost</value>
   </record>
 
   <record name="jarn.xmpp.adminJID">
     <field type="plone.registry.field.ASCIILine">
       <title>Admin JID</title>
     </field>
-    <value>admin@myserver</value>
+    <value>admin@localhost</value>
   </record>
 
   <record name="jarn.xmpp.adminPassword">
@@ -26,21 +26,21 @@
     <field type="plone.registry.field.ASCIILine">
       <title>PubSub JID</title>
     </field>
-    <value>pubsub.myserver</value>
+    <value>pubsub.localhost</value>
   </record>
 
   <record name="jarn.xmpp.conferenceJID">
     <field type="plone.registry.field.ASCIILine">
       <title>Conference JID</title>
     </field>
-    <value>conference.myserver</value>
+    <value>conference.localhost</value>
   </record>
 
   <record name="jarn.xmpp.boshURL">
     <field type="plone.registry.field.URI">
-      <title>Conference JID</title>
+      <title>BOSH url</title>
     </field>
-    <value>http://myserver/http-bind/</value>
+    <value>http://localhost/http-bind/</value>
   </record>
 
 </registry>
