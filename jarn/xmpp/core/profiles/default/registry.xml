@@ -40,7 +40,7 @@
     <field type="plone.registry.field.URI">
       <title>BOSH url</title>
     </field>
-    <value>http://localhost/http-bind/</value>
+    <value>http://localhost:8080/http-bind/</value>
   </record>
 
 </registry>
