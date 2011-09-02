@@ -1,6 +1,5 @@
 import logging
 
-from plone.registry.interfaces import IRegistry
 from twisted.internet import defer
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
@@ -42,7 +41,7 @@ class PubSubClientMixIn(object):
         node = event.nodeIdentifier
         items = [self._pubsubItemToDict(item)
                   for item in items
-                  if item.name=='item']
+                  if item.name == 'item']
         storage = getUtility(IPubSubStorage)
         for item in items:
             storage.node_items[node].insert(0, item)
@@ -165,14 +164,10 @@ class AdminClient(XMPPClient, PubSubClientMixIn):
 
     implements(IAdminClient)
 
-    def __init__(self):
-        settings = getUtility(IRegistry)
+    def __init__(self, jid, jdomain, password, pubsub_jid):
 
-        jid = JID(settings['jarn.xmpp.adminJID'])
-        jdomain = settings['jarn.xmpp.xmppDomain']
-        password = settings['jarn.xmpp.adminPassword']
-
-        self.pubsub_jid = JID(settings['jarn.xmpp.pubsubJID'])
+        jid = JID(jid)
+        self.pubsub_jid = JID(pubsub_jid)
         self.admin = AdminHandler()
         self.pubsub = PubSubHandler()
         self.chat = ChatHandler()

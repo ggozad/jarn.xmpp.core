@@ -1,5 +1,6 @@
 import logging
 
+from plone.registry.interfaces import IRegistry
 from twisted.internet import defer
 from zope.component import getGlobalSiteManager
 from zope.component import getUtility
@@ -17,8 +18,18 @@ logger = logging.getLogger('jarn.xmpp.core')
 def setupAdminClient(portal, event):
     client = queryUtility(IAdminClient)
     if client is None:
+        settings = getUtility(IRegistry)
+
+        try:
+            jid = settings['jarn.xmpp.adminJID']
+            jdomain = settings['jarn.xmpp.xmppDomain']
+            password = settings['jarn.xmpp.adminPassword']
+            pubsub_jid = settings['jarn.xmpp.pubsubJID']
+        except KeyError:
+            pass
+
+        client = AdminClient(jid, jdomain, password, pubsub_jid)
         gsm = getGlobalSiteManager()
-        client = AdminClient()
         gsm.registerUtility(client, IAdminClient)
 
         def checkAdminClientConnected():

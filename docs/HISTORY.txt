@@ -3,6 +3,15 @@ Changelog
 =========
 
 ------------------
+0.1b2 - Unreleased
+------------------
+
+- Fix startup subscriber to not do anything if the product has not been
+  installed. This allows you to install on an existing site.
+  [ggozad]
+
+
+------------------
 0.1b1 - 2011-09-01
 ------------------
 
