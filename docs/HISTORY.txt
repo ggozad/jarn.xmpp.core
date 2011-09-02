@@ -3,7 +3,7 @@ Changelog
 =========
 
 ------------------
-0.1b2 - Unreleased
+0.1b2 - 2011-09-02
 ------------------
 
 - Fix startup subscriber to not do anything if the product has not been
