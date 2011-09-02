@@ -26,7 +26,7 @@ def setupAdminClient(portal, event):
             password = settings['jarn.xmpp.adminPassword']
             pubsub_jid = settings['jarn.xmpp.pubsubJID']
         except KeyError:
-            pass
+            return
 
         client = AdminClient(jid, jdomain, password, pubsub_jid)
         gsm = getGlobalSiteManager()
