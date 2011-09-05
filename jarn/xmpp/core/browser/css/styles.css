@@ -23,7 +23,7 @@
 }
 
 #online-users {
-	z-index: auto;
+	z-index: 10;
 	position: absolute;
 	background-color: #E3E3E3;
 	border-bottom-right-radius: 0.5em;
