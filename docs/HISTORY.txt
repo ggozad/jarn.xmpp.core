@@ -10,6 +10,8 @@ Changelog
   installed. This allows you to install on an existing site.
   [ggozad]
 
+- Update to Strophe 1.0.2
+  [ggozad]
 
 ------------------
 0.1b1 - 2011-09-01
