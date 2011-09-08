@@ -154,6 +154,7 @@ jarnxmpp.onConnect = function (status) {
         (status === Strophe.Status.CONNECTED)) {
         $(window).bind('beforeunload', function() {
             var presence = $pres({type: 'unavailable'});
+            jarnxmpp.connection.sync = true;
             jarnxmpp.connection.send(presence);
             jarnxmpp.connection.disconnect();
             jarnxmpp.connection.flush();

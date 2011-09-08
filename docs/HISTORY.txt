@@ -3,6 +3,16 @@ Changelog
 =========
 
 ------------------
+0.1b3 - Unreleased
+------------------
+
+- Patch strophe to make synchronous requests in order to be able to *really*
+  disconnect on onbeforeunload. This is to stop WebKit-based browsers from
+  keeping users connected until they timeout. Also, no longer use minified
+  versions of strophe libraries, since we patch them.
+  [ggozad]
+
+------------------
 0.1b2 - 2011-09-02
 ------------------
 
