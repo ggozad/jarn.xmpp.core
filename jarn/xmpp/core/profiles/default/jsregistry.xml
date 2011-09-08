@@ -1,8 +1,14 @@
 <object name="portal_javascripts" meta_type="JavaScripts Registry">
- <javascript id="++resource++gritter/jquery.gritter.min.js" compression="none" authenticated="True" />
- <javascript id="++resource++jarn.xmpp.core.js/strophe.min.js" authenticated="True" compression="none"/>
- <javascript id="++resource++jarn.xmpp.core.js/strophe.pubsub.min.js" authenticated="True" insert-after="++resource++jarn.xmpp.core.js/strophe.min.js" compression="none"/>
- <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.handlers.js" authenticated="True" insert-after="++resource++jarn.xmpp.core.js/strophe.pubsub.min.js" compression="none"/>
- <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.muc.js" authenticated="True" insert-after="++resource++jarn.xmpp.core.js/jarnxmpp.core.jarnxmpp.core.handlers.js"/>
- <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.ui.js" authenticated="True" insert-after="++resource++jarn.xmpp.core.js/jarnxmpp.core.muc.js"/>
+ <javascript id="++resource++gritter/jquery.gritter.min.js"
+    compression="none" authenticated="True" />
+ <javascript id="++resource++jarn.xmpp.core.js/strophe.js"
+     authenticated="True" />
+ <javascript id="++resource++jarn.xmpp.core.js/strophe.pubsub.js"
+     authenticated="True" insert-after="++resource++jarn.xmpp.core.js/strophe.js" />
+ <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.handlers.js"
+     authenticated="True" insert-after="++resource++jarn.xmpp.core.js/strophe.pubsub.js" compression="none"/>
+ <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.muc.js"
+     authenticated="True" insert-after="++resource++jarn.xmpp.core.js/jarnxmpp.core.jarnxmpp.core.handlers.js"/>
+ <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.ui.js"
+     authenticated="True" insert-after="++resource++jarn.xmpp.core.js/jarnxmpp.core.muc.js"/>
 </object>
