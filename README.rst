@@ -152,7 +152,7 @@ Setting up a new Plone site
 * Start ejabberd (if you used the recipe to build ejabberd, ``bin/ejabberd`` will do the job).
 * Start the Nginx frontend. ``bin/frontend start``
 * Start your zope instance.
-* Access Zope directly at ``http://localhost:8081/manage`` and create a new Plone site with ``jarn.xmpp.core``.
+* Access Zope directly at ``http://localhost:8081/manage`` and create a new Plone site with ``jarn.xmpp.core`` (and probably ``jarn.xmpp.collaboration``).
 * Go to the Plone control panel, into the registry settings. Edit the jarn.xmpp.* settings to reflect your installation, passwords etc.
 * Restart your Plone instance.
 * Upon the first request the administrator will log to his account. You should see things happening in the logs and if there are any errors something might be wrong with your installation.
@@ -167,7 +167,7 @@ Making sure things work ;)
 This is a complex infrastructure so it can be hard to know what goes wrong sometimes. Do not despair, here are a few things to try:
 
 * Make sure your ejabberd is running. Connect to it normal client as the admin user.
-* Verify that http-binding is setup properly. Visiting ``http://localhost:8080/http-bind/`` should tell you it's working.
+* Verify that http-binding is setup properly. Visiting ``http://localhost:5280/http-bind`` should tell you it's working.
 * When you start your Zope instance in foreground you can verify the Twisted reactor is running fine:
 
   ::
