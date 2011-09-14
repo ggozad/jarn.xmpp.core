@@ -167,7 +167,7 @@ Making sure things work ;)
 This is a complex infrastructure so it can be hard to know what goes wrong sometimes. Do not despair, here are a few things to try:
 
 * Make sure your ejabberd is running. Connect to it normal client as the admin user.
-* Verify that http-binding is setup properly. Visiting ``http://localhost:8080/http-bind/`` should tell you it's working.
+* Verify that http-binding is setup properly. Visiting ``http://localhost:5280/http-bind`` should tell you it's working.
 * When you start your Zope instance in foreground you can verify the Twisted reactor is running fine:
 
   ::
