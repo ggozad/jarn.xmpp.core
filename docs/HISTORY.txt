@@ -12,6 +12,9 @@ Changelog
   versions of strophe libraries, since we patch them.
   [ggozad]
 
+- Documentation updates.
+  [tkimnguyen]
+
 ------------------
 0.1b2 - 2011-09-02
 ------------------
