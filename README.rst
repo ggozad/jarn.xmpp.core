@@ -152,7 +152,7 @@ Setting up a new Plone site
 * Start ejabberd (if you used the recipe to build ejabberd, ``bin/ejabberd`` will do the job).
 * Start the Nginx frontend. ``bin/frontend start``
 * Start your zope instance.
-* Access Zope directly at ``http://localhost:8081/manage`` and create a new Plone site with ``jarn.xmpp.core``.
+* Access Zope directly at ``http://localhost:8081/manage`` and create a new Plone site with ``jarn.xmpp.core`` (or ``jarn.xmpp.collaboration`` if you want that package installed as well).
 * Go to the Plone control panel, into the registry settings. Edit the jarn.xmpp.* settings to reflect your installation, passwords etc.
 * Restart your Plone instance.
 * Upon the first request the administrator will log to his account. You should see things happening in the logs and if there are any errors something might be wrong with your installation.
