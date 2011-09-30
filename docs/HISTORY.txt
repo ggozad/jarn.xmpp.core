@@ -2,6 +2,13 @@
 Changelog
 =========
 
+0.1b4 - 2011-09-30
+------------------
+
+- Revert to using Strophe 1.0.1 as a workaround against broken xml parser that
+  insists on escaping everything.
+  [ggozad]
+
 ------------------
 0.1b3 - 2011-09-18
 ------------------
