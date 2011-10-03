@@ -31,16 +31,6 @@ jarnxmpp.Messages = {
         $(document).trigger(event);
         return true;
     },
-
-    invitationReceived: function(message) {
-        var room = $(message).attr('from');
-        var from = $(message).find('invite').attr('from');
-        var event = jQuery.Event('jarnxmpp.roomInvitation');
-        event.room = room;
-        event.from = from;
-        $(document).trigger(event);
-        return true;
-    }
 };
 
 jarnxmpp.Roster = {
