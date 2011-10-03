@@ -6,7 +6,7 @@ Introduction
 
 * Integration of plone user accounts with XMPP accounts and authentication.
 * A microblogging environment based on XMPP PubSub.
-* Basic messaging and multi-user chat.
+* Basic messaging.
 
 It is part of a suite of packages aiming to provide XMPP services to Plone. The other two packages are
 

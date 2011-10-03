@@ -6,6 +6,10 @@ Changelog
 0.2b1 - Unreleased
 ------------------
 
+- Remove multi-user chat. It will go in again properly when the use-cases have
+  been defined.
+  [ggozad]
+
 ------------------
 0.1b4 - 2011-09-30
 ------------------
