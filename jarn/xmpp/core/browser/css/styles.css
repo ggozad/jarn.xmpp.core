@@ -15,7 +15,7 @@
 	-webkit-border-bottom-right-radius: 0.5em;
 	-webkit-border-bottom-left-radius: 0.5em;
 	-moz-border-radius-bottomleft: 0.5em;
-	-moz-border-radius-bottomright: 0.5em;	
+	-moz-border-radius-bottomright: 0.5em;
 }
 
 #xmpp-viewlet a {
@@ -25,47 +25,59 @@
 #online-users {
 	z-index: 10;
 	position: absolute;
+	right: 0;
+	width: 300px;
+	padding: 0;
+	margin: 0;
 	background-color: #E3E3E3;
 	border-bottom-right-radius: 0.5em;
 	border-bottom-left-radius: 0.5em;
 	-webkit-border-bottom-right-radius: 0.5em;
 	-webkit-border-bottom-left-radius: 0.5em;
 	-moz-border-radius-bottomleft: 0.5em;
-	-moz-border-radius-bottomright: 0.5em;	
+	-moz-border-radius-bottomright: 0.5em;
 }
-
-#online-users.deactivated {
-	display: none;
+ul#online-users,
+ul#online-users li {
+    list-style: none;
+    display: block;
 }
-
-#online-users.activated {
-	display: block;
+ul.deactivated {
+	display: none !important;
 }
-#toggle-online-users:after {
+#toggle-online-users > a:after {
     content: " ▼";
+    display: inline-block;
 }
-#online-users .avatar {
+#online-users img {
+	max-width: 48px;
 	display: block;
 	float:left;
+	margin: 0.5em 1em 0.5em 0.5em;
 }
-#online-users .avatar img {
-	height: 64px;
-	vertical-align: middle;
+#online-users li {
+    display: block;
+    border-bottom: 1px solid #ccc;
+    background:  #E3E3E3;
+    background-image: -moz-linear-gradient(top, #eee, #dedede); /* FF3.6 */
+    background-image: -ms-linear-gradient(top, #eee, #dedede); /* IE10 */
+    background-image: -o-linear-gradient(top, #eee, #dedede); /* Opera 11.10+ */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#dedede)); /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, #eee, #dedede); /* Chrome 10+, Saf5.1+ */
+    background-image: linear-gradient(top, #eee, #dedede);
 }
-
-#online-users dd {
-	display: block;
-	float: left;
-	margin: 0.5em;
-}
-
-#online-users .online-user-actions {
-	float:left;
-}
-
+#online-users li:before,
+#online-users li:after { content: ""; display: table; }
+#online-users li:after { clear: both; }
+#online-users li { *zoom: 1; }
 #online-users .offline {
 	opacity: 0.5;
 }
+a.send-message {
+    margin: 1em 0 0;
+    font-size: 0.9em;
+}
+
 /* PubSub feed */
 .pubsubAvatar {
 	float:left;

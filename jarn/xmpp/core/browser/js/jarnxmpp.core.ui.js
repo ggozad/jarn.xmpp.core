@@ -19,7 +19,6 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
                 subtype: 'ajax',
             });
             $('#online-users').append(user_details);
-
         });
     }
     var counter = 0;
@@ -89,7 +88,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $('#toggle-online-users').bind('click', function (el) {
+    $('#toggle-online-users > a').bind('click', function (el) {
         $('#online-users').toggleClass('deactivated');
         return false;
     });
