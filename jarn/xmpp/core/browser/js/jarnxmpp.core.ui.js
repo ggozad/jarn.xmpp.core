@@ -53,13 +53,13 @@ $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from);
     var jid = Strophe.getBareJidFromJid(event.from);
     var text_p = $('<p>').text(event.body);
-    var chat_p = $('<p>');
-    var chat_link = $('<a>')
-        .attr('class', 'chat-link')
-        .attr('href', 'muc?invitee=' + jid)
-        .text('Chat');
-    chat_p.append(chat_link);
-    var text = $('<div>').append(text_p).append(chat_p).remove().html();
+    var reply_p = $('<p>');
+    var reply_link = $('<a>')
+        .attr('class', 'reply-link')
+        .attr('href', 'sendXMPPMessage?message-recipient=' + jid)
+        .text('Reply');
+    reply_p.append(reply_link);
+    var text = $('<div>').append(text_p).append(reply_p).remove().html();
     jarnxmpp.Presence.getUserInfo(user_id, function(data) {
         $.gritter.add({
             title: data.fullname,
@@ -67,7 +67,7 @@ $(document).bind('jarnxmpp.message', function (event) {
             image: data.portrait_url,
             sticky: true,
             after_open: function (e) {
-                e.find('.chat-link').prepOverlay({
+                e.find('.reply-link').prepOverlay({
                     subtype: 'ajax'
                 });
             }
@@ -84,107 +84,6 @@ $(document).bind('jarnxmpp.nodePublished', function (event) {
             image: data.portrait_url
         });
     });
-});
-
-
-// MUC
-
-// Room invites
-$(document).bind('jarnxmpp.roomInvitation', function (event) {
-    var user_id = Strophe.getNodeFromJid(event.from);
-    var link = '@@muc?room=' + event.room;
-    var body = 'You have received an invitation to ' +
-           '<a class="chat-link" href="'+ link +'">join</a>' +
-           ' a group chat.';
-
-    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
-        $.gritter.add({
-            title: data.fullname,
-            text: body,
-            image: data.portrait_url,
-            sticky: true,
-            after_open: function (e) {
-                e.find('.chat-link').prepOverlay({
-                    subtype: 'ajax',
-                });
-            },
-        });
-    });
-});
-
-$(document).bind('jarnxmpp.muc.displayPublicMessage', function (ev) {
-    var msg = "";
-    if (!ev.notice) {
-        var delay_css = ev.delayed ? " delayed" : "";
-        // messages from ourself will be styled differently
-        var nick_class = "nick";
-        if (ev.nick === jarnxmpp.muc.nickname)
-            nick_class += " self";
-
-        msg = $('<div>').addClass('message').addClass(delay_css);
-        msg.append($('<span>')
-            .addClass(nick_class)
-            .text('<' + ev.nick + '>'));
-        msg.append($('<span>')
-            .addClass('body')
-            .text(ev.body));
-
-    } else
-        msg = $('<div>').addClass('notice').text(ev.body);
-
-    // detect if we are scrolled all the way down
-    var chat = $('#chat').get(0);
-    var at_bottom = chat.scrollTop >= chat.scrollHeight - chat.clientHeight;
-    $('#chat').append(msg);
-    // if we were at the bottom, keep us at the bottom
-    if (at_bottom) {
-        chat.scrollTop = chat.scrollHeight;
-    }
-});
-
-$(document).bind('jarnxmpp.muc.roomJoined', function (ev, owner) {
-    jarnxmpp.muc.joined = true;
-    $('#room-name').text(jarnxmpp.muc.room);
-    var li = $('<li>').attr('id', 'muc-participant-'+owner).text(owner);
-    $('#participant-list').append(li);
-    $('#muc-online-'+owner).remove();
-    var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
-    event.body = "Room joined";
-    event.notice = true;
-    $(document).trigger(event);
-});
-
-$(document).bind('jarnxmpp.muc.userJoined', function (ev, nick) {
-    var li = $('<li>').attr('id', 'muc-participant-'+nick).text(nick);
-    $('#participant-list').append(li);
-    $('#muc-online-'+nick).remove();
-    var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
-    event.body = nick +" joined.";
-    event.notice = true;
-    $(document).trigger(event);
-});
-
-$(document).bind('jarnxmpp.muc.userLeft', function (ev, nick) {
-    $('#muc-participant-'+nick).remove();
-    var event = jQuery.Event('jarnxmpp.muc.displayPublicMessage');
-    event.body = nick +" left.";
-    event.notice = true;
-    $(document).trigger(event);
-    if (nick in jarnxmpp.Presence.online)
-        $(document).trigger('jarnxmpp.muc.userOnline', [nick]);  
-});
-
-$(document).bind('jarnxmpp.muc.userOnline', function (ev, nick) {
-    if ($('#muc-online-'+nick).length === 0) {
-        var li = $('<li>').attr('id', 'muc-online-'+nick);
-        li.append($('<span>').text(nick));
-        li.append($('<button>').attr('class', 'invite').text('invite'));
-        $('#online-list').append(li);
-    }
-});
-
-$(document).bind('jarnxmpp.muc.userOffline', function (ev, nick) {
-    $('#muc-online-'+nick).remove();
 });
 
 // Logging

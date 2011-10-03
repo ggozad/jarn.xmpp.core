@@ -171,7 +171,6 @@ $(document).bind('jarnxmpp.connected', function () {
     jarnxmpp.connection.rawOutput = jarnxmpp.rawOutput;
     // Messages
     jarnxmpp.connection.addHandler(jarnxmpp.Messages.messageReceived, null, 'message', 'chat');
-    jarnxmpp.connection.addHandler(jarnxmpp.Messages.invitationReceived, 'http://jabber.org/protocol/muc#user', 'message', null);
     //Roster
     jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
     jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');

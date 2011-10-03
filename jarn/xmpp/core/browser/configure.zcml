@@ -64,14 +64,6 @@
     permission="cmf.ManagePortal"
     />
 
-  <browser:page
-    for="*"
-    name="muc"
-    class=".muc.MUCView"
-    template="muc.pt"
-    permission="zope2.View"
-    />
-
   <browser:view
     for="*"
     name="magic-links"

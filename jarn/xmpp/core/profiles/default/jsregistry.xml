@@ -7,8 +7,6 @@
      authenticated="True" insert-after="++resource++jarn.xmpp.core.js/strophe.js" />
  <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.handlers.js"
      authenticated="True" insert-after="++resource++jarn.xmpp.core.js/strophe.pubsub.js" compression="none"/>
- <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.muc.js"
-     authenticated="True" insert-after="++resource++jarn.xmpp.core.js/jarnxmpp.core.jarnxmpp.core.handlers.js"/>
  <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.ui.js"
-     authenticated="True" insert-after="++resource++jarn.xmpp.core.js/jarnxmpp.core.muc.js"/>
+     authenticated="True" insert-after="++resource++jarn.xmpp.core.js/jarnxmpp.core.handlers.js"/>
 </object>
