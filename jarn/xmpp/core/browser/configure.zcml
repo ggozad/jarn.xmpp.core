@@ -16,7 +16,15 @@
   <browser:view
     for="*"
     name="xmpp-userinfo"
-    class=".userinfo.XMPPUserInfoView"
+    class=".userinfo.XMPPUserInfo"
+    permission="zope2.View"
+    />
+
+  <browser:page
+    for="*"
+    name="xmpp-userDetails"
+    class=".userinfo.XMPPUserDetails"
+    template="user_details.pt"
     permission="zope2.View"
     />
 

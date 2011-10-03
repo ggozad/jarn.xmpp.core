@@ -13,32 +13,13 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
              return;
         existing_element.attr('class', status);
     } else {
-        var dd = $('<dd>')
-            .attr('class', status)
-            .attr('id', 'online-users-'+user_id);
-        $('#online-users').append(dd);
-        jarnxmpp.Presence.getUserInfo(user_id, function(data) {
-            if (data===null) return;
-            var portrait = $('<div>').attr('class', 'avatar').append($('<img/>')
-                .attr('title', data.fullname)
-                .attr('src', data.portrait_url)
-                .attr('class','portrait'));
-            var actions = $('<div>').attr('class', 'online-user-actions');
-            var personalFeed = $('<a>')
-                .attr('href', '@@pubsub-feed?node=' + user_id)
-                .text(data.fullname);
-            var sendMessage = $('<a>')
-                .attr('href', 'sendXMPPMessage?message-recipient=' + barejid);
-            sendMessage.append($('<img>')
-                .attr('src', '++resource++jarn.xmpp.core.images/chat_icon.png')
-            );
-            sendMessage.prepOverlay({
+        $.get('xmpp-userDetails?jid=' + barejid, function(user_details) {
+            user_details = $(user_details);
+            user_details.find('.send-message').prepOverlay({
                 subtype: 'ajax',
             });
-            dd.append(portrait);
-            actions.append($('<div>').append(personalFeed));
-            actions.append($('<div>').append(sendMessage));
-            dd.append(actions);
+            $('#online-users').append(user_details);
+
         });
     }
     var counter = 0;

@@ -1,0 +1,23 @@
+<metal:userdetails tal:condition="view/available"
+  tal:define="user_id view/user_id">
+
+    <dd tal:attributes="id string:online-users-$user_id">
+        <div class="avatar">
+            <img class="portrait"
+                 tal:attributes="title view/fullname;
+                                 src view/portrait_url" />
+        </div>
+        <div class="online-user-actions">
+            <div>
+              <a tal:attributes=" href string:@@pubsub-feed?node=$user_id"  
+                 tal:content="view/fullname"></a>
+            </div>
+            <div>
+                <a class="send-message" tal:attributes="href string:sendXMPPMessage?message-recipient=${view/bare_jid}">
+                    <img src="++resource++jarn.xmpp.core.images/chat_icon.png" />
+                </a>
+            </div>
+        </div>
+    </dd>
+
+</metal:userdetails>
