@@ -14,6 +14,7 @@
 <metal:main fill-slot="main"
   tal:define="node view/node;
               isLeaf python: view.nodeType=='leaf';
+              canPublish view/canPublish;
               feed_items view/items;
               limit_display limit_display|request/limit_display|nothing;
               limit_display python:limit_display and int(limit_display) or None;
@@ -31,8 +32,16 @@
       </div>
 
       <h1 class="documentFirstHeading" tal:content="python: view.fullname(node) or node">St. Peter</h1>
+      <form tal:define="publishNode view/canPublish" tal:condition="publishNode" id="pubsub-form">
+        <form action="" method="post">
+            <input type="text" name="message" placeholder="Post to stream"
+                tal:attributes="data-node publishNode"/>
+            <div class="formControls">
+                <input type="submit" value="Post" name="postButton" class="submit-widget button-field"/>
+            </div>
+        </form>
+      </form>
       <div class="visualClear"><!-- --></div>
-
       <dl class="pubSubNode">
         <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
                                       plone_view context/@@plone;"

@@ -90,8 +90,14 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $('.pubsub-post').prepOverlay({
-        subtype: 'ajax'
+    $('#pubsub-form').bind('submit', function (e) {
+        var $field = $('input[name="message"]', this),
+            text = $field.attr('value'),
+            node = $field.attr('data-node');
+        //$.post('pubsub-publish', {'form.widgets.node':node, 'form.widgets.message':text}, function(data) {
+        //});
+        // Fill me in.
+        e.preventDefault();
     });
 
     $('a.magic-link').each(function () {

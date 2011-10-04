@@ -23,7 +23,7 @@ class IPublishToNode(Interface):
     node = schema.ASCIILine(title=_(u'Node'),
                           required=True)
 
-    message = schema.Text(title=_(u'Message'),
+    message = schema.TextLine(title=_(u'Message'),
                           required=True)
 
 
@@ -59,6 +59,27 @@ class PubSubFeedView(BrowserView):
             self.fullnames[author] = fullname
             return fullname
 
+    def canPublish(self):
+        """
+        Checks whether the user can publish in this node. If it's a leaf
+        node check whether the user is in the publishers. If it's a collection
+        node check if there is a unique node for this collection where the
+        user has publisher rights.
+        """
+
+        if self.mt.isAnonymousUser() or self.node is None:
+            return
+        user_id = self.mt.getAuthenticatedMember().id
+        if self.nodeType == 'leaf':
+            if user_id in self.storage.publishers[self.node]:
+                return self.node
+        else:
+            publisher_nodes = [node
+                               for node in self.storage.collections[self.node]
+                               if user_id in self.storage.publishers[node]]
+            if len(publisher_nodes) == 1:
+                return publisher_nodes[0]
+
     def items(self, node=None, count=100):
         if node is None:
             node = self.node
@@ -77,22 +98,21 @@ class PublishToNodeForm(form.Form):
 
     fields = field.Fields(IPublishToNode)
     label = _("Post message")
-    description = _("The message posted will be visible to all users in your stream, as well as the global site's feed.")
     ignoreContext = True
 
     def __init__(self, context, request, node=None):
         super(PublishToNodeForm, self).__init__(context, request)
         self.node = node or request.get('node', None)
+        self.message = request.get('message', None)
 
     def updateWidgets(self):
         form.Form.updateWidgets(self)
-
         if self.node:
             # Hide fields which we don't want to bother the user with
             self.widgets["node"].value = self.node
             self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
 
-    @button.buttonAndHandler(_('Post'), name='publish_message')
+    @button.buttonAndHandler(_('Post'), name='submit')
     def publish(self, action):
         data, errors = self.extractData()
         if errors:
