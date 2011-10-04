@@ -1,4 +1,4 @@
-<div id="xmpp-viewlet" class=""
+<div id="xmpp-viewlet"
      i18n:domain="jarn.xmpp.core"
      tal:condition="not: view/anonymous">
     <div id="xmpp-viewlet-container">
