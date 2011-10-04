@@ -82,9 +82,9 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $('a#toggle-online-users').bind('click', function (el) {
-        $('#online-users').toggleClass('deactivated');
-        return false;
+    $('a#toggle-online-users').bind('click', function (e) {
+        $('#xmpp-viewlet').toggleClass('activated');
+        e.preventDefault();
     });
 
     $('.pubsub-post').prepOverlay({

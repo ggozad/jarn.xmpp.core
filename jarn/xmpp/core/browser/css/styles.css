@@ -4,18 +4,16 @@
 }
 
 #xmpp-viewlet-container {
-	height: 15px;
 	background-color: #E3E3E3;
 	font-size: 80%;
+	position: relative;
 
 	margin-right: 0.5em;
 	padding: 0.25em 0.5em;
-	border-bottom-right-radius: 0.5em;
-	border-bottom-left-radius: 0.5em;
-	-webkit-border-bottom-right-radius: 0.5em;
-	-webkit-border-bottom-left-radius: 0.5em;
-	-moz-border-radius-bottomleft: 0.5em;
-	-moz-border-radius-bottomright: 0.5em;
+	-webkit-border-radius: 0 0 0.5em 0.5em;
+    -moz-border-radius: 0 0 0.5em 0.5em;
+    border-radius: 0 0 0.5em 0.5em;
+    -webkit-background-clip: padding-box;
 }
 
 #xmpp-viewlet a {
@@ -23,29 +21,37 @@
 }
 
 #online-users {
+	display: none;
 	z-index: 10;
 	position: absolute;
 	right: 0;
+	top: 1.7em;
 	width: 300px;
 	padding: 0;
 	margin: 0;
-	background-color: #E3E3E3;
-	border-bottom-right-radius: 0.5em;
-	border-bottom-left-radius: 0.5em;
-	-webkit-border-bottom-right-radius: 0.5em;
-	-webkit-border-bottom-left-radius: 0.5em;
-	-moz-border-radius-bottomleft: 0.5em;
-	-moz-border-radius-bottomright: 0.5em;
+    font-size: 0.9em;
+    list-style: none;	
+	background-color: #ccc;
+	-webkit-border-radius: 0 0 0.5em 0.5em;
+    -moz-border-radius: 0 0 0.5em 0.5em;
+    border-radius: 0 0 0.5em 0.5em;
+    -webkit-background-clip: padding-box;
 }
-ul#online-users,
 ul#online-users li {
     list-style: none;
     display: block;
 }
-ul.deactivated {
-	display: none !important;
+.activated ul#online-users{
+	display: block !important;
 }
-#toggle-online-users > a:after {
+.activated #xmpp-viewlet-container {
+	-webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    background: #ccc;
+}
+
+a#toggle-online-users:after {
     content: " ▼";
     display: inline-block;
 }
@@ -57,14 +63,14 @@ ul.deactivated {
 }
 #online-users li {
     display: block;
-    border-bottom: 1px solid #ccc;
-    background:  #E3E3E3;
-    background-image: -moz-linear-gradient(top, #eee, #dedede); /* FF3.6 */
-    background-image: -ms-linear-gradient(top, #eee, #dedede); /* IE10 */
-    background-image: -o-linear-gradient(top, #eee, #dedede); /* Opera 11.10+ */
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#dedede)); /* Saf4+, Chrome */
-    background-image: -webkit-linear-gradient(top, #eee, #dedede); /* Chrome 10+, Saf5.1+ */
-    background-image: linear-gradient(top, #eee, #dedede);
+    border-top: 1px solid #efefef;
+    background:  #aaa;
+    background-image: -moz-linear-gradient(top, #ccc, #bbb);
+    background-image: -ms-linear-gradient(top, #ccc, #bbb);
+    background-image: -o-linear-gradient(top, #ccc, #bbb);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#bbb));
+    background-image: -webkit-linear-gradient(top, #ccc, #bbb);
+    background-image: linear-gradient(top, #ccc, #bbb);
 }
 #online-users li:before,
 #online-users li:after { content: ""; display: table; }
@@ -73,9 +79,17 @@ ul.deactivated {
 #online-users .offline {
 	opacity: 0.5;
 }
-a.send-message {
-    margin: 1em 0 0;
-    font-size: 0.9em;
+#online-users li > a {
+    display: block;	
+    padding: 0.5em 1em;
+    margin: 0;
+}
+#online-users li > a:hover {
+	background-color: #ddd;
+	background-image: none;
+}
+#online-users li > div {
+    display: none;
 }
 
 /* PubSub feed */
