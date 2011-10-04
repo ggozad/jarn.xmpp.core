@@ -1,18 +1,36 @@
 <metal:userdetails tal:condition="view/available"
-  tal:define="user_id view/user_id">
+  tal:define="user_id view/user_id;
+              fullname view/fullname">
 
     <li tal:attributes="id string:online-users-$user_id">
-        <a tal:attributes=" href string:@@pubsub-feed?node=$user_id">
-           <img tal:attributes="title view/fullname;
-                             src view/portrait_url" />
-        </a>
-        <h3>
-            <a tal:attributes=" href string:@@pubsub-feed?node=$user_id"
-               tal:content="view/fullname"></a>
-        </h3>
-        <a class="send-message" tal:attributes="href string:sendXMPPMessage?message-recipient=${view/bare_jid}">
-            Send a message
-        </a>
+        
+        <a href="#" title="Click to toggle user's details"
+           tal:content="fullname">Jon Doe</a>
+        
+        <div>
+            <a tal:attributes="href string:@@pubsub-feed?node=$user_id;
+                               title string:Personal stream of $fullname">
+               <img tal:attributes="alt string:Personal stream of $fullname;
+                                    src view/portrait_url" />
+            </a>
+            <form id="sendXMPPMessage" action="" method="post">
+                <input type="hidden" name="message-recipient" tal:attributes="value here/REQUEST/message-recipient | nothing"/>
+
+                <label for="pm" tal:content="string:Personal message to ${fullname}.">
+                    Personal message to Jon Doe.
+                </label>
+                <input type="text" name="message" id="pm" />
+                <div class="formControls">
+                    <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"/>
+                </div>
+            </form>
+            <a href="#" title=""
+               tal:attributes="href string:@@pubsub-feed?node=$user_id;
+                               title string:Personal stream of $fullname"
+               tal:content="string:Check ${fullname}'s posts in the stream.">
+                Check Jon Doe's posts in the stream.
+            </a>            
+        </div>
     </li>
 
 </metal:userdetails>
