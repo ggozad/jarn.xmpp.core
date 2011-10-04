@@ -82,7 +82,7 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $('#toggle-online-users > a').bind('click', function (el) {
+    $('a#toggle-online-users').bind('click', function (el) {
         $('#online-users').toggleClass('deactivated');
         return false;
     });
