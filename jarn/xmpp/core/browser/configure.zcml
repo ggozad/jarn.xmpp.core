@@ -30,14 +30,6 @@
 
   <browser:page
     for="*"
-    name="sendXMPPMessage"
-    class=".messaging.SendMessageView"
-    template="send_message.pt"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="*"
     name="pubsub-feed"
     class=".pubsub.PubSubFeedView"
     template="pubsub_feed.pt"

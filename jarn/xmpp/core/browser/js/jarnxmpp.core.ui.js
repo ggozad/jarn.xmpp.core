@@ -32,21 +32,19 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
 $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from);
     var jid = Strophe.getBareJidFromJid(event.from);
-    var text_p = $('<p>').text(event.body);
-    var reply_p = $('<p>');
-    $.get('sendXMPPMessage?message-recipient=' + jid, function(form) {
-        form = $(form);
-        reply_p.append(form);
-        var text = $('<div>').append(text_p).append(reply_p).remove().html();
-        jarnxmpp.Presence.getUserInfo(user_id, function(data) {
-            $.gritter.add({
-                title: data.fullname,
-                text: text,
-                image: data.portrait_url,
-                sticky: true,
-            });
-        });
+    var $text_p = $('<p>').text(event.body);
+    var $form = $('#online-users li#online-users-' + user_id + ' form');
+    $('input[type="submit"]', $form).attr('value', 'Reply');
+    var $reply_p = $('<p>').append($form);
+    var text = $('<div>').append($text_p).append($reply_p).remove().html();
 
+    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
+        $.gritter.add({
+            title: data.fullname,
+            text: text,
+            image: data.portrait_url,
+            sticky: true,
+        });
     });
 });
 

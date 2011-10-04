@@ -7,8 +7,8 @@
             <span id="online-count">0</span>
         </a>
         <ul id="online-users"></ul>
-        <!-- <a tal:attributes="href string:@@pubsub-feed?node=people">Site stream</a>
+        <a tal:attributes="href string:@@pubsub-feed?node=people">Site stream</a>
         <a class="pubsub-post"
-           tal:attributes="href string:@@pubsub-publish?node=${view/personal_node}">Post to stream</a> -->
+           tal:attributes="href string:@@pubsub-publish?node=${view/personal_node}">Post to stream</a>
     </div>
 </div>
