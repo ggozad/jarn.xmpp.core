@@ -81,12 +81,12 @@ $(document).ready(function () {
     });
 
     $('a#toggle-online-users').bind('click', function (e) {
-        $('#xmpp-viewlet').toggleClass('activated');
+        $("ul#online-users").toggleClass('activated');
         e.preventDefault();
     });
 
     $('a.user-details-toggle').live( 'click', function (e) {
-        $(this).toggleClass('collapsed');
+        $(this).toggleClass('expanded');
         e.preventDefault();
     });
 

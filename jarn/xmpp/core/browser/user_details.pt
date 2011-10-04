@@ -2,7 +2,7 @@
   tal:define="user_id view/user_id;
               fullname view/fullname">
     <li tal:attributes="id string:online-users-$user_id">
-        <a href="#" class="user-details-toggle collapsed"
+        <a href="#" class="user-details-toggle"
            title="Click to toggle user's details">
            <tal:name replace="fullname">Jon Doe</tal:name>
         </a>
