@@ -77,12 +77,23 @@ a#toggle-online-users:after {
     padding: 0.5em 1em;
     margin: 0;
 }
-#online-users li > a:hover {
+#online-users li > a.collapsed:hover {
 	background-color: #ddd;
-	background-image: none;
 }
-#online-users li > div {
+div.user-details-form {
+    background: #efefef;
+}
+div.user-details-form:before,
+div.user-details-form:after { content: ""; display: table; }
+div.user-details-form:after { clear: both; }
+div.user-details-form { *zoom: 1; }
+
+#online-users li > a.collapsed + div.user-details-form {
     display: none;
+}
+#online-users li form input[type='text'] {
+    float: left;
+    width: 12em;
 }
 
 /* PubSub feed */

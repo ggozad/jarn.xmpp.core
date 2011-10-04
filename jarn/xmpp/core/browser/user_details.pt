@@ -2,9 +2,9 @@
   tal:define="user_id view/user_id;
               fullname view/fullname">
     <li tal:attributes="id string:online-users-$user_id">
-        <a href="#" title="Click to toggle user's details"
+        <a href="#" class="user-details-toggle collapsed" title="Click to toggle user's details"
            tal:content="fullname">Jon Doe</a>
-        <div>
+        <div class="user-details-form">
             <a tal:attributes="href string:@@pubsub-feed?node=$user_id;
                                title string:Personal stream of $fullname">
                <img tal:attributes="alt string:Personal stream of $fullname;
@@ -20,8 +20,7 @@
             </form>
             <a href="#" title=""
                tal:attributes="href string:@@pubsub-feed?node=$user_id;
-                               title string:$fullname"
-               tal:content="string:${fullname}'s personal stream">
+                               title string:$fullname">
                 Personal Stream
             </a>
         </div>
