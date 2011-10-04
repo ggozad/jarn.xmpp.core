@@ -34,24 +34,19 @@ $(document).bind('jarnxmpp.message', function (event) {
     var jid = Strophe.getBareJidFromJid(event.from);
     var text_p = $('<p>').text(event.body);
     var reply_p = $('<p>');
-    var reply_link = $('<a>')
-        .attr('class', 'reply-link')
-        .attr('href', 'sendXMPPMessage?message-recipient=' + jid)
-        .text('Reply');
-    reply_p.append(reply_link);
-    var text = $('<div>').append(text_p).append(reply_p).remove().html();
-    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
-        $.gritter.add({
-            title: data.fullname,
-            text: text,
-            image: data.portrait_url,
-            sticky: true,
-            after_open: function (e) {
-                e.find('.reply-link').prepOverlay({
-                    subtype: 'ajax'
-                });
-            }
+    $.get('sendXMPPMessage?message-recipient=' + jid, function(form) {
+        form = $(form);
+        reply_p.append(form);
+        var text = $('<div>').append(text_p).append(reply_p).remove().html();
+        jarnxmpp.Presence.getUserInfo(user_id, function(data) {
+            $.gritter.add({
+                title: data.fullname,
+                text: text,
+                image: data.portrait_url,
+                sticky: true,
+            });
         });
+
     });
 });
 
@@ -78,14 +73,13 @@ $(document).bind('jarnxmpp.dataSent', function (ev) {
 
 $(document).ready(function () {
 
-    $('#sendXMPPMessage').live('submit', function () {
-        var text = $(this).find('textarea[name="message"]').attr('value');
-        var recipient = $(this).find('input[name="message-recipient"]').attr('value');
-        var message = $msg({to: recipient, type: 'chat'})
-            .c('body').t(text);
+    $('.sendXMPPMessage').live('submit', function (e) {
+        var $field = $('input[name="message"]', this),
+            text = $field.attr('value'),
+            recipient = $field.attr('data-recipient'),
+            message = $msg({to: recipient, type: 'chat'}).c('body').t(text);
         jarnxmpp.connection.send(message);
-        $(this).parents('.overlay').data('overlay').close();
-        return false;
+        e.preventDefault();
     });
 
     $('#toggle-online-users > a').bind('click', function (el) {
