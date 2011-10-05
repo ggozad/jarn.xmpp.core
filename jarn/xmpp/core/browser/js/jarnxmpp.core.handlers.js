@@ -123,6 +123,19 @@ jarnxmpp.Presence = {
 };
 
 jarnxmpp.PubSub = {
+
+    _ISODateString: function(d) {
+        function pad(n){
+            return n<10 ? '0'+n : n;
+        }
+        return d.getUTCFullYear() + '-' +
+            pad(d.getUTCMonth() + 1) + '-' +
+            pad(d.getUTCDate()) + 'T' +
+            pad(d.getUTCHours()) + ':' +
+            pad(d.getUTCMinutes()) + ':' +
+            pad(d.getUTCSeconds()) + 'Z';
+    },
+
     eventReceived: function(msg) {
         var items = $(msg).find('item');
         if (items.length>0) {
@@ -136,7 +149,29 @@ jarnxmpp.PubSub = {
             }
         }
         return true;
-    }
+    },
+
+    publishToPersonalNode: function(node, text, callback) {
+        var pubid = jarnxmpp.connection.getUniqueId("publishnode");
+        var publish_elem = Strophe.xmlElement("publish", [["node",node],["jid",jarnxmpp.jid]]);
+        var item = Strophe.xmlElement("item",[]);
+        var entry = Strophe.xmlElement('entry', [['xmlns', 'http://www.w3.org/2005/Atom']]);
+        var author = Strophe.xmlElement('author', [], Strophe.getNodeFromJid(jarnxmpp.jid));
+        var now = jarnxmpp.PubSub._ISODateString(new Date());
+        var updated = Strophe.xmlElement('updated', [], now);
+        var published = Strophe.xmlElement('published', [], now);
+        var content = Strophe.xmlElement('content', [], text);
+        entry.appendChild(author);
+        entry.appendChild(updated);
+        entry.appendChild(published);
+        entry.appendChild(content);
+        item.appendChild(entry);
+        publish_elem.appendChild(item);
+        var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid});
+        pub.c('pubsub', { xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
+        jarnxmpp.connection.addHandler(callback, null, 'iq', null, pubid, null);
+        jarnxmpp.connection.send(pub);
+    },
 };
 
 jarnxmpp.onConnect = function (status) {

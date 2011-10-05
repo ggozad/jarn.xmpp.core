@@ -91,13 +91,15 @@ $(document).ready(function () {
     });
 
     $('#pubsub-form').bind('submit', function (e) {
+        e.preventDefault();
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
             node = $field.attr('data-node');
-        //$.post('pubsub-publish', {'form.widgets.node':node, 'form.widgets.message':text}, function(data) {
-        //});
-        // Fill me in.
-        e.preventDefault();
+        jarnxmpp.PubSub.publishToPersonalNode(node, text, function() {
+            // Here we should be handling the incoming pubsub event without
+            // reloading, but well...
+            window.location.reload();
+        });
     });
 
     $('a.magic-link').each(function () {
