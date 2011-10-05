@@ -1,4 +1,5 @@
 import re
+import json
 
 from z3c.form import form
 from z3c.form import field
@@ -93,6 +94,13 @@ class PubSubFeedView(BrowserView):
             result[index] = item
         return result
 
+class ContentTransform(BrowserView):
+    def __call__(self, text):
+        transforms = getToolByName(self.context, 'portal_transforms')
+        result = {
+            'text': transforms.convert('web_intelligent_plain_text_to_html', text).getData()
+        }
+        return json.dumps(result)
 
 class PublishToNodeForm(form.Form):
 
