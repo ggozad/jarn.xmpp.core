@@ -31,7 +31,7 @@
   <browser:page
     for="*"
     name="pubsub-feed"
-    class=".pubsub.PubSubFeedView"
+    class=".pubsub.PubSubFeed"
     template="pubsub_feed.pt"
     permission="zope2.View"
     />
@@ -46,14 +46,14 @@
   <browser:page
     for="*"
     name="pubsub-subscribe"
-    class=".pubsub.SubscribeToNodeForm"
+    class=".pubsub.SubscribeToNode"
     permission="zope2.View"
     />
 
   <browser:page
     for="*"
     name="pubsub-unsubscribe"
-    class=".pubsub.UnsubscribeFromNodeForm"
+    class=".pubsub.UnsubscribeFromNode"
     permission="zope2.View"
     />
 

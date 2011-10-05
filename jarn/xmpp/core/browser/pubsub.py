@@ -33,10 +33,10 @@ class ISubscribeToNode(Interface):
                             required=True)
 
 
-class PubSubFeedView(BrowserView):
+class PubSubFeed(BrowserView):
 
     def __init__(self, context, request):
-        super(PubSubFeedView, self).__init__(context, request)
+        super(PubSubFeed, self).__init__(context, request)
         self.storage = getUtility(IPubSubStorage)
         self.node = request.get('node', None)
         if self.node in self.storage.leaf_nodes:
@@ -103,13 +103,13 @@ class ContentTransform(BrowserView):
         return json.dumps(result)
 
 
-class SubscribeUnsubscribeForm(form.Form):
+class SubscribeUnsubscribeBase(form.Form):
 
     fields = field.Fields(ISubscribeToNode)
     ignoreContext = True
 
     def __init__(self, context, request, node=None, user_jid=None):
-        super(SubscribeUnsubscribeForm, self).__init__(context, request)
+        super(SubscribeUnsubscribeBase, self).__init__(context, request)
         self.node = node
         if user_jid is not None:
             self.user_jid = user_jid
@@ -127,7 +127,7 @@ class SubscribeUnsubscribeForm(form.Form):
             self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
 
 
-class SubscribeToNodeForm(SubscribeUnsubscribeForm):
+class SubscribeToNode(SubscribeUnsubscribeBase):
 
     label = _("Subscribe")
 
@@ -142,7 +142,7 @@ class SubscribeToNodeForm(SubscribeUnsubscribeForm):
         return d
 
 
-class UnsubscribeFromNodeForm(SubscribeUnsubscribeForm):
+class UnsubscribeFromNode(SubscribeUnsubscribeBase):
 
     label = _("Unsubscribe")
 
