@@ -16,7 +16,6 @@ from jarn.xmpp.core import messageFactory as _
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IXMPPUsers
 from jarn.xmpp.core.interfaces import IPubSubStorage
-from jarn.xmpp.core.utils.pubsub import publishItemToNode
 
 
 class IPublishToNode(Interface):
@@ -94,47 +93,14 @@ class PubSubFeedView(BrowserView):
             result[index] = item
         return result
 
+
 class ContentTransform(BrowserView):
+
     def __call__(self, text):
-        transforms = getToolByName(self.context, 'portal_transforms')
-        result = {
-            'text': transforms.convert('web_intelligent_plain_text_to_html', text).getData()
-        }
+        tr = getToolByName(self.context, 'portal_transforms')
+        text = tr.convert('web_intelligent_plain_text_to_html', text).getData()
+        result = {'text': text}
         return json.dumps(result)
-
-class PublishToNodeForm(form.Form):
-
-    fields = field.Fields(IPublishToNode)
-    label = _("Post message")
-    ignoreContext = True
-
-    def __init__(self, context, request, node=None):
-        super(PublishToNodeForm, self).__init__(context, request)
-        self.node = node or request.get('node', None)
-        self.message = request.get('message', None)
-
-    def updateWidgets(self):
-        form.Form.updateWidgets(self)
-        if self.node:
-            # Hide fields which we don't want to bother the user with
-            self.widgets["node"].value = self.node
-            self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
-
-    @button.buttonAndHandler(_('Post'), name='submit')
-    def publish(self, action):
-        data, errors = self.extractData()
-        if errors:
-            return
-        node = data['node']
-        message = data['message']
-        transforms = getToolByName(self.context, 'portal_transforms')
-        message = transforms.convert('web_intelligent_plain_text_to_html',
-                                     message).getData()
-        pm = getToolByName(self.context, 'portal_membership')
-        user = str(pm.getAuthenticatedMember())
-        message = message.decode('utf-8')
-        publishItemToNode(node, message, user)
-        return self.request.response.redirect(self.context.absolute_url())
 
 
 class SubscribeUnsubscribeForm(form.Form):

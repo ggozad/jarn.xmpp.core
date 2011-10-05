@@ -45,13 +45,6 @@
 
   <browser:page
     for="*"
-    name="pubsub-publish"
-    class=".pubsub.PublishToNodeForm"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="*"
     name="pubsub-subscribe"
     class=".pubsub.SubscribeToNodeForm"
     permission="zope2.View"
