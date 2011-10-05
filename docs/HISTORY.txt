@@ -6,8 +6,8 @@ Changelog
 0.2b1 - Unreleased
 ------------------
 
-- Redesign and implement UI for messaging, presence, pubsub feeds.
-  [mishunov]
+- Redesign UI for messaging, presence, pubsub feeds.
+  [mishunov, ggozad]
 
 - Remove multi-user chat. It will go in again properly when the use-cases have
   been defined.

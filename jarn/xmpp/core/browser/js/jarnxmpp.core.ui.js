@@ -13,12 +13,25 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
              return;
         existing_element.attr('class', status);
     } else {
-        $.get('xmpp-userDetails?jid=' + barejid, function(user_details) {
+        $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function(user_details) {
             user_details = $(user_details);
             user_details.find('.send-message').prepOverlay({
                 subtype: 'ajax',
             });
-            $('#online-users').append(user_details);
+            // Put users in alphabetical order. This is stupidly done but works.
+            var name = $('a.user-details-toggle', user_details).text().trim();
+            var existing_users = $('#online-users > li');
+            var added = false;
+            $.each(existing_users, function (index, li) {
+                var existing_name = $('a.user-details-toggle', li).text().trim();
+                if (existing_name > name) {
+                    user_details.insertBefore($(li));
+                    added = true;
+                    return false;
+                }
+            });
+            if (!added)
+                $('#online-users').append(user_details);
         });
     }
     var counter = 0;

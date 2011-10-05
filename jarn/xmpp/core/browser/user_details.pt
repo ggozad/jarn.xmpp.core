@@ -1,13 +1,15 @@
 <metal:userdetails tal:condition="view/available"
   tal:define="user_id view/user_id;
-              fullname view/fullname">
-    <li tal:attributes="id string:online-users-$user_id">
+              fullname view/fullname;
+              portal_url context/portal_url">
+    <li tal:attributes="id string:online-users-${user_id};
+                        data-userid user_id">
         <a href="#" class="user-details-toggle"
            title="Click to toggle user's details">
            <tal:name replace="fullname">Jon Doe</tal:name>
         </a>
         <div class="user-details-form">
-            <a tal:attributes="href string:@@pubsub-feed?node=$user_id;
+            <a tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
                                title string:Personal stream of $fullname">
                <img tal:attributes="alt string:Personal stream of $fullname;
                                     src view/portrait_url" />
@@ -21,7 +23,7 @@
                 </div>
             </form>
             <a href="#" title="" class="user-personal-stream"
-               tal:attributes="href string:@@pubsub-feed?node=$user_id;
+               tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
                                title string:$fullname">
                 Personal Stream
             </a>
