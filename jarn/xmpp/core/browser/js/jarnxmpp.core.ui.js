@@ -104,15 +104,12 @@ $(document).ready(function () {
     });
 
     $('#pubsub-form').bind('submit', function (e) {
-        e.preventDefault();
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
             node = $field.attr('data-node');
-        jarnxmpp.PubSub.publishToPersonalNode(node, text, function() {
-            // Here we should be handling the incoming pubsub event without
-            // reloading, but well...
-            window.location.reload();
-        });
+        jarnxmpp.PubSub.publishToPersonalNode(node, text);
+        $field.attr('value', '');
+        return false;
     });
 
     $('a.magic-link').each(function () {

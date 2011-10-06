@@ -177,7 +177,8 @@ jarnxmpp.PubSub = {
             publish_elem.appendChild(item);
             var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid});
             pub.c('pubsub', { xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
-            jarnxmpp.connection.addHandler(callback, null, 'iq', null, pubid, null);
+            if (typeof callback != 'undefined')
+                jarnxmpp.connection.addHandler(callback, null, 'iq', null, pubid, null);
             jarnxmpp.connection.send(pub);
         });
 

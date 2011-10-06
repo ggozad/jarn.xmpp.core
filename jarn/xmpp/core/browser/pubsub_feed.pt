@@ -37,7 +37,7 @@
             <input type="text" name="message" placeholder="Post to stream"
                 tal:attributes="data-node publishNode"/>
             <div class="formControls">
-                <input type="submit" value="Post" name="postButton" class="submit-widget button-field"/>
+                <input type="submit" value="Post" name="postButton" class="allowMultiSubmit"/>
             </div>
         </form>
       </form>
