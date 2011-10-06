@@ -91,7 +91,18 @@ class PubSubItem(BrowserView):
     def isLeaf(self):
         return self._isLeaf
 
-    def __call__(self, item, isLeaf=True):
+    def __call__(self, item=None, isLeaf=True):
+        if item is None:
+            item = {
+                'node': self.request.get('node'),
+                'item_id': self.request.get('item_id'),
+                'content': self.request.get('content'),
+                'author': self.request.get('author'),
+                'published': self.request.get('published'),
+                'updated': self.request.get('updated'),
+            }
+            if self.request.get('isLeaf') == 'false':
+                isLeaf = False
         self.item = item
         self.isLeaf = isLeaf
         self.mt = getToolByName(self.context, 'portal_membership')
