@@ -42,18 +42,16 @@
         </form>
       </form>
       <div class="visualClear"><!-- --></div>
-      <dl class="pubSubNode">
+      <ul class="pubSubNode">
         <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
                                       plone_view context/@@plone;"
                           tal:repeat="obj batch">
-          <dd class="pubsubItem"
-              tal:define="oddrow repeat/obj/odd;
-                          author obj/author;
+          <li class="pubsubItem"
+              tal:define="author obj/author;
                           fullname python: view.fullname(author) or author;
                           content obj/content;
                           updated obj/updated;
-                          links obj/urls | nothing"
-              tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
+                          links obj/urls | nothing">
             <div class="pubsubAvatar" tal:condition="not: isLeaf">
                <img class="portrait"
                     tal:define="portrait python:member_tool.getPersonalPortrait(author);"
@@ -65,7 +63,7 @@
               <span tal:replace="structure content">xmpp ftw!</span>
               <div class="pubsubItemDetails">
                 <span class="discreet" tal:content="python:toLocalizedTime(updated)">May 5</span>
-                <ul class="pubsub-item-links" tal:condition="links">
+                <ul class="pubsubItemLinks" tal:condition="links">
                   <li tal:repeat="url links">
                     <a tal:attributes="href url" class="magic-link external-link">
                       <img src="" height="16" width="16" class="magic-favicon"/>
@@ -78,13 +76,12 @@
 
             </div>
             <div class="visualClear"><!-- --></div>
-          </dd>
+          </li>
         <div class="visualClear"><!-- --></div>
         </tal:pubsubitems>
-      </dl>
+      </ul>
       <div metal:use-macro="context/batch_macros/macros/navigation" />
     </div>
-
 </metal:main>
 </body>
 </html>
