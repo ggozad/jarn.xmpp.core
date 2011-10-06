@@ -30,7 +30,6 @@
         </li>
       </ul>
     </div>
-
   </div>
   <div class="visualClear"><!-- --></div>
 </tal:pubsub_item>

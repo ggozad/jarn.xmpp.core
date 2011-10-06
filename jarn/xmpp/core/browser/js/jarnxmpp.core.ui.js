@@ -76,6 +76,14 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
         $('#site-stream-link').animate({opacity: 0.5}, 100);
         $('#site-stream-link').animate({opacity: 1.0}, 100);
     }
+    // If we are showing a feed already, and the item should be in it,
+    // inject it.
+    if ($('.pubSubNode[data-node="people"]').length > 0 ||
+        $('.pubSubNode[data-node=event.node]').length > 0) {
+        $.get(portal_url + '/@@pubsub-item?', {item: event.node}, function(data) {
+        });
+        var a=1;
+    }
 });
 
 // Logging
