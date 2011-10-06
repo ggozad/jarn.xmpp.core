@@ -62,7 +62,7 @@ $(document).bind('jarnxmpp.message', function (event) {
 });
 
 // Pub-Sub
-$(document).bind('jarnxmpp.nodePublished', function (event) {
+$(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     jarnxmpp.Presence.getUserInfo(event.author, function(data) {
         $.gritter.add({
             title: data.fullname,

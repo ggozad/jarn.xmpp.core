@@ -137,17 +137,23 @@ jarnxmpp.PubSub = {
     },
 
     eventReceived: function(msg) {
-        var items = $(msg).find('item');
-        if (items.length>0) {
-            for (var i = 0; i < items.length; i++) {
-                var entry = $(items[i]).children('entry');
-                var event = jQuery.Event('jarnxmpp.nodePublished');
-                event.author = $(entry).children('author').text();
-                event.published = $(entry).children('published').text();
-                event.content = $(entry).children('content').text();
-                $(document).trigger(event);
-            }
-        }
+        $.each($('event > items', msg), function (idx, node_items) {
+            var node = $(node_items).attr('node');
+            $.each($('>item', node_items), function(iidx, item) {
+                var item_id = $(item).attr('id');
+                var entry = $('entry[xmlns="http://www.w3.org/2005/Atom"]:first', item);
+                if (entry.length > 0) {
+                    var event = jQuery.Event('jarnxmpp.pubsubEntryPublished');
+                    event.node = node;
+                    event.item_id = item_id;
+                    event.content = $('content', entry).text();
+                    event.author = $('author', entry).text();
+                    event.published = $('published', entry).text();
+                    event.updated = $('updated', entry).text();
+                    $(document).trigger(event);
+                }
+            });
+        });
         return true;
     },
 
