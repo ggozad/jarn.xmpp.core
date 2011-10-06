@@ -63,13 +63,19 @@ $(document).bind('jarnxmpp.message', function (event) {
 
 // Pub-Sub
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
-    jarnxmpp.Presence.getUserInfo(event.author, function(data) {
-        $.gritter.add({
-            title: data.fullname,
-            text: event.content,
-            image: data.portrait_url
-        });
-    });
+    // jarnxmpp.Presence.getUserInfo(event.author, function(data) {
+    //     $.gritter.add({
+    //         title: data.fullname,
+    //         text: event.content,
+    //         image: data.portrait_url
+    //     });
+    // });
+
+    // Put some stupid animation and let Denys fix it.
+    for (var i=0; i<10; i++) {
+        $('#site-stream-link').animate({opacity: 0.5}, 100);
+        $('#site-stream-link').animate({opacity: 1.0}, 100);
+    }
 });
 
 // Logging

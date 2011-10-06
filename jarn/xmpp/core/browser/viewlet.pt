@@ -1,8 +1,12 @@
 <div id="xmpp-viewlet"
      i18n:domain="jarn.xmpp.core"
+     tal:define="portal_url context/portal_url"
      tal:condition="not: view/anonymous">
     <div id="xmpp-viewlet-container">
-        <a tal:attributes="href string:@@pubsub-feed?node=people">Site stream</a>
+        <a id="site-stream-link"
+           tal:attributes="href string:@@pubsub-feed?node=people">
+              Site stream
+        </a>
         <a href="#" id="toggle-online-users">
             <span i18n:translate="">Online users:</span>
             <span id="online-count">0</span>
