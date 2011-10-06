@@ -82,7 +82,8 @@ If you already run an XMPP server here are some hints on how to set it up:
         {ignore_pep_from_offline, true},
         {last_item_cache, false},
         {nodetree, "dag"},
-        {plugins, ["dag", "flat", "hometree", "pep"]}
+        {plugins, ["dag", "flat", "hometree", "pep"]},
+        {max_items_node, 1000}
         ]},
 
 * In order to test and run custom XMPP components (for instance the collaborative editing component provided by ``jarn.xmpp.collaboration``) you will need to allow them to connect. This means you should have something similar to this configuration:

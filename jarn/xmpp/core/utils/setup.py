@@ -27,7 +27,7 @@ def setupXMPPEnvironment(client, member_jids=[],
         if not result:
             return False
         d = client.createNode('people',
-            options={'pubsub#node_title': 'All personal feeds',
+            options={'pubsub#node_title': 'All personal nodes',
                      'pubsub#node_type': 'collection',
                      'pubsub#collection': ''})
         return d

@@ -1,3 +1,7 @@
+USER_NODE_CONFIG = {
+    'pubsub#collection': 'people',
+    'pubsub#max_items': 1000
+}
 
 
 def setupPrincipal(client,
@@ -19,7 +23,7 @@ def setupPrincipal(client,
         if result == False:
             return False
         d = client.createNode(principal_id,
-            options={'pubsub#collection': 'people'})
+            options=USER_NODE_CONFIG)
         return d
 
     def affiliateUser(result):
