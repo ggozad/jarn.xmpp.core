@@ -81,8 +81,10 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                published: event.published,
                updated: event.updated,
                isLeaf: isLeaf}, function(data) {
-            var $li = $('<li>').addClass('pubsubItem').html(data);
+            var $li = $('<li>').addClass('pubsubItem').css('display','none').html(data);
             $('.pubSubNode').prepend($li);
+            $(".pubSubNode li:first");
+            $(".pubSubNode li:first").slideDown("slow");
         });
     }
 });
