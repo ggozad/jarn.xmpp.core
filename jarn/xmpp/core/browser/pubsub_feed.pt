@@ -20,8 +20,7 @@
               limit_display python:limit_display and int(limit_display) or None;
               Batch python:modules['Products.CMFPlone'].Batch;
               b_start python:request.get('b_start', 0);
-              batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);          
-              member_tool context/portal_membership">
+              batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);          ">
 
     <div id="content-core">
       <div class="pubsubAvatar" tal:condition="isLeaf">
@@ -31,7 +30,16 @@
                tal:attributes="src portrait/absolute_url">
       </div>
 
-      <h1 class="documentFirstHeading" tal:content="python: view.fullname(node) or node">St. Peter</h1>
+      <h1 class="documentFirstHeading"
+          tal:condition="isLeaf"
+          tal:content="python: view.fullname(node) or node">
+              St. Peter
+      </h1>
+      <h1 class="documentFirstHeading"
+          tal:condition="not: isLeaf"
+          tal:content="python: node">
+              People
+      </h1>
       <form tal:define="publishNode view/canPublish" tal:condition="publishNode" id="pubsub-form">
         <form action="" method="post">
             <input type="text" name="message" placeholder="Post to stream"
@@ -43,43 +51,13 @@
       </form>
       <div class="visualClear"><!-- --></div>
       <ul class="pubSubNode">
-        <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
-                                      plone_view context/@@plone;"
-                          tal:repeat="obj batch">
-          <li class="pubsubItem"
-              tal:define="author obj/author;
-                          fullname python: view.fullname(author) or author;
-                          content obj/content;
-                          updated obj/updated;
-                          links obj/urls | nothing">
-            <div class="pubsubAvatar" tal:condition="not: isLeaf">
-               <img class="portrait"
-                    tal:define="portrait python:member_tool.getPersonalPortrait(author);"
-                    tal:condition="portrait"
-                    tal:attributes="src portrait/absolute_url"/>
-            </div>
-            <div class="pubsubItemContent">
-              <h4 tal:condition="not: isLeaf" tal:content="fullname">Saint Andre</h4>
-              <span tal:replace="structure content">xmpp ftw!</span>
-              <div class="pubsubItemDetails">
-                <span class="discreet" tal:content="python:toLocalizedTime(updated)">May 5</span>
-                <ul class="pubsubItemLinks" tal:condition="links">
-                  <li tal:repeat="url links">
-                    <a tal:attributes="href url" class="magic-link external-link">
-                      <img src="" height="16" width="16" class="magic-favicon"/>
-                      <h6 class="magic-link-title">Title</h6>
-                      <span class="magic-link-descr">Description</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-            </div>
-            <div class="visualClear"><!-- --></div>
+        <tal:pubsubitems tal:repeat="obj batch">
+          <li class="pubsubItem">
+            <div tal:replace="structure python:context.unrestrictedTraverse('@@pubsub-item')(obj, isLeaf=isLeaf)"/>
           </li>
-        <div class="visualClear"><!-- --></div>
         </tal:pubsubitems>
       </ul>
+      <div class="visualClear"><!-- --></div>
       <div metal:use-macro="context/batch_macros/macros/navigation" />
     </div>
 </metal:main>

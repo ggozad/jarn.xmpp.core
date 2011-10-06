@@ -12,6 +12,7 @@ from zope.interface import Interface
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from jarn.xmpp.core import messageFactory as _
 from jarn.xmpp.core.interfaces import IAdminClient
@@ -45,20 +46,10 @@ class PubSubFeed(BrowserView):
         else:
             self.nodeType = 'collection'
         self.mt = getToolByName(self.context, 'portal_membership')
-        self.fullnames = dict()
 
     def fullname(self, author):
-        if author in self.fullnames:
-            return self.fullnames[author]
-        else:
-            member = self.mt.getMemberById(author)
-            if member is None:
-                return ''
-            fullname = member.getProperty('fullname', None)
-            if fullname is None:
-                return ''
-            self.fullnames[author] = fullname
-            return fullname
+        member = self.mt.getMemberById(author)
+        return member.getProperty('fullname', None)
 
     def canPublish(self):
         """
@@ -86,17 +77,33 @@ class PubSubFeed(BrowserView):
             node = self.node
         if node not in self.storage.node_items:
             return []
-        result = self.storage.node_items[node][:count]
+        return self.storage.node_items[node][:count]
+
+
+class PubSubItem(BrowserView):
+
+    item_template = ViewPageTemplateFile("pubsub_item.pt")
+
+    def fullname(self, author):
+        member = self.mt.getMemberById(author)
+        return member.getProperty('fullname', None)
+
+    def isLeaf(self):
+        return self._isLeaf
+
+    def __call__(self, item, isLeaf=True):
+        self.item = item
+        self.isLeaf = isLeaf
+        self.mt = getToolByName(self.context, 'portal_membership')
+
+        # Calculate magic links
         portal_url_netloc = urlparse(
             getToolByName(self.context, 'portal_url')()).netloc
-        for index, item in enumerate(result):
-            urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
-            if urls:
-                item['urls'] = [url
-                                for url in urls
-                                if urlparse(url).netloc != portal_url_netloc]
-            result[index] = item
-        return result
+        urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
+        self.item['urls'] = [url
+                             for url in urls
+                             if urlparse(url).netloc != portal_url_netloc]
+        return self.item_template()
 
 
 class ContentTransform(BrowserView):

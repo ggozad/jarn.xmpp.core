@@ -1,0 +1,36 @@
+<tal:pubsub_item
+    define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
+            plone_view context/@@plone;
+            member_tool context/portal_membership;
+            item view/item;
+            isLeaf view/isLeaf;
+            author item/author;
+            fullname python: view.fullname(author) or author;
+            content item/content;
+            updated item/updated;
+            links item/urls | nothing">
+  <div class="pubsubAvatar" tal:condition="not: isLeaf">
+     <img class="portrait"
+          tal:define="portrait python:member_tool.getPersonalPortrait(author);"
+          tal:condition="portrait"
+          tal:attributes="src portrait/absolute_url"/>
+  </div>
+  <div class="pubsubItemContent">
+    <h4 tal:condition="not: isLeaf" tal:content="fullname">Saint Andre</h4>
+    <span tal:replace="structure content">xmpp ftw!</span>
+    <div class="pubsubItemDetails">
+      <span class="discreet" tal:content="python:toLocalizedTime(updated)">May 5</span>
+      <ul class="pubsubItemLinks" tal:condition="links">
+        <li tal:repeat="url links">
+          <a tal:attributes="href url" class="magic-link external-link">
+            <img src="" height="16" width="16" class="magic-favicon"/>
+            <h6 class="magic-link-title">Title</h6>
+            <span class="magic-link-descr">Description</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="visualClear"><!-- --></div>
+</tal:pubsub_item>

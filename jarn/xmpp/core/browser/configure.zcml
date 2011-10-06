@@ -38,6 +38,13 @@
 
   <browser:view
     for="*"
+    name="pubsub-item"
+    class=".pubsub.PubSubItem"
+    permission="zope2.View"
+    />
+
+  <browser:view
+    for="*"
     name="pubsub-transform"
     class=".pubsub.ContentTransform"
     permission="zope2.View"
