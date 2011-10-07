@@ -108,14 +108,25 @@ $.fn.magicLinks = function () {
         var $link = $(this);
         $link.hide();
         $link.children('.magic-favicon').hide();
-        $.getJSON(portal_url + "/magic-links?url=" + $link.attr('href'), function (data) {
-            if (data===null) return;
+        var setLink = function(data) {
             $link.children('.magic-link-title').html(data.title);
             $link.children('.magic-link-descr').html(data.description);
             $link.children('.magic-favicon').attr('src', data.favicon_url);
             $link.children('.magic-favicon').show();
             $link.show();
-        });
+        };
+        if (jarnxmpp.Storage.storage !==null && 'ml' + $link.attr('href') in jarnxmpp.Storage.storage) {
+            var data = jarnxmpp.Storage.get('ml' + $link.attr('href'));
+            setLink(data);
+        } else {
+            $.getJSON(portal_url + "/magic-links?url=" + $link.attr('href'), function (data) {
+                if (data===null) return;
+                if (jarnxmpp.Storage.storage!==null) {
+                    jarnxmpp.Storage.set('ml' + $link.attr('href'), data);
+                }
+                setLink(data);
+            });
+        }
     });
 };
 
