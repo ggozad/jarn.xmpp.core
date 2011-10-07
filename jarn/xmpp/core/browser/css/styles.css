@@ -212,14 +212,12 @@ div.replyForm > a:hover {
     -moz-box-sizing:border-box;
     -webkit-box-sizing:border-box;
     box-sizing:border-box;
-    border: 1px solid #cecece;
+    border: none;
     padding: 0.85em;
     color: #000;
     outline: none;
-    -webkit-border-radius: 0.3em;
-    -moz-border-radius: 0.3em;
-    border-radius: 0.3em;
     float: left;
+    border-right: 6em solid #205c90;
 }
 .postItemWrapper form input[type='text']:focus {
     -webkit-box-shadow: 0 0 10px #bbb;
@@ -233,18 +231,18 @@ div.replyForm > a:hover {
     padding: 0;
     margin: 0;
 }
-.postItemWrapper input[type='submit'] {
-    line-height: 1em;
-    border: 1px solid #205c90;
-    padding: 0.4em 0.7em 0.47em;
-    -webkit-border-radius: 0.2em;
-    -moz-border-radius: 0.2em;
-    border-radius: 0.2em;
-    margin-left: 0.35em;
-    background-color: #205c90;
+.postItemWrapper button[type='submit'] {
+    border: none;
+    background: transparent;    
+    padding: 0.37em 0;
+    margin: 0;
     color: #fff;
     font-size: 1.5em;
     text-transform: lowercase;
+    width: 4em;
+    line-height: 0.96em;
+    cursor: pointer;
+    vertical-align: middle;
 }
 #content-core ul.pubsubNode {
     margin: 0;
