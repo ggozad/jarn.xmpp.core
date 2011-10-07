@@ -62,8 +62,7 @@
     padding:0;
     margin:0;
     font-size: 1.2em;
-    font-style: italic;
-    font-family: Georgia, serif;
+    font-family: Georgia, Times, serif;    
 }
 .gritter-close {
     position:absolute;
@@ -77,7 +76,10 @@
 .gritter-title {
     padding:0 0 7px 0;
     display:block;
-    text-shadow:1px 1px #000; /* Not supported by IE :( */
+    font-weight: bold;
+    font-style: italic;
+    font-family: Georgia, Times, serif;
+    font-size: 1.1em;
 }
 .gritter-image {
     max-width:48px;
@@ -91,4 +93,17 @@
 .gritter-with-image {
     width:220px;
     float:right;
+}
+.gritter-item div.replyForm > form {
+    display: none;
+}
+.gritter-item a {
+    color: Orange;
+}
+.gritter-item div.replyForm {
+    margin-top: 1em;    
+}
+.gritter-item div.replyForm > a {
+    display: block;
+    float: right;
 }

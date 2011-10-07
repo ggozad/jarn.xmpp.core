@@ -169,23 +169,6 @@ div.replyForm > a {
 div.replyForm > a:hover {
     color: #fff;
 }
-.gritter-item div.replyForm > form {
-    display: none;
-}
-.gritter-item a {
-    color: #fff;
-    font-style: normal;
-	text-decoration: underline;
-    color: #eee;
-}
-.gritter-item div.replyForm {
-    margin-top: 1em;    
-}
-.gritter-item div.replyForm > a {
-	display: block;
-	float: right;
-	text-decoration: none;
-}
 
 /* PubSub feed */
 .pubsubAvatar {
