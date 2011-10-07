@@ -1,25 +1,14 @@
 jarnxmpp = {};
 
-jarnxmpp.rawInput = function(data) {
-    var event = jQuery.Event('jarnxmpp.dataReceived');
-    event.text = data;
-    $(document).trigger(event);
-};
-
-jarnxmpp.rawOutput = function (data) {
-    var event = jQuery.Event('jarnxmpp.dataSent');
-    event.text = data;
-    $(document).trigger(event);
-};
-
 jarnxmpp.Messages = {
     messageReceived: function (message) {
         var body = $(message).children('body').text();
         if (body==="") {
             return true; // This is a typing notification, we do not handle it here...
         }
-        var xhtml_body = $(message).find('html > body').contents();
-        var event = jQuery.Event('jarnxmpp.message');
+        var xhtml_body = $(message).find('html > body').contents(),
+            event = jQuery.Event('jarnxmpp.message');
+        event.from = $(message).attr('from');
         if (xhtml_body.length>0) {
             event.mtype = 'xhtml';
             event.body = xhtml_body.html();
@@ -27,21 +16,12 @@ jarnxmpp.Messages = {
             event.body = body;
             event.mtype = 'text';
         }
-        event.from = $(message).attr('from');
         $(document).trigger(event);
         return true;
     },
 };
 
 jarnxmpp.Roster = {
-    rosterSet: function(iq) {
-        // XXX: Fill me in
-        return true;
-    },
-    rosterResult: function(iq) {
-        // XXX: Fill me in
-        return true;
-    },
 
     rosterSuggestedItem: function(msg) {
         $(msg).find('item').each(function () {
@@ -62,9 +42,10 @@ jarnxmpp.Presence = {
     _user_info: {},
 
     presenceReceived: function (presence) {
-        var ptype = $(presence).attr('type');
-        var from = $(presence).attr('from');
-        var status = '';
+        var ptype = $(presence).attr('type'),
+            from = $(presence).attr('from'),
+            jid = Strophe.getNodeFromJid(from),
+            status = '';
 
         // User wants to subscribe to us. Always approve and
         // ask to subscribe to him
@@ -76,20 +57,13 @@ jarnxmpp.Presence = {
                 to: from,
                 "type": "subscribe"}));
         }
-
         // Presence has changed
         else if (ptype !== 'error') {
             if (ptype === 'unavailable') {
                 status = 'offline';
             } else {
-                var show = $(presence).find('show').text(); 
-                if (show === '') {
-                    status = 'online';
-                } else {
-                    status = 'away';
-                }
+                status = ($(presence).find('show').text() === '') ? 'online' : 'away';
             }
-            var jid = Strophe.getNodeFromJid(from);
             if (status !== 'offline') {
                 if (jarnxmpp.Presence.online.hasOwnProperty(jid))
                     jarnxmpp.Presence.online[jid].push(from);
@@ -177,7 +151,7 @@ jarnxmpp.PubSub = {
             publish_elem.appendChild(item);
             var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid});
             pub.c('pubsub', { xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
-            if (typeof callback != 'undefined')
+            if (typeof(callback) !== 'undefined')
                 jarnxmpp.connection.addHandler(callback, null, 'iq', null, pubid, null);
             jarnxmpp.connection.send(pub);
         });
@@ -201,6 +175,18 @@ jarnxmpp.onConnect = function (status) {
     }
 };
 
+jarnxmpp.rawInput = function(data) {
+    var event = jQuery.Event('jarnxmpp.dataReceived');
+    event.text = data;
+    $(document).trigger(event);
+};
+
+jarnxmpp.rawOutput = function (data) {
+    var event = jQuery.Event('jarnxmpp.dataSent');
+    event.text = data;
+    $(document).trigger(event);
+};
+
 $(document).bind('jarnxmpp.connected', function () {
     // Logging
     jarnxmpp.connection.rawInput = jarnxmpp.rawInput;
@@ -208,7 +194,6 @@ $(document).bind('jarnxmpp.connected', function () {
     // Messages
     jarnxmpp.connection.addHandler(jarnxmpp.Messages.messageReceived, null, 'message', 'chat');
     //Roster
-    jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterSet, Strophe.NS.ROSTER, 'iq', 'set');
     jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterResult, Strophe.NS.ROSTER, 'iq', 'result');
     // Presence
     jarnxmpp.connection.addHandler(jarnxmpp.Presence.presenceReceived, null, 'presence', null);
