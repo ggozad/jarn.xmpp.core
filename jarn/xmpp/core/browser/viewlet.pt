@@ -6,8 +6,7 @@
         <a id="site-stream-link"
            tal:attributes="href string:@@pubsub-feed?node=people">
               Site stream
-        </a>
-        <a href="#" id="toggle-online-users">
+        </a><a href="#" id="toggle-online-users">
             <span i18n:translate="">Online users:</span>
             <span id="online-count">0</span>
         </a>

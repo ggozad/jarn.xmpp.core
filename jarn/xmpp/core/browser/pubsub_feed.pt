@@ -29,11 +29,6 @@
           tal:content="python: view.fullname(node) or node">
               Jon Doe
       </h1>
-      <h1 class="documentFirstHeading"
-          tal:condition="not: isLeaf"
-          tal:content="python: node">
-              People
-      </h1>
       
       <div class="pubsubAvatar" tal:condition="isLeaf">
           <img class="portrait"
