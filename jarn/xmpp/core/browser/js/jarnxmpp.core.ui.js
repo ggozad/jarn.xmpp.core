@@ -1,15 +1,21 @@
+/*global $:false, document:false, window:false, portal_url:false,
+jarnxmpp:false, $msg:false, Strophe:false */
+
 // Presence handler
 
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var user_id = Strophe.getNodeFromJid(jid),
         barejid = Strophe.getBareJidFromJid(jid),
-        existing_user_element = $('#online-users-'+user_id);
+        existing_user_element = $('#online-users-' + user_id),
+        counter = 0,
+        user;
     if (existing_user_element.length) {
-        if (status==='offline' && jarnxmpp.Presence.online.hasOwnProperty(user_id))
-             return;
+        if (status === 'offline' && jarnxmpp.Presence.online.hasOwnProperty(user_id)) {
+            return;
+        }
         existing_user_element.attr('class', status);
     } else {
-        $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function(user_details) {
+        $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function (user_details) {
             user_details = $(user_details);
             // Put users in alphabetical order. This is stupidly done but works.
             var name = $('a.user-details-toggle', user_details).text().trim(),
@@ -23,14 +29,15 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
                     return false;
                 }
             });
-            if (!added)
+            if (!added) {
                 $('#online-users').append(user_details);
+            }
         });
     }
-    var counter = 0;
-    for (var user in jarnxmpp.Presence.online) {
-        if (jarnxmpp.Presence.online.hasOwnProperty(user))
-            counter++;
+    for (user in jarnxmpp.Presence.online) {
+        if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
+            counter += 1;
+        }
     }
     $('#online-count').text(counter);
 });
@@ -39,25 +46,26 @@ $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from),
         jid = Strophe.getBareJidFromJid(event.from),
         $text_p = $('<p>').text(event.body),
-        $form = $('#online-users li#online-users-' + user_id + ' form').clone();
-    $('input[type="submit"]', $form).attr('value', 'Reply');
-    var $reply_p = $('<p>').append($form),
+        $form = $('#online-users li#online-users-' + user_id + ' .replyForm').clone(),
+        $reply_p = $('<p>').append($form),
         text = $('<div>').append($text_p).append($reply_p).remove().html();
+    $('input[type="submit"]', $form).attr('value', 'Reply');        
 
-    jarnxmpp.Presence.getUserInfo(user_id, function(data) {
+    jarnxmpp.Presence.getUserInfo(user_id, function (data) {
         $.gritter.add({
             title: data.fullname,
             text: text,
             image: data.portrait_url,
-            sticky: true,
+            sticky: true
         });
     });
 });
 
 // Pub-Sub
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
+    var i, isLeaf, $li;
     // Put some stupid animation and let Denys fix it.
-    for (var i=0; i<10; i++) {
+    for (i = 0; i < 10; i += 1) {
         $('#site-stream-link').animate({opacity: 0.5}, 100);
         $('#site-stream-link').animate({opacity: 1.0}, 100);
     }
@@ -65,7 +73,7 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     // inject it.
     if ($('.pubsubNode[data-node="people"]').length > 0 ||
         $('.pubsubNode[data-node=event.node]').length > 0) {
-        var isLeaf = ($('.pubsubNode[data-node="people"]').length > 0) ? false : true;
+        isLeaf = ($('.pubsubNode[data-node="people"]').length > 0) ? false : true;
         $.get(portal_url + '/@@pubsub-item?',
               {node: event.node,
                item_id: event.item_id,
@@ -73,8 +81,8 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                author: event.author,
                published: event.published,
                updated: event.updated,
-               isLeaf: isLeaf}, function(data) {
-            var $li = $('<li>').addClass('pubsubItem').css('display','none').html(data);
+               isLeaf: isLeaf}, function (data) {
+            $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
             $('.pubsubNode').prepend($li);
             $('.pubsubNode li:first').slideDown("slow");
             $('.pubsubNode li:first').magicLinks();
@@ -97,7 +105,7 @@ $.fn.magicLinks = function () {
         var $link = $(this);
         $link.hide();
         $link.children('.magic-favicon').hide();
-        $.getJSON(portal_url+"/magic-links?url="+$link.attr('href'), function(data) {
+        $.getJSON(portal_url + "/magic-links?url=" + $link.attr('href'), function (data) {
             $link.children('.magic-link-title').html(data.title);
             $link.children('.magic-link-descr').html(data.description);
             $link.children('.magic-favicon').attr('src', data.favicon_url);
