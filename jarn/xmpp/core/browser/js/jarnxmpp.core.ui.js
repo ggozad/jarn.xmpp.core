@@ -63,9 +63,9 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     }
     // If we are showing a feed already, and the item should be in it,
     // inject it.
-    if ($('.pubSubNode[data-node="people"]').length > 0 ||
-        $('.pubSubNode[data-node=event.node]').length > 0) {
-        var isLeaf = ($('.pubSubNode[data-node="people"]').length > 0) ? false : true;
+    if ($('.pubsubNode[data-node="people"]').length > 0 ||
+        $('.pubsubNode[data-node=event.node]').length > 0) {
+        var isLeaf = ($('.pubsubNode[data-node="people"]').length > 0) ? false : true;
         $.get(portal_url + '/@@pubsub-item?',
               {node: event.node,
                item_id: event.item_id,
@@ -75,8 +75,9 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                updated: event.updated,
                isLeaf: isLeaf}, function(data) {
             var $li = $('<li>').addClass('pubsubItem').css('display','none').html(data);
-            $('.pubSubNode').prepend($li);
-            $(".pubSubNode li:first").slideDown("slow");
+            $('.pubsubNode').prepend($li);
+            $('.pubsubNode li:first').slideDown("slow");
+            $('.pubsubNode li:first').magicLinks();
         });
     }
 });
@@ -90,6 +91,21 @@ $(document).bind('jarnxmpp.dataReceived', function (ev) {
 $(document).bind('jarnxmpp.dataSent', function (ev) {
     $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));
 });
+
+$.fn.magicLinks = function () {
+    $('a.magic-link', this).each(function () {
+        var $link = $(this);
+        $link.hide();
+        $link.children('.magic-favicon').hide();
+        $.getJSON(portal_url+"/magic-links?url="+$link.attr('href'), function(data) {
+            $link.children('.magic-link-title').html(data.title);
+            $link.children('.magic-link-descr').html(data.description);
+            $link.children('.magic-favicon').attr('src', data.favicon_url);
+            $link.children('.magic-favicon').show();
+            $link.show();
+        });
+    });
+};
 
 $(document).ready(function () {
     
@@ -107,7 +123,7 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $('a.user-details-toggle').live( 'click', function (e) {
+    $('a.user-details-toggle').live('click', function (e) {
         $(this).toggleClass('expanded');
         e.preventDefault();
     });
@@ -121,16 +137,5 @@ $(document).ready(function () {
         return false;
     });
 
-    $('a.magic-link').each(function () {
-        var $link = $(this);
-        $link.hide();
-        $link.children('.magic-favicon').hide();
-        $.getJSON(portal_url+"/magic-links?url="+$link.attr('href'), function(data) {
-            $link.children('.magic-link-title').html(data.title);
-            $link.children('.magic-link-descr').html(data.description);
-            $link.children('.magic-favicon').attr('src', data.favicon_url);
-            $link.children('.magic-favicon').show();
-            $link.show();
-        });
-    }); 
+    $('.pubsubNode').magicLinks();
 });

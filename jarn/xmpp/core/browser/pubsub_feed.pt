@@ -50,7 +50,7 @@
         </form>
       </form>
       <div class="visualClear"><!-- --></div>
-      <ul class="pubSubNode" tal:attributes="data-node node">
+      <ul class="pubsubNode" tal:attributes="data-node node">
         <tal:pubsubitems tal:repeat="obj batch">
           <li class="pubsubItem">
             <div tal:replace="structure python:context.unrestrictedTraverse('@@pubsub-item')(obj, isLeaf=isLeaf)"/>
