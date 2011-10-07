@@ -50,7 +50,7 @@
 .gritter-item {
     display:block;
     background:url(++resource++gritter/gritter.png) no-repeat left -40px;
-    color:#eee;
+    color:#fff;
     padding:0 12px;
     font-size: 11px;
     font-family:verdana;
