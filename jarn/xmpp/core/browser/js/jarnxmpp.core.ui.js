@@ -10,6 +10,7 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         existing_user_element.attr('class', status);
     } else {
         $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function(user_details) {
+            if ($('#online-users-'+user_id).length > 0) return;
             user_details = $(user_details);
             // Put users in alphabetical order. This is stupidly done but works.
             var name = $('a.user-details-toggle', user_details).text().trim(),

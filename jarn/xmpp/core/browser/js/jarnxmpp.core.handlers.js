@@ -44,9 +44,8 @@ jarnxmpp.Presence = {
     presenceReceived: function (presence) {
         var ptype = $(presence).attr('type'),
             from = $(presence).attr('from'),
-            jid = Strophe.getNodeFromJid(from),
+            user_id = Strophe.getNodeFromJid(from),
             status = '';
-
         // User wants to subscribe to us. Always approve and
         // ask to subscribe to him
         if (ptype === 'subscribe' ) {
@@ -65,18 +64,18 @@ jarnxmpp.Presence = {
                 status = ($(presence).find('show').text() === '') ? 'online' : 'away';
             }
             if (status !== 'offline') {
-                if (jarnxmpp.Presence.online.hasOwnProperty(jid))
-                    jarnxmpp.Presence.online[jid].push(from);
+                if (jarnxmpp.Presence.online.hasOwnProperty(user_id))
+                    jarnxmpp.Presence.online[user_id].push(from);
                 else
-                    jarnxmpp.Presence.online[jid] = [from];
+                    jarnxmpp.Presence.online[user_id] = [from];
             } else {
-                if (jarnxmpp.Presence.online.hasOwnProperty(jid)) {
-                    var pos = jarnxmpp.Presence.online[jid].indexOf(from);
+                if (jarnxmpp.Presence.online.hasOwnProperty(user_id)) {
+                    var pos = jarnxmpp.Presence.online[user_id].indexOf(from);
                     if (pos >= 0) {
-                        jarnxmpp.Presence.online[jid].splice(pos, 1);
+                        jarnxmpp.Presence.online[user_id].splice(pos, 1);
                     }
-                    if (jarnxmpp.Presence.online[jid].length === 0)
-                        delete jarnxmpp.Presence.online[jid];
+                    if (jarnxmpp.Presence.online[user_id].length === 0)
+                        delete jarnxmpp.Presence.online[user_id];
                 }
             }
             $(document).trigger('jarnxmpp.presence', [from, status, presence]);
