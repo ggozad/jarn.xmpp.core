@@ -16,6 +16,10 @@ Changelog
 - Replace python views/utilities for publishing to nodes by js.
   [ggozad]
 
+- Provide a pubsub item view and load them asynchronously in the pubsub feed
+  view.
+  [ggozad]
+
 ------------------
 0.1b4 - 2011-09-30
 ------------------
