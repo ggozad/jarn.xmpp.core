@@ -52,7 +52,7 @@ $(document).bind('jarnxmpp.message', function (event) {
         $form = $('#online-users li#online-users-' + user_id + ' .replyForm').clone(),
         $reply_p = $('<p>').append($form),
         text = $('<div>').append($text_p).append($reply_p).remove().html();
-    $('input[type="submit"]', $form).attr('value', 'Reply');        
+    $('input[type="submit"]', $form).attr('value', 'Reply');
 
     jarnxmpp.Presence.getUserInfo(user_id, function (data) {
         $.gritter.add({
@@ -147,9 +147,9 @@ $(document).ready(function () {
         $field.attr('value', '');
         return false;
     });
-    
+
     $('.replyForm').find('> a').live('click', function (e) {
-        $(this).hide();        
+        $(this).hide();
         $(this).next('form.sendXMPPMessage').fadeIn('medium');
         e.preventDefault();
     });
