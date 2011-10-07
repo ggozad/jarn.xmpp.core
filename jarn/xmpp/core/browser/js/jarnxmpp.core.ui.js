@@ -68,7 +68,7 @@ $(document).bind('jarnxmpp.message', function (event) {
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     var i, isLeaf, $li;
     // Put some stupid animation and let Denys fix it.
-    $('#site-stream-link').css('color', 'darkorange');
+    $('#site-stream-link').addClass('newStreamMessage');
     // If we are showing a feed already, and the item should be in it,
     // inject it.
     if ($('.pubsubNode[data-node="people"]').length > 0 ||
