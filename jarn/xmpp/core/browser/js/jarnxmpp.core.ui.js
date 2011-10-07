@@ -39,7 +39,7 @@ $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from),
         jid = Strophe.getBareJidFromJid(event.from),
         $text_p = $('<p>').text(event.body),
-        $form = $('#online-users li#online-users-' + user_id + ' form');
+        $form = $('#online-users li#online-users-' + user_id + ' form').clone();
     $('input[type="submit"]', $form).attr('value', 'Reply');
     var $reply_p = $('<p>').append($form),
         text = $('<div>').append($text_p).append($reply_p).remove().html();
