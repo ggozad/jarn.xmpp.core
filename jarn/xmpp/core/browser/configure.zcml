@@ -46,7 +46,7 @@
   <browser:view
     for="*"
     name="pubsub-transform"
-    class=".pubsub.ContentTransform"
+    class=".transforms.ContentTransform"
     permission="zope2.View"
     />
 
@@ -74,7 +74,7 @@
   <browser:view
     for="*"
     name="magic-links"
-    class=".magic_links.MagicLinksView"
+    class=".transforms.MagicLinksView"
     permission="zope.Public"
     />
 

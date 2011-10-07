@@ -48,7 +48,7 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
 $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from),
         jid = Strophe.getBareJidFromJid(event.from),
-        $text_p = $('<p>').text(event.body),
+        $text_p = $('<p>').html(event.body),
         $form = $('#online-users li#online-users-' + user_id + ' .replyForm').clone(),
         $reply_p = $('<p>').append($form),
         text = $('<div>').append($text_p).append($reply_p).remove().html();
@@ -123,9 +123,11 @@ $(document).ready(function () {
     $('.sendXMPPMessage').live('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
-            recipient = $field.attr('data-recipient'),
-            message = $msg({to: recipient, type: 'chat'}).c('body').t(text);
-        jarnxmpp.connection.send(message);
+            recipient = $field.attr('data-recipient');
+        $.getJSON(portal_url+'/pubsub-transform?', {text: text}, function(data) {
+            message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
+            jarnxmpp.connection.send(message);
+        });
         e.preventDefault();
     });
 
