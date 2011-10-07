@@ -109,7 +109,9 @@ $.fn.magicLinks = function () {
         $link.hide();
         $link.children('.magic-favicon').hide();
         $.getJSON(portal_url + "/magic-links?url=" + $link.attr('href'), function (data) {
-            if (data===null) return;
+            if (data === null) {
+                return;
+            }
             $link.children('.magic-link-title').html(data.title);
             $link.children('.magic-link-descr').html(data.description);
             $link.children('.magic-favicon').attr('src', data.favicon_url);
@@ -120,12 +122,13 @@ $.fn.magicLinks = function () {
 };
 
 $(document).ready(function () {
-    
+
     $('.sendXMPPMessage').live('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
-            recipient = $field.attr('data-recipient');
-        $.getJSON(portal_url+'/pubsub-transform?', {text: text}, function(data) {
+            recipient = $field.attr('data-recipient'),
+            message;
+        $.getJSON(portal_url + '/pubsub-transform?', {text: text}, function (data) {
             message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
             jarnxmpp.connection.send(message);
         });
