@@ -109,6 +109,7 @@ $.fn.magicLinks = function () {
         $link.hide();
         $link.children('.magic-favicon').hide();
         $.getJSON(portal_url + "/magic-links?url=" + $link.attr('href'), function (data) {
+            if (data===null) return;
             $link.children('.magic-link-title').html(data.title);
             $link.children('.magic-link-descr').html(data.description);
             $link.children('.magic-favicon').attr('src', data.favicon_url);
