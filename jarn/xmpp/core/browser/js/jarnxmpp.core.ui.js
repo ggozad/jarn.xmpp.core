@@ -144,6 +144,12 @@ $(document).ready(function () {
         $field.attr('value', '');
         return false;
     });
+    
+    $('.replyForm').find('> a').live('click', function (e) {
+        $(this).hide();        
+        $(this).next('form.sendXMPPMessage').fadeIn('medium');
+        e.preventDefault();
+    });
 
     $('.pubsubNode').magicLinks();
 });
