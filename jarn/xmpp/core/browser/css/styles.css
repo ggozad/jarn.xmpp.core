@@ -160,9 +160,18 @@ form.sendXMPPMessage .formControls {
 }
 div.replyForm > a {
     display: none;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAMCAYAAAC0qUeeAAAAY0lEQVR42o2QMQrAMAhFO3Z07BE65ggdM/YIPULGjJ7Us8SAAUlK/MNDlId+PERkhq0uLCIqMyrzD0V5lcvLDJB2mz+lTjOKMt9KsdmDfIPGNejPXo5IPsaO0zLn3kcydUbfABn6buBjanBWAAAAAElFTkSuQmCC) 0% 50% no-repeat;
+    padding-left: 13px;
+    color: #ccc;
+}
+div.replyForm > a:hover {
+    color: #fff;
 }
 .gritter-item div.replyForm > a {
-    display: block;
+	display: block;
+	float: right;
 }
 .gritter-item div.replyForm > form {
     display: none;
