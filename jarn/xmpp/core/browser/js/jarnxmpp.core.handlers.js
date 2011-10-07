@@ -1,5 +1,34 @@
 jarnxmpp = {};
 
+jarnxmpp.Storage = {
+
+    storage: null,
+    init: function () {
+        try {
+            if ('sessionStorage' in window &&
+                window.sessionStorage !== null &&
+                'JSON' in window &&
+                window.JSON !== null) {
+                    jarnxmpp.Storage.storage = sessionStorage;
+                }
+        } catch(e) {}
+    },
+
+    get: function (key) {
+        if (key in sessionStorage) {
+            return JSON.parse(sessionStorage[key]);
+        }
+        return null;
+    },
+
+    set: function (key, value) {
+        sessionStorage[key] = JSON.stringify(value);
+    }
+
+};
+
+jarnxmpp.Storage.init();
+
 jarnxmpp.Messages = {
     messageReceived: function (message) {
         var body = $(message).children('body').text();
@@ -203,6 +232,7 @@ $(document).bind('jarnxmpp.connected', function () {
 });
 
 $(document).ready(function () {
+
     $.getJSON(portal_url + '/@@xmpp-loader', function (data) {
         jarnxmpp.BOSH_SERVICE = data.BOSH_SERVICE;
         jarnxmpp.pubsub_jid = data.pubsub_jid;
