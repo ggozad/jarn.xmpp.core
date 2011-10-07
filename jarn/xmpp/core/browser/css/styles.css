@@ -141,7 +141,7 @@ div.user-details-form { *zoom: 1; }
 #online-users li > a.expanded + div.user-details-form {
     display: block;
 }
-#online-users li form input[type='text'] {
+form.sendXMPPMessage input[type='text'] {
     float: left;
     width: 11em;
 }
@@ -152,11 +152,20 @@ a.user-personal-stream {
 	bottom: 0.5em;
 	left: 72px;
 }
-div.user-details-form form {
+form.sendXMPPMessage {
     margin-top: 1em;
 }
-div.user-details-form .formControls {
+form.sendXMPPMessage .formControls {
     margin: 0;
+}
+div.replyForm > a {
+    display: none;
+}
+.gritter-item div.replyForm > a {
+    display: block;
+}
+.gritter-item div.replyForm > form {
+    display: none;
 }
 
 /* PubSub feed */
