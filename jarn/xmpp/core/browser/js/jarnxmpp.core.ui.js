@@ -144,6 +144,7 @@ $(document).ready(function () {
     });
 
     $('a.user-details-toggle').live('click', function (e) {
+        $('a.user-details-toggle').removeClass('expanded');        
         $(this).toggleClass('expanded');
         $(this).next().find('input[name="message"]').focus();
         e.preventDefault();
