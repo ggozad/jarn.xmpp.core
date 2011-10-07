@@ -1,4 +1,6 @@
 import re
+import json
+from urlparse import urlparse
 
 from z3c.form import form
 from z3c.form import field
@@ -10,12 +12,12 @@ from zope.interface import Interface
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from jarn.xmpp.core import messageFactory as _
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.interfaces import IXMPPUsers
 from jarn.xmpp.core.interfaces import IPubSubStorage
-from jarn.xmpp.core.utils.pubsub import publishItemToNode
 
 
 class IPublishToNode(Interface):
@@ -23,7 +25,7 @@ class IPublishToNode(Interface):
     node = schema.ASCIILine(title=_(u'Node'),
                           required=True)
 
-    message = schema.Text(title=_(u'Message'),
+    message = schema.TextLine(title=_(u'Message'),
                           required=True)
 
 
@@ -33,10 +35,10 @@ class ISubscribeToNode(Interface):
                             required=True)
 
 
-class PubSubFeedView(BrowserView):
+class PubSubFeed(BrowserView):
 
     def __init__(self, context, request):
-        super(PubSubFeedView, self).__init__(context, request)
+        super(PubSubFeed, self).__init__(context, request)
         self.storage = getUtility(IPubSubStorage)
         self.node = request.get('node', None)
         if self.node in self.storage.leaf_nodes:
@@ -44,78 +46,103 @@ class PubSubFeedView(BrowserView):
         else:
             self.nodeType = 'collection'
         self.mt = getToolByName(self.context, 'portal_membership')
-        self.fullnames = dict()
 
     def fullname(self, author):
-        if author in self.fullnames:
-            return self.fullnames[author]
+        member = self.mt.getMemberById(author)
+        return member.getProperty('fullname', None)
+
+    def canPublish(self):
+        """
+        Checks whether the user can publish in this node. If it's a leaf
+        node check whether the user is in the publishers. If it's a collection
+        node check if there is a unique node for this collection where the
+        user has publisher rights.
+        """
+
+        if self.mt.isAnonymousUser() or self.node is None:
+            return
+        user_id = self.mt.getAuthenticatedMember().id
+        if self.nodeType == 'leaf':
+            if user_id in self.storage.publishers[self.node]:
+                return self.node
         else:
-            member = self.mt.getMemberById(author)
-            if member is None:
-                return ''
-            fullname = member.getProperty('fullname', None)
-            if fullname is None:
-                return ''
-            self.fullnames[author] = fullname
-            return fullname
+            publisher_nodes = [node
+                               for node in self.storage.collections[self.node]
+                               if user_id in self.storage.publishers[node]]
+            if len(publisher_nodes) == 1:
+                return publisher_nodes[0]
 
     def items(self, node=None, count=100):
         if node is None:
             node = self.node
         if node not in self.storage.node_items:
             return []
-        result = self.storage.node_items[node][:count]
-        for index, item in enumerate(result):
-            urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
-            if urls:
-                item['urls'] = urls
-            result[index] = item
-        return result
+        return self.storage.node_items[node][:count]
 
 
-class PublishToNodeForm(form.Form):
+class PubSubItem(BrowserView):
 
-    fields = field.Fields(IPublishToNode)
-    label = _("Post message")
-    description = _("The message posted will be visible to all users in your stream, as well as the global site's feed.")
-    ignoreContext = True
+    item_template = ViewPageTemplateFile("pubsub_item.pt")
 
-    def __init__(self, context, request, node=None):
-        super(PublishToNodeForm, self).__init__(context, request)
-        self.node = node or request.get('node', None)
+    def fullname(self, author):
+        member = self.mt.getMemberById(author)
+        return member.getProperty('fullname', None)
 
-    def updateWidgets(self):
-        form.Form.updateWidgets(self)
+    def isLeaf(self):
+        return self._isLeaf
 
-        if self.node:
-            # Hide fields which we don't want to bother the user with
-            self.widgets["node"].value = self.node
-            self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
+    def __call__(self, item=None, isLeaf=True):
+        if item is None:
+            item = {
+                'node': self.request.get('node'),
+                'item_id': self.request.get('item_id'),
+                'content': self.request.get('content'),
+                'author': self.request.get('author'),
+                'published': self.request.get('published'),
+                'updated': self.request.get('updated'),
+            }
+            if self.request.get('isLeaf') == 'false':
+                isLeaf = False
+        self.item = item
+        self.isLeaf = isLeaf
+        self.mt = getToolByName(self.context, 'portal_membership')
 
-    @button.buttonAndHandler(_('Post'), name='publish_message')
-    def publish(self, action):
-        data, errors = self.extractData()
-        if errors:
-            return
-        node = data['node']
-        message = data['message']
-        transforms = getToolByName(self.context, 'portal_transforms')
-        message = transforms.convert('web_intelligent_plain_text_to_html',
-                                     message).getData()
-        pm = getToolByName(self.context, 'portal_membership')
-        user = str(pm.getAuthenticatedMember())
-        message = message.decode('utf-8')
-        publishItemToNode(node, message, user)
-        return self.request.response.redirect(self.context.absolute_url())
+        # Calculate magic links
+        portal_url_netloc = urlparse(
+            getToolByName(self.context, 'portal_url')()).netloc
+        urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
+        self.item['urls'] = [url
+                             for url in urls
+                             if urlparse(url).netloc != portal_url_netloc]
+        return self.item_template()
 
 
-class SubscribeUnsubscribeForm(form.Form):
+class ContentTransform(BrowserView):
+
+    def __call__(self, text):
+        tr = getToolByName(self.context, 'portal_transforms')
+        text = tr.convert('web_intelligent_plain_text_to_html', text).getData()
+        user_pattern = re.compile(r'@[\w\.\-@]+')
+        user_refs = user_pattern.findall(text)
+        mt = getToolByName(self.context, 'portal_membership')
+        portal_url = getToolByName(self.context, 'portal_url')()
+        for user_ref in user_refs:
+            user_id = user_ref[1:]
+            if mt.getMemberById(user_id) is not None:
+                link = '<a href="%s/pubsub-feed?node=%s">%s</a>' % \
+                    (portal_url, user_id, user_ref)
+                text = user_pattern.sub(link, text)
+        result = {'text': text}
+        return json.dumps(result)
+
+
+class SubscribeUnsubscribeBase(form.Form):
 
     fields = field.Fields(ISubscribeToNode)
     ignoreContext = True
 
     def __init__(self, context, request, node=None, user_jid=None):
-        super(SubscribeUnsubscribeForm, self).__init__(context, request)
+        super(SubscribeUnsubscribeBase, self).__init__(context, request)
         self.node = node
         if user_jid is not None:
             self.user_jid = user_jid
@@ -133,7 +160,7 @@ class SubscribeUnsubscribeForm(form.Form):
             self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
 
 
-class SubscribeToNodeForm(SubscribeUnsubscribeForm):
+class SubscribeToNode(SubscribeUnsubscribeBase):
 
     label = _("Subscribe")
 
@@ -148,7 +175,7 @@ class SubscribeToNodeForm(SubscribeUnsubscribeForm):
         return d
 
 
-class UnsubscribeFromNodeForm(SubscribeUnsubscribeForm):
+class UnsubscribeFromNode(SubscribeUnsubscribeBase):
 
     label = _("Unsubscribe")
 

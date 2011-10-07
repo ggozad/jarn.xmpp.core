@@ -14,13 +14,13 @@
 <metal:main fill-slot="main"
   tal:define="node view/node;
               isLeaf python: view.nodeType=='leaf';
+              canPublish view/canPublish;
               feed_items view/items;
               limit_display limit_display|request/limit_display|nothing;
               limit_display python:limit_display and int(limit_display) or None;
               Batch python:modules['Products.CMFPlone'].Batch;
               b_start python:request.get('b_start', 0);
-              batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);          
-              member_tool context/portal_membership">
+              batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);          ">
 
     <div id="content-core">
       <div class="pubsubAvatar" tal:condition="isLeaf">
@@ -30,52 +30,36 @@
                tal:attributes="src portrait/absolute_url">
       </div>
 
-      <h1 class="documentFirstHeading" tal:content="python: view.fullname(node) or node">St. Peter</h1>
+      <h1 class="documentFirstHeading"
+          tal:condition="isLeaf"
+          tal:content="python: view.fullname(node) or node">
+              St. Peter
+      </h1>
+      <h1 class="documentFirstHeading"
+          tal:condition="not: isLeaf"
+          tal:content="python: node">
+              People
+      </h1>
+      <form tal:define="publishNode view/canPublish" tal:condition="publishNode" id="pubsub-form">
+        <form action="" method="post">
+            <input type="text" name="message" placeholder="Post to stream"
+                tal:attributes="data-node publishNode"/>
+            <div class="formControls">
+                <input type="submit" value="Post" name="postButton" class="allowMultiSubmit"/>
+            </div>
+        </form>
+      </form>
       <div class="visualClear"><!-- --></div>
-
-      <dl class="pubSubNode">
-        <tal:pubsubitems  tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
-                                      plone_view context/@@plone;"
-                          tal:repeat="obj batch">
-          <dd class="pubsubItem"
-              tal:define="oddrow repeat/obj/odd;
-                          author obj/author;
-                          fullname python: view.fullname(author) or author;
-                          content obj/content;
-                          updated obj/updated;
-                          links obj/urls | nothing"
-              tal:attributes="class python:oddrow and 'portletItem even' or 'portletItem odd'">
-            <div class="pubsubAvatar" tal:condition="not: isLeaf">
-               <img class="portrait"
-                    tal:define="portrait python:member_tool.getPersonalPortrait(author);"
-                    tal:condition="portrait"
-                    tal:attributes="src portrait/absolute_url"/>
-            </div>
-            <div class="pubsubItemContent">
-              <h4 tal:condition="not: isLeaf" tal:content="fullname">Saint Andre</h4>
-              <span tal:replace="structure content">xmpp ftw!</span>
-              <div class="pubsubItemDetails">
-                <span class="discreet" tal:content="python:toLocalizedTime(updated)">May 5</span>
-                <ul class="pubsub-item-links" tal:condition="links">
-                  <li tal:repeat="url links">
-                    <a tal:attributes="href url" class="magic-link external-link">
-                      <img src="" height="16" width="16" class="magic-favicon"/>
-                      <h6 class="magic-link-title">Title</h6>
-                      <span class="magic-link-descr">Description</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-            </div>
-            <div class="visualClear"><!-- --></div>
-          </dd>
-        <div class="visualClear"><!-- --></div>
+      <ul class="pubSubNode" tal:attributes="data-node node">
+        <tal:pubsubitems tal:repeat="obj batch">
+          <li class="pubsubItem">
+            <div tal:replace="structure python:context.unrestrictedTraverse('@@pubsub-item')(obj, isLeaf=isLeaf)"/>
+          </li>
         </tal:pubsubitems>
-      </dl>
+      </ul>
+      <div class="visualClear"><!-- --></div>
       <div metal:use-macro="context/batch_macros/macros/navigation" />
     </div>
-
 </metal:main>
 </body>
 </html>

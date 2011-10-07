@@ -13,32 +13,25 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
              return;
         existing_element.attr('class', status);
     } else {
-        var dd = $('<dd>')
-            .attr('class', status)
-            .attr('id', 'online-users-'+user_id);
-        $('#online-users').append(dd);
-        jarnxmpp.Presence.getUserInfo(user_id, function(data) {
-            if (data===null) return;
-            var portrait = $('<div>').attr('class', 'avatar').append($('<img/>')
-                .attr('title', data.fullname)
-                .attr('src', data.portrait_url)
-                .attr('class','portrait'));
-            var actions = $('<div>').attr('class', 'online-user-actions');
-            var personalFeed = $('<a>')
-                .attr('href', '@@pubsub-feed?node=' + user_id)
-                .text(data.fullname);
-            var sendMessage = $('<a>')
-                .attr('href', 'sendXMPPMessage?message-recipient=' + barejid);
-            sendMessage.append($('<img>')
-                .attr('src', '++resource++jarn.xmpp.core.images/chat_icon.png')
-            );
-            sendMessage.prepOverlay({
+        $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function(user_details) {
+            user_details = $(user_details);
+            user_details.find('.send-message').prepOverlay({
                 subtype: 'ajax',
             });
-            dd.append(portrait);
-            actions.append($('<div>').append(personalFeed));
-            actions.append($('<div>').append(sendMessage));
-            dd.append(actions);
+            // Put users in alphabetical order. This is stupidly done but works.
+            var name = $('a.user-details-toggle', user_details).text().trim();
+            var existing_users = $('#online-users > li');
+            var added = false;
+            $.each(existing_users, function (index, li) {
+                var existing_name = $('a.user-details-toggle', li).text().trim();
+                if (existing_name > name) {
+                    user_details.insertBefore($(li));
+                    added = true;
+                    return false;
+                }
+            });
+            if (!added)
+                $('#online-users').append(user_details);
         });
     }
     var counter = 0;
@@ -52,38 +45,48 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
 $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from);
     var jid = Strophe.getBareJidFromJid(event.from);
-    var text_p = $('<p>').text(event.body);
-    var reply_p = $('<p>');
-    var reply_link = $('<a>')
-        .attr('class', 'reply-link')
-        .attr('href', 'sendXMPPMessage?message-recipient=' + jid)
-        .text('Reply');
-    reply_p.append(reply_link);
-    var text = $('<div>').append(text_p).append(reply_p).remove().html();
+    var $text_p = $('<p>').text(event.body);
+    var $form = $('#online-users li#online-users-' + user_id + ' form');
+    $('input[type="submit"]', $form).attr('value', 'Reply');
+    var $reply_p = $('<p>').append($form);
+    var text = $('<div>').append($text_p).append($reply_p).remove().html();
+
     jarnxmpp.Presence.getUserInfo(user_id, function(data) {
         $.gritter.add({
             title: data.fullname,
             text: text,
             image: data.portrait_url,
             sticky: true,
-            after_open: function (e) {
-                e.find('.reply-link').prepOverlay({
-                    subtype: 'ajax'
-                });
-            }
         });
     });
 });
 
 // Pub-Sub
-$(document).bind('jarnxmpp.nodePublished', function (event) {
-    jarnxmpp.Presence.getUserInfo(event.author, function(data) {
-        $.gritter.add({
-            title: data.fullname,
-            text: event.content,
-            image: data.portrait_url
+$(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
+    // Put some stupid animation and let Denys fix it.
+    for (var i=0; i<10; i++) {
+        $('#site-stream-link').animate({opacity: 0.5}, 100);
+        $('#site-stream-link').animate({opacity: 1.0}, 100);
+    }
+    // If we are showing a feed already, and the item should be in it,
+    // inject it.
+    if ($('.pubSubNode[data-node="people"]').length > 0 ||
+        $('.pubSubNode[data-node=event.node]').length > 0) {
+        var isLeaf = ($('.pubSubNode[data-node="people"]').length > 0) ? false : true;
+        $.get(portal_url + '/@@pubsub-item?',
+              {node: event.node,
+               item_id: event.item_id,
+               content: event.content,
+               author: event.author,
+               published: event.published,
+               updated: event.updated,
+               isLeaf: isLeaf}, function(data) {
+            var $li = $('<li>').addClass('pubsubItem').css('display','none').html(data);
+            $('.pubSubNode').prepend($li);
+            $(".pubSubNode li:first");
+            $(".pubSubNode li:first").slideDown("slow");
         });
-    });
+    }
 });
 
 // Logging
@@ -97,24 +100,33 @@ $(document).bind('jarnxmpp.dataSent', function (ev) {
 });
 
 $(document).ready(function () {
-
-    $('#sendXMPPMessage').live('submit', function () {
-        var text = $(this).find('textarea[name="message"]').attr('value');
-        var recipient = $(this).find('input[name="message-recipient"]').attr('value');
-        var message = $msg({to: recipient, type: 'chat'})
-            .c('body').t(text);
+    
+    $('.sendXMPPMessage').live('submit', function (e) {
+        var $field = $('input[name="message"]', this),
+            text = $field.attr('value'),
+            recipient = $field.attr('data-recipient'),
+            message = $msg({to: recipient, type: 'chat'}).c('body').t(text);
         jarnxmpp.connection.send(message);
-        $(this).parents('.overlay').data('overlay').close();
-        return false;
+        e.preventDefault();
     });
 
-    $('#toggle-online-users').bind('click', function (el) {
-        $('#online-users').toggleClass('deactivated');
-        return false;
+    $('a#toggle-online-users').bind('click', function (e) {
+        $("ul#online-users").toggleClass('activated');
+        e.preventDefault();
     });
 
-    $('.pubsub-post').prepOverlay({
-        subtype: 'ajax'
+    $('a.user-details-toggle').live( 'click', function (e) {
+        $(this).toggleClass('expanded');
+        e.preventDefault();
+    });
+
+    $('#pubsub-form').bind('submit', function (e) {
+        var $field = $('input[name="message"]', this),
+            text = $field.attr('value'),
+            node = $field.attr('data-node');
+        jarnxmpp.PubSub.publishToPersonalNode(node, text);
+        $field.attr('value', '');
+        return false;
     });
 
     $('a.magic-link').each(function () {
@@ -129,5 +141,4 @@ $(document).ready(function () {
             $(link).show();
         });
     }); 
-
 });
