@@ -171,6 +171,7 @@ $(document).ready(function () {
     $('.replyForm').find('> a').live('click', function (e) {
         $(this).hide();
         $(this).next('form.sendXMPPMessage').fadeIn('medium');
+        $(this).next('form.sendXMPPMessage').find('input[name="message"]').focus();        
         e.preventDefault();
     });
 
