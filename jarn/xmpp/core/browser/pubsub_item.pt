@@ -16,20 +16,24 @@
           tal:attributes="src portrait/absolute_url"/>
   </div>
   <div class="pubsubItemContent">
-    <h4 tal:condition="not: isLeaf" tal:content="fullname">Saint Andre</h4>
-    <span tal:replace="structure content">xmpp ftw!</span>
-    <div class="pubsubItemDetails">
-      <span class="discreet" tal:content="python:toLocalizedTime(updated)">May 5</span>
-      <ul class="pubsubItemLinks" tal:condition="links">
+    <div>
+        <b class="pubsubItemAuthor" tal:condition="not: isLeaf" tal:content="fullname">Jon Doe</b>
+        <span class="discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
+              tal:attributes="data-time updated">May 5</span>
+    </div>
+    <div class="pubsubItemMsg" tal:content="structure content">
+        Content goes here.
+    </div>
+    <div class="pubsubItemDetails" tal:condition="links">
+      <ul class="pubsubItemLinks">
         <li tal:repeat="url links">
           <a tal:attributes="href url" class="magic-link external-link">
             <img src="" height="16" width="16" class="magic-favicon"/>
-            <h6 class="magic-link-title">Title</h6>
+            <h4 class="magic-link-title">Title</h4>
             <span class="magic-link-descr">Description</span>
           </a>
         </li>
       </ul>
     </div>
-  </div>
-  <div class="visualClear"><!-- --></div>
+  </div>  
 </tal:pubsub_item>

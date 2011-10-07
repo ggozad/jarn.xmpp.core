@@ -33,7 +33,7 @@
       <h1 class="documentFirstHeading"
           tal:condition="isLeaf"
           tal:content="python: view.fullname(node) or node">
-              St. Peter
+              Jon Doe
       </h1>
       <h1 class="documentFirstHeading"
           tal:condition="not: isLeaf"

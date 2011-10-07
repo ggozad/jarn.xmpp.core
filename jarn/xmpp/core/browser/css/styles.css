@@ -237,36 +237,69 @@ div.replyForm > a:hover {
 	float:left;
 	display: block;
 	margin: 0 20px 0 0;
-	height: 100px;
-	width:75px;
+	height: 75px;
+	width: 75px;
 	position: relative;
 	overflow: hidden;
 	text-align: center;
 	vertical-align: middle;
 }
 .pubsubAvatar img {
-
+	height: 75px;
 }
 .pubsubItemContent {
-	float: left;
+	border: 1px solid #ddd;
+    -webkit-border-radius: 0.2em;
+    -moz-border-radius: 0.2em;
+    border-radius: 0.2em;
+    padding: 12px;
+	background-color: #f5f5f5;	
+	margin-left: 95px;
 }
-#content ul.pubsubItemLinks {
-	margin: 1em 0 0 0;
-	margin-left: 0px;
-	padding: 0em;
+.pubsubItemContent b.pubsubItemAuthor { 
+	margin-right: 0.5em; 
+}
+.pubsubItemMsg {
+    font-size: 1.2em;
+    margin-top: 1em;
+    color: #444;
+}
+ul.pubsubNode {
 	max-width: 671px;
 }
-li.pubsubItem {
+#content li.pubsubItem {
 	list-style-type: none;
+	clear: both;
+	margin: 0 0 1em;
 }
+#content li.pubsubItem:before, #content li.pubsubItem:after {
+	content: ""; display: table;    
+}
+#content li.pubsubItem:after { clear: both; }
+#content li.pubsubItem { *zoom: 1; }
 .pubsubItemLinks li {
 	list-style-type: none;
 }
 .pubsubItemLinks li img {
 	display: block;
 	float: left;
-	padding-right:0.25em;
+	padding-right:10px;
 	border: none;
+}
+#content ul.pubsubItemLinks {
+    border-top: 1px solid #ddd;
+    margin: 1.5em 0 0;
+    padding: 0.5em 0 0;	
+}
+.pubsubItemLinks {
+}
+.pubsubItemLinks li h4 {
+    font-size: 1em;
+}
+.magic-link-descr {
+	display: block;
+    padding-left: 26px;
+    font-size: 0.9em;
 }
 
 /* Logging */
