@@ -1,27 +1,20 @@
-/*
-    Event handlers
-*/
-
 // Presence handler
 
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
-    var user_id = Strophe.getNodeFromJid(jid);
-    var barejid = Strophe.getBareJidFromJid(jid);
-    var existing_element = $('#online-users-'+user_id);
-    if (existing_element.length) {
+    var user_id = Strophe.getNodeFromJid(jid),
+        barejid = Strophe.getBareJidFromJid(jid),
+        existing_user_element = $('#online-users-'+user_id);
+    if (existing_user_element.length) {
         if (status==='offline' && jarnxmpp.Presence.online.hasOwnProperty(user_id))
              return;
-        existing_element.attr('class', status);
+        existing_user_element.attr('class', status);
     } else {
         $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function(user_details) {
             user_details = $(user_details);
-            user_details.find('.send-message').prepOverlay({
-                subtype: 'ajax',
-            });
             // Put users in alphabetical order. This is stupidly done but works.
-            var name = $('a.user-details-toggle', user_details).text().trim();
-            var existing_users = $('#online-users > li');
-            var added = false;
+            var name = $('a.user-details-toggle', user_details).text().trim(),
+                existing_users = $('#online-users > li'),
+                added = false;
             $.each(existing_users, function (index, li) {
                 var existing_name = $('a.user-details-toggle', li).text().trim();
                 if (existing_name > name) {
@@ -35,21 +28,21 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         });
     }
     var counter = 0;
-    for (var key in jarnxmpp.Presence.online) {
-        if (jarnxmpp.Presence.online.hasOwnProperty(key))
+    for (var user in jarnxmpp.Presence.online) {
+        if (jarnxmpp.Presence.online.hasOwnProperty(user))
             counter++;
     }
     $('#online-count').text(counter);
 });
 
 $(document).bind('jarnxmpp.message', function (event) {
-    var user_id = Strophe.getNodeFromJid(event.from);
-    var jid = Strophe.getBareJidFromJid(event.from);
-    var $text_p = $('<p>').text(event.body);
-    var $form = $('#online-users li#online-users-' + user_id + ' form');
+    var user_id = Strophe.getNodeFromJid(event.from),
+        jid = Strophe.getBareJidFromJid(event.from),
+        $text_p = $('<p>').text(event.body),
+        $form = $('#online-users li#online-users-' + user_id + ' form');
     $('input[type="submit"]', $form).attr('value', 'Reply');
-    var $reply_p = $('<p>').append($form);
-    var text = $('<div>').append($text_p).append($reply_p).remove().html();
+    var $reply_p = $('<p>').append($form),
+        text = $('<div>').append($text_p).append($reply_p).remove().html();
 
     jarnxmpp.Presence.getUserInfo(user_id, function(data) {
         $.gritter.add({
@@ -83,7 +76,6 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                isLeaf: isLeaf}, function(data) {
             var $li = $('<li>').addClass('pubsubItem').css('display','none').html(data);
             $('.pubSubNode').prepend($li);
-            $(".pubSubNode li:first");
             $(".pubSubNode li:first").slideDown("slow");
         });
     }
@@ -130,15 +122,15 @@ $(document).ready(function () {
     });
 
     $('a.magic-link').each(function () {
-        var link = this;
-        $(link).hide();
-        $(link).children('.magic-favicon').hide();
-        $.getJSON(portal_url+"/magic-links?url="+$(link).attr('href'), function(data) {
-            $(link).children('.magic-link-title').html(data.title);
-            $(link).children('.magic-link-descr').html(data.description);
-            $(link).children('.magic-favicon').attr('src', data.favicon_url);
-            $(link).children('.magic-favicon').show();
-            $(link).show();
+        var $link = $(this);
+        $link.hide();
+        $link.children('.magic-favicon').hide();
+        $.getJSON(portal_url+"/magic-links?url="+$link.attr('href'), function(data) {
+            $link.children('.magic-link-title').html(data.title);
+            $link.children('.magic-link-descr').html(data.description);
+            $link.children('.magic-favicon').attr('src', data.favicon_url);
+            $link.children('.magic-favicon').show();
+            $link.show();
         });
     }); 
 });
