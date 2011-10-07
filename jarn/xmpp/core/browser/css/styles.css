@@ -53,7 +53,7 @@ a#toggle-online-users:after {
 	max-width: 48px;
 	display: block;
 	float:left;
-	margin: 0.5em 12px;
+	margin: 0 12px 0 0;
 }
 #online-users li:before,
 #online-users li:after { content: ""; display: table; }
@@ -131,6 +131,7 @@ div.user-details-form {
     background: #efefef;
     position: relative;
     display: none;
+    padding: 0.5em 12px;
 }
 div.user-details-form:before,
 div.user-details-form:after { content: ""; display: table; }
@@ -142,7 +143,7 @@ div.user-details-form { *zoom: 1; }
 }
 #online-users li form input[type='text'] {
     float: left;
-    width: 12em;
+    width: 11em;
 }
 a.user-personal-stream {
     background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAgMAAABinRfyAAAACVBMVEXZ2dlnZ2f///+EYkgUAAAAA3RSTlP//wDXyg1BAAAAHElEQVQIW2NcxcDAwBj2H4UAi2GTYPqHQwKuAwDGAREKJBAUeAAAAABJRU5ErkJggg==) 0% 50% no-repeat;
@@ -150,6 +151,12 @@ a.user-personal-stream {
 	position: absolute;
 	bottom: 0.5em;
 	left: 72px;
+}
+div.user-details-form form {
+    margin-top: 1em;
+}
+div.user-details-form .formControls {
+    margin: 0;
 }
 
 /* PubSub feed */
