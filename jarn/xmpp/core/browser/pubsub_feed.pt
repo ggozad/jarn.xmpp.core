@@ -27,7 +27,7 @@
           <img class="portrait"
                tal:define="portrait python:context.portal_membership.getPersonalPortrait(view.node);"
                tal:condition="portrait"
-               tal:attributes="src portrait/absolute_url">
+               tal:attributes="src portrait/absolute_url" />
       </div>
 
       <h1 class="documentFirstHeading"
@@ -40,16 +40,19 @@
           tal:content="python: node">
               People
       </h1>
-      <form tal:define="publishNode view/canPublish" tal:condition="publishNode" id="pubsub-form">
-        <form action="" method="post">
-            <input type="text" name="message" placeholder="Post to stream"
-                tal:attributes="data-node publishNode"/>
-            <div class="formControls">
-                <input type="submit" value="Post" name="postButton" class="allowMultiSubmit"/>
-            </div>
-        </form>
-      </form>
-      <div class="visualClear"><!-- --></div>
+
+      <div class="postItemWrapper"
+            tal:define="publishNode view/canPublish"
+           tal:condition="publishNode">
+          <form action="" method="post" id="pubsub-form">
+              <input type="text" name="message" placeholder="Post to stream"
+                  tal:attributes="data-node publishNode"/>
+              <div class="formControls">
+                  <input type="submit" value="Post" name="postButton" class="allowMultiSubmit"/>
+              </div>
+          </form>
+      </div>
+
       <ul class="pubsubNode" tal:attributes="data-node node">
         <tal:pubsubitems tal:repeat="obj batch">
           <li class="pubsubItem">
