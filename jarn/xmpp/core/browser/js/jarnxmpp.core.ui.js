@@ -133,7 +133,13 @@ $(document).ready(function () {
     });
 
     $('a#toggle-online-users').bind('click', function (e) {
-        $("ul#online-users").toggleClass('activated');
+        if ($("ul#online-users").hasClass('activated')) {
+            $("ul#online-users").removeClass('activated');
+            $('a.user-details-toggle').removeClass('expanded');
+        }
+        else {
+            $("ul#online-users").addClass('activated');
+        }
         e.preventDefault();
     });
 
