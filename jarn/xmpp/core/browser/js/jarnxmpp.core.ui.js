@@ -68,10 +68,7 @@ $(document).bind('jarnxmpp.message', function (event) {
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     var i, isLeaf, $li;
     // Put some stupid animation and let Denys fix it.
-    for (i = 0; i < 10; i += 1) {
-        $('#site-stream-link').animate({opacity: 0.5}, 100);
-        $('#site-stream-link').animate({opacity: 1.0}, 100);
-    }
+    $('#site-stream-link').addClass('newStreamMessage');
     // If we are showing a feed already, and the item should be in it,
     // inject it.
     if ($('.pubsubNode[data-node="people"]').length > 0 ||
@@ -131,12 +128,13 @@ $.fn.magicLinks = function () {
 };
 
 $(document).ready(function () {
-    
+
     $('.sendXMPPMessage').live('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
-            recipient = $field.attr('data-recipient');
-        $.getJSON(portal_url+'/pubsub-transform?', {text: text}, function(data) {
+            recipient = $field.attr('data-recipient'),
+            message;
+        $.getJSON(portal_url + '/pubsub-transform?', {text: text}, function (data) {
             message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
             jarnxmpp.connection.send(message);
         });
@@ -144,12 +142,19 @@ $(document).ready(function () {
     });
 
     $('a#toggle-online-users').bind('click', function (e) {
-        $("ul#online-users").toggleClass('activated');
+        if ($("ul#online-users").hasClass('activated')) {
+            $("ul#online-users").removeClass('activated');
+            $('a.user-details-toggle').removeClass('expanded');
+        }
+        else {
+            $("ul#online-users").addClass('activated');
+        }
         e.preventDefault();
     });
 
     $('a.user-details-toggle').live('click', function (e) {
         $(this).toggleClass('expanded');
+        $(this).next().find('input[name="message"]').focus();
         e.preventDefault();
     });
 

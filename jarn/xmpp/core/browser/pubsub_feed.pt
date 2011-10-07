@@ -23,23 +23,19 @@
               batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);          ">
 
     <div id="content-core">
-      <div class="pubsubAvatar" tal:condition="isLeaf">
-          <img class="portrait"
-               tal:define="portrait python:context.portal_membership.getPersonalPortrait(view.node);"
-               tal:condition="portrait"
-               tal:attributes="src portrait/absolute_url" />
-      </div>
 
       <h1 class="documentFirstHeading"
           tal:condition="isLeaf"
           tal:content="python: view.fullname(node) or node">
               Jon Doe
       </h1>
-      <h1 class="documentFirstHeading"
-          tal:condition="not: isLeaf"
-          tal:content="python: node">
-              People
-      </h1>
+      
+      <div class="pubsubAvatar" tal:condition="isLeaf">
+          <img class="portrait"
+               tal:define="portrait python:context.portal_membership.getPersonalPortrait(view.node);"
+               tal:condition="portrait"
+               tal:attributes="src portrait/absolute_url" />
+      </div>      
 
       <div class="postItemWrapper"
             tal:define="publishNode view/canPublish"

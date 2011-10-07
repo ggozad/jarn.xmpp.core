@@ -8,7 +8,8 @@
             fullname python: view.fullname(author) or author;
             content item/content;
             updated item/updated;
-            links item/urls | nothing">
+            links item/urls | nothing;
+            portal_url context/portal_url">
   <div class="pubsubAvatar" tal:condition="not: isLeaf">
      <img class="portrait"
           tal:define="portrait python:member_tool.getPersonalPortrait(author);"
@@ -17,7 +18,12 @@
   </div>
   <div class="pubsubItemContent">
     <div>
-        <b class="pubsubItemAuthor" tal:condition="not: isLeaf" tal:content="fullname">Jon Doe</b>
+        <a href="#" title=""
+           tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
+                           title string:$fullname"><b
+           class="pubsubItemAuthor" tal:condition="not: isLeaf" tal:content="fullname">
+           Jon Doe
+        </b></a>
         <span class="discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
               tal:attributes="data-time updated">May 5</span>
     </div>
