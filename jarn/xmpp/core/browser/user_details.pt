@@ -14,14 +14,17 @@
                <img tal:attributes="alt string:Personal stream of $fullname;
                                     src view/portrait_url" />
             </a>
-            <form class="sendXMPPMessage" action="" method="post">
-                <input type="text" name="message" placeholder=""
-                       tal:attributes="placeholder string:Personal message;
-                                       data-recipient view/jid"/>
-                <div class="formControls">
-                    <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"/>
-                </div>
-            </form>
+            <div class="replyForm">
+                <a href="#" i18n:translate="">Reply</a>
+                <form class="sendXMPPMessage" action="" method="post">
+                    <input type="text" name="message" placeholder=""
+                           tal:attributes="placeholder string:Personal message;
+                                           data-recipient view/jid"/>
+                    <div class="formControls">
+                        <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"/>
+                    </div>
+                </form>
+            </div>
             <a href="#" title="" class="user-personal-stream"
                tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
                                title string:$fullname">
