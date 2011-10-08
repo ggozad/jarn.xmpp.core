@@ -55,12 +55,14 @@ $(document).bind('jarnxmpp.message', function (event) {
     $('input[type="submit"]', $form).attr('value', 'Reply');
 
     jarnxmpp.Presence.getUserInfo(user_id, function (data) {
-        $.gritter.add({
+        var gritter_id = $.gritter.add({
             title: data.fullname,
             text: text,
             image: data.portrait_url,
             sticky: true
         });
+        // Let the form know the gritter id so that we can easily close it later.
+        $('#gritter-item-' + gritter_id + ' form').attr('data-gritter-id', gritter_id);
     });
 });
 
@@ -138,6 +140,9 @@ $(document).ready(function () {
                    .parent()
                    .children('.user-details-toggle')
                    .removeClass('expanded');
+            var gritter_id = $(this).attr('data-gritter-id');
+            if (typeof(gritter_id) !== 'undefined')
+                $.gritter.remove(gritter_id);
             $("ul#online-users").removeClass('activated');
             $field.val('');
         $.getJSON(portal_url + '/content-transform?', {text: text}, function (data) {
