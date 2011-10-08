@@ -1,5 +1,5 @@
-import re
 import json
+import re
 import urllib2
 from urlparse import urlparse
 from BeautifulSoup import BeautifulSoup
@@ -12,11 +12,11 @@ from Products.Five.browser import BrowserView
 
 @ram.cache(lambda method, url: url)
 def getURLData(url):
-    print "START %s"%url
     try:
-        doc = urllib2.urlopen(url).read()
+        doc = urllib2.urlopen(url, timeout=5).read()
     except urllib2.URLError:
         return None
+
     doc = BeautifulSoup(urllib2.urlopen(url).read())
     title = u''
     description = u''
@@ -41,7 +41,6 @@ def getURLData(url):
     else:
         host_url = urlparse(url)
         favicon_url = host_url[0] + u'://' + host_url[1] + u'/favicon.ico'
-    print "END %s"%url
 
     return json.dumps({
         'title': title,
