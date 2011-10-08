@@ -45,7 +45,7 @@
 
   <browser:view
     for="*"
-    name="pubsub-transform"
+    name="content-transform"
     class=".transforms.ContentTransform"
     permission="zope2.View"
     />

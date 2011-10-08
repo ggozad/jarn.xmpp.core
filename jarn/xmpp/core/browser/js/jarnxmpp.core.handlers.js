@@ -161,7 +161,7 @@ jarnxmpp.PubSub = {
 
     publishToPersonalNode: function(node, text, callback) {
         if (text === '' || node === '') return;
-        $.getJSON(portal_url+'/pubsub-transform?', {text: text}, function(data) {
+        $.getJSON(portal_url+'/content-transform?', {text: text}, function(data) {
             var pubid = jarnxmpp.connection.getUniqueId("publishnode"),
                 publish_elem = Strophe.xmlElement("publish", [["node",node],["jid",jarnxmpp.jid]]),
                 item = Strophe.xmlElement("item",[]),
