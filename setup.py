@@ -28,7 +28,6 @@ setup(name='jarn.xmpp.core',
           'BeautifulSoup',
           'plone.app.registry',
           'plone.app.z3cform',
-          'pas.plugins.userdeletedevent',
           'jarn.xmpp.twisted',
       ],
       extras_require = {

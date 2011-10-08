@@ -2,7 +2,6 @@ from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import applyProfile
 from plone.app.testing import IntegrationTesting, FunctionalTesting
 from plone.registry.interfaces import IRegistry
-from plone.testing import z2
 from twisted.words.protocols.jabber.jid import JID
 from zope.component import getUtility
 from zope.configuration import xmlconfig
@@ -24,13 +23,9 @@ class XMPPCoreNoReactorFixture(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML
         import jarn.xmpp.core
-        import pas.plugins.userdeletedevent
 
         xmlconfig.file('configure.zcml', jarn.xmpp.core,
                        context=configurationContext)
-        xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent,
-                       context=configurationContext)
-        z2.installProduct(app, 'pas.plugins.userdeletedevent')
 
     def setUpPloneSite(self, portal):
         # Install into Plone site using portal_setup
@@ -40,10 +35,6 @@ class XMPPCoreNoReactorFixture(PloneSandboxLayer):
         registry['jarn.xmpp.pubsubJID'] = 'pubsub.localhost'
         registry['jarn.xmpp.conferenceJID'] = 'conference.localhost'
         registry['jarn.xmpp.xmppDomain'] = 'localhost'
-
-    def tearDownZope(self, app):
-        # Uninstall product
-        z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
 
 
 XMPPCORE_NO_REACTOR_FIXTURE = XMPPCoreNoReactorFixture()
@@ -67,7 +58,6 @@ class XMPPCoreFixture(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML
         import jarn.xmpp.core
-        import pas.plugins.userdeletedevent
 
         # Normally on a client disconnect we unregister the AdminClient
         # utility. We can't do that here as we need to disconnect the
@@ -77,9 +67,6 @@ class XMPPCoreFixture(PloneSandboxLayer):
 
         xmlconfig.file('configure.zcml', jarn.xmpp.core,
                        context=configurationContext)
-        xmlconfig.file('configure.zcml', pas.plugins.userdeletedevent,
-                       context=configurationContext)
-        z2.installProduct(app, 'pas.plugins.userdeletedevent')
 
     def setUpPloneSite(self, portal):
         # Install into Plone site using portal_setup
@@ -92,10 +79,6 @@ class XMPPCoreFixture(PloneSandboxLayer):
         setupAdminClient(None, None)
         client = getUtility(IAdminClient)
         wait_for_client_state(client, 'authenticated')
-
-    def tearDownZope(self, app):
-        # Uninstall product
-        z2.uninstallProduct(app, 'pas.plugins.userdeletedevent')
 
     def testSetUp(self):
         client = getUtility(IAdminClient)
