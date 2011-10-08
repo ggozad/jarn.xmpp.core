@@ -131,10 +131,16 @@ $(document).ready(function () {
 
     $('.sendXMPPMessage').live('submit', function (e) {
         var $field = $('input[name="message"]', this),
-            text = $field.attr('value'),
+            text = $field.val(),
             recipient = $field.attr('data-recipient'),
             message;
-        $.getJSON(portal_url + '/pubsub-transform?', {text: text}, function (data) {
+            $(this).parents('.user-details-form')
+                   .parent()
+                   .children('.user-details-toggle')
+                   .removeClass('expanded');
+            $("ul#online-users").removeClass('activated');
+            $field.val('');
+        $.getJSON(portal_url + '/content-transform?', {text: text}, function (data) {
             message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
             jarnxmpp.connection.send(message);
         });
