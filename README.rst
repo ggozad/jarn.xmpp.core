@@ -5,8 +5,8 @@ Introduction
 ``jarn.xmpp.core`` is a Plone add-on providing the following functionality based on XMPP services:
 
 * Integration of plone user accounts with XMPP accounts and authentication.
-* A microblogging environment based on XMPP PubSub.
-* Basic messaging.
+* A microblogging environment similar to twitter/yammer based on XMPP PubSub.
+* Messaging.
 
 It is part of a suite of packages aiming to provide XMPP services to Plone. The other two packages are
 
@@ -200,7 +200,7 @@ Usage
 
 * Add a few users.
 * Login as one of them, and in a different browser as some other. Use the frontend to access the site, if you used the settings above this should be ``http://localhost:8080``.
-* All actions are performed through the viewlet on the top right: ``Online users`` will display the users currently logged in. Clicking it will give you the list of users. You can message them directly by clicking the chat icon next to them or look at their personal feed by clicking their name.
+* All actions are performed through the viewlet on the top right: ``Online users`` will display the users currently logged in. Clicking it will give you the list of users. You can message them directly or look at their personal feed.
 * Try posting an entry to your feed. Links will be transformed automatically. As soon as you submit other logged-in users will receive a notification in real-time.
 * You can see all posts by clicking on ``Site feed`` on the viewlet.
 
@@ -228,6 +228,7 @@ Some of the included tests are functional tests that require a XMPP server runni
 Credits
 =======
 
+* The UI was designed and implemented by Denys Mishunov.
 * Most of this work was done using the 10% time available to `Jarn AS`_ employees for the development of open-source projects.
 
 .. _XEP-0071: http://xmpp.org/extensions/xep-0071.html

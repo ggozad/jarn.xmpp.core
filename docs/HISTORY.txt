@@ -6,18 +6,21 @@ Changelog
 0.2b1 - Unreleased
 ------------------
 
-- Redesign UI for messaging, presence, pubsub feeds.
+- Design and implement awesome UI for messaging, presence, pubsub feeds.
   [mishunov, ggozad]
-
-- Remove multi-user chat. It will go in again properly when the use-cases have
-  been defined.
-  [ggozad]
 
 - Replace python views/utilities for publishing to nodes by js.
   [ggozad]
 
 - Provide a pubsub item view and load them asynchronously in the pubsub feed
   view.
+  [ggozad]
+
+- Start using sessionStorage in browsers where this is supported.
+  [ggozad]
+
+- Remove multi-user chat. It will go in again properly when the use-cases have
+  been defined.
   [ggozad]
 
 ------------------
