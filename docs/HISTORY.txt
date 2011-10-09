@@ -3,7 +3,7 @@ Changelog
 =========
 
 ------------------
-0.2b1 - Unreleased
+0.2b1 - 2011-10-09
 ------------------
 
 - Design and implement awesome UI for messaging, presence, pubsub feeds.
