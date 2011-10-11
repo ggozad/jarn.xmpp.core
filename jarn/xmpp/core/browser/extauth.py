@@ -1,7 +1,10 @@
 import binascii
+from urllib import unquote
+
+from zope.publisher.browser import BrowserView
+
 from Products.CMFCore.utils import getToolByName
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
-from zope.publisher.browser import BrowserView
 
 
 class ExtAuthView(BrowserView):
@@ -13,6 +16,7 @@ class ExtAuthView(BrowserView):
             return True
 
         # Maybe it's the auth cookie value?
+        password = unquote(password)
         creds = {}
         try:
             creds['cookie'] = binascii.a2b_base64(password)
