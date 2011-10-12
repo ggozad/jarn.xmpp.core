@@ -1,0 +1,7 @@
+* Auto-complete for the nick names in the stream.
+* Optional sound-notification when you get a private message — not everybody
+  is sitting and staring at the same site all the time.
+* No batching. The stream should show 20 last messages and load more when a
+  user scrolls to the bottom of it.
+* Personal stream and the Site Stream should be on the same view, no reload
+  should be required. It's just the matter of switching (tabs, maybe?).
