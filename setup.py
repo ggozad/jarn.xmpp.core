@@ -40,5 +40,7 @@ setup(name='jarn.xmpp.core',
 
       [z3c.autoinclude.plugin]
       target = plone
+      [console_scripts]
+      ext_auth = jarn.xmpp.core.scripts.ext_auth:run
       """,
       )
