@@ -6,9 +6,7 @@ jarnxmpp:false, $msg:false, Strophe:false */
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var user_id = Strophe.getNodeFromJid(jid),
         barejid = Strophe.getBareJidFromJid(jid),
-        existing_user_element = $('#online-users-' + user_id),
-        counter = 0,
-        user;
+        existing_user_element = $('#online-users-' + user_id);
     if (existing_user_element.length) {
         if (status === 'offline' && jarnxmpp.Presence.online.hasOwnProperty(user_id)) {
             return;
@@ -40,12 +38,7 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         if (jarnxmpp.Storage.storage !== null)
             jarnxmpp.Presence.getUserInfo(user_id, function (data) {});
     }
-    for (user in jarnxmpp.Presence.online) {
-        if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
-            counter += 1;
-        }
-    }
-    $('#online-count').text(counter);
+    $('#online-count').text(jarnxmpp.Presence.onlineCount());
 });
 
 $(document).bind('jarnxmpp.message', function (event) {
@@ -190,4 +183,11 @@ $(document).ready(function () {
     });
 
     $('.pubsubNode').magicLinks();
+
+    if (jarnxmpp.Storage.storage !==null) {
+        var count = jarnxmpp.Storage.get('online-count');
+        if (count !== null) {
+            $('#online-count').text(count);
+        }
+    }
 });

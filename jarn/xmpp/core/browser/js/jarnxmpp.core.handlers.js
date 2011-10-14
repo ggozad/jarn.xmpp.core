@@ -73,6 +73,16 @@ jarnxmpp.Presence = {
     online: {},
     _user_info: {},
 
+    onlineCount: function () {
+        var counter = 0;
+        for (var user in jarnxmpp.Presence.online) {
+            if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
+                counter += 1;
+            }
+        }
+        return counter;
+    },
+
     presenceReceived: function (presence) {
         var ptype = $(presence).attr('type'),
             from = $(presence).attr('from'),
@@ -208,6 +218,7 @@ jarnxmpp.onConnect = function (status) {
     if ((status === Strophe.Status.ATTACHED) ||
         (status === Strophe.Status.CONNECTED)) {
         $(window).bind('beforeunload', function() {
+            $(document).trigger('jarnxmpp.disconnecting');
             var presence = $pres({type: 'unavailable'});
             jarnxmpp.connection.sync = true;
             jarnxmpp.connection.send(presence);
@@ -246,6 +257,11 @@ $(document).bind('jarnxmpp.connected', function () {
     jarnxmpp.connection.addHandler(jarnxmpp.PubSub.eventReceived, null, 'message', null, null, jarnxmpp.pubsub_jid);
     jarnxmpp.connection.addHandler(jarnxmpp.Roster.rosterSuggestedItem, 'http://jabber.org/protocol/rosterx', 'message', null);
     jarnxmpp.connection.send($pres());
+});
+
+$(document).bind('jarnxmpp.disconnecting', function () {
+    if (jarnxmpp.Storage.storage !== null)
+        jarnxmpp.Storage.set('online-count', jarnxmpp.Presence.onlineCount());
 });
 
 $(document).ready(function () {
