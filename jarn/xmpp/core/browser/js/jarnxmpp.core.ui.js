@@ -1,6 +1,8 @@
 /*global $:false, document:false, window:false, portal_url:false,
 jarnxmpp:false, $msg:false, Strophe:false */
 
+var msg_counter = 0;
+
 // Presence handler
 
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
@@ -55,10 +57,28 @@ $(document).bind('jarnxmpp.message', function (event) {
             title: data.fullname,
             text: text,
             image: data.portrait_url,
-            sticky: true
+            sticky: true,
+            after_close: function () {
+                if (msg_counter > 1) {
+                    msg_counter -= 1;
+                    document.title = document.title.replace(/^\(\d\) /, "(" + msg_counter + ") ");
+                }
+                else {
+                    msg_counter = 0;
+                    document.title = document.title.replace(/^\(\d\) /, "");
+                }
+            }
         });
         // Let the form know the gritter id so that we can easily close it later.
         $('#gritter-item-' + gritter_id + ' form').attr('data-gritter-id', gritter_id);
+        
+        msg_counter += 1;
+        if (document.title.search(/^\(\d\) /) === -1) {
+            document.title = "(" + msg_counter + ") " + document.title;
+        }
+        else {
+            document.title = document.title.replace(/^\(\d\) /, "(" + msg_counter + ") ");
+        }
     });
 });
 
@@ -160,7 +180,7 @@ $(document).ready(function () {
     });
 
     $('a.user-details-toggle').live('click', function (e) {
-        $('a.user-details-toggle').removeClass('expanded');        
+        $('a.user-details-toggle').removeClass('expanded');
         $(this).toggleClass('expanded');
         $(this).next().find('input[name="message"]').focus();
         e.preventDefault();
@@ -178,7 +198,7 @@ $(document).ready(function () {
     $('.replyForm').find('> a').live('click', function (e) {
         $(this).hide();
         $(this).next('form.sendXMPPMessage').fadeIn('medium');
-        $(this).next('form.sendXMPPMessage').find('input[name="message"]').focus();        
+        $(this).next('form.sendXMPPMessage').find('input[name="message"]').focus();
         e.preventDefault();
     });
 
