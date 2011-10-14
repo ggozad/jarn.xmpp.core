@@ -10,8 +10,11 @@ jarnxmpp.Storage = {
                 'JSON' in window &&
                 window.JSON !== null) {
                     jarnxmpp.Storage.storage = sessionStorage;
+                    if (!('_user_info' in jarnxmpp.Storage.storage))
+                        jarnxmpp.Storage.set('_user_info', {});
                 }
         } catch(e) {}
+
     },
 
     get: function (key) {
@@ -113,13 +116,27 @@ jarnxmpp.Presence = {
     },
 
     getUserInfo: function(user_id, callback) {
-        if (user_id in jarnxmpp.Presence._user_info) {
-            callback(jarnxmpp.Presence._user_info[user_id]);
+        // User info on browsers without storage
+        if (jarnxmpp.Storage.storage === null) {
+            if (user_id in jarnxmpp.Presence._user_info) {
+                callback(jarnxmpp.Presence._user_info[user_id]);
+            } else {
+                $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
+                    jarnxmpp.Presence._user_info[user_id] = data;
+                    callback(data);
+                });
+            }
         } else {
-            $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
-                jarnxmpp.Presence._user_info[user_id] = data;
-                callback(data);
-            });
+            _user_info = jarnxmpp.Storage.get('_user_info');
+            if (user_id in _user_info) {
+                callback(_user_info[user_id]);
+            } else {
+                $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
+                    _user_info[user_id] = data;
+                    jarnxmpp.Storage.set('_user_info', _user_info);
+                    callback(data);
+                });
+            }
         }
     }
 };

@@ -3,6 +3,14 @@ Changelog
 =========
 
 ------------------
+0.2b2 - Unreleased
+------------------
+
+- Use sessionStorage for user-info data, so that they are only fetched once
+  per session.
+  [ggozad]
+
+------------------
 0.2b1 - 2011-10-09
 ------------------
 

@@ -36,6 +36,9 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
                 $('#online-users').append(user_details);
             }
         });
+        // Pre-fetch user info if we have a session storage.
+        if (jarnxmpp.Storage.storage !== null)
+            jarnxmpp.Presence.getUserInfo(user_id, function (data) {});
     }
     for (user in jarnxmpp.Presence.online) {
         if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
