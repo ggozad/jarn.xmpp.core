@@ -24,6 +24,30 @@ jarnxmpp.UI = {
     }
 };
 
+$(document).bind('jarnxmpp.showMap', function(event, id, lat, lng) {
+
+    jarnxmpp.UI.showMap = function (){
+        var latlng = new google.maps.LatLng(lat, lng);
+        var options = {
+          zoom: 8,
+          center: latlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById(id), options);        
+    };
+
+    loadScript = function () {
+      var $script = $("<script>")
+        .attr('id', 'google-maps-js')
+        .attr('type', 'text/javascript')
+        .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=jarnxmpp.UI.showMap');
+     $('body').append($script);
+    };
+
+    if ($('#google-maps-js').length === 0) loadScript();
+    else jarnxmpp.UI.showMap();
+});
+
 // Presence handler
 
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
