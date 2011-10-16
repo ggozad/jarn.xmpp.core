@@ -276,4 +276,11 @@ $(document).ready(function () {
         else
             jarnxmpp.connection.connect(jarnxmpp.jid, data.password, jarnxmpp.onConnect);
     });
+    jarnxmpp.geolocation = null;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(geolocation) {
+                jarnxmpp.geolocation = geolocation;
+            }, function(error) {}, {maximumAge:600000});
+    }
 });
