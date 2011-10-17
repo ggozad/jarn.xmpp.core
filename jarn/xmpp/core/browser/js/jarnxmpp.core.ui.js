@@ -37,11 +37,11 @@ $(document).bind('jarnxmpp.showMap', function(event, id, lat, lng) {
     };
 
     loadScript = function () {
-      var $script = $("<script>")
-        .attr('id', 'google-maps-js')
-        .attr('type', 'text/javascript')
-        .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=jarnxmpp.UI.showMap');
-     $('body').append($script);
+        var $script = $("<script>")
+            .attr('id', 'google-maps-js')
+            .attr('type', 'text/javascript')
+            .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=jarnxmpp.UI.showMap');
+        $('body').append($script);
     };
 
     if ($('#google-maps-js').length === 0) loadScript();

@@ -179,6 +179,15 @@ jarnxmpp.PubSub = {
                     event.author = $('author', entry).text();
                     event.published = $('published', entry).text();
                     event.updated = $('updated', entry).text();
+                    $('geolocation:first', entry).each(function (idx, geoel) {
+                        var coords = {
+                            latitude: $(geoel).attr('latitude'),
+                            longitude: $(geoel).attr('longitude')
+                        };
+                        event.geolocation = coords;
+                    });
+                    //event.longitude = $('longitude', entry).text();
+                    //event.longitude = $('latitude', entry).text();
                     $(document).trigger(event);
                 }
             });
@@ -202,6 +211,15 @@ jarnxmpp.PubSub = {
             entry.appendChild(updated);
             entry.appendChild(published);
             entry.appendChild(content);
+            if (jarnxmpp.geolocation!==null) {
+                var coords = jarnxmpp.geolocation.coords;
+                //entry.appendChild(Strophe.xmlElement('longitude', [], coords.longitude));
+                //entry.appendChild(Strophe.xmlElement('latitude', [], coords.latitude));
+                entry.appendChild(Strophe.xmlElement(
+                    'geolocation',
+                    [['latitude', coords.latitude],
+                     ['longitude', coords.longitude]]));
+            }
             item.appendChild(entry);
             publish_elem.appendChild(item);
             var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid});
