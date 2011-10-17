@@ -113,7 +113,8 @@ class PubSubItem(BrowserView):
         urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
         self.item['urls'] = [url
                              for url in urls
-                             if urlparse(url).netloc != portal_url_netloc]
+                             if url.startswith('http')
+                             and urlparse(url).netloc != portal_url_netloc]
         return self.item_template()
 
 
