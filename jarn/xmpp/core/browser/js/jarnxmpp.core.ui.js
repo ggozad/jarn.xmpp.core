@@ -1,7 +1,14 @@
 /*global $:false, document:false, window:false, portal_url:false,
 jarnxmpp:false, $msg:false, Strophe:false */
 
-var msg_counter = 0;
+jarnxmpp.UI = {
+    msg_counter: 0,
+
+    focus: function() {
+        window.blur();
+        window.focus();
+    }
+};
 
 // Presence handler
 
@@ -59,12 +66,12 @@ $(document).bind('jarnxmpp.message', function (event) {
             image: data.portrait_url,
             sticky: true,
             after_close: function () {
-                if (msg_counter > 1) {
-                    msg_counter -= 1;
-                    document.title = document.title.replace(/^\(\d\) /, "(" + msg_counter + ") ");
+                if (jarnxmpp.UI.msg_counter > 1) {
+                    jarnxmpp.UI.msg_counter -= 1;
+                    document.title = document.title.replace(/^\(\d\) /, "(" + jarnxmpp.UI.msg_counter + ") ");
                 }
                 else {
-                    msg_counter = 0;
+                    jarnxmpp.UI.msg_counter = 0;
                     document.title = document.title.replace(/^\(\d\) /, "");
                 }
             }
@@ -72,12 +79,13 @@ $(document).bind('jarnxmpp.message', function (event) {
         // Let the form know the gritter id so that we can easily close it later.
         $('#gritter-item-' + gritter_id + ' form').attr('data-gritter-id', gritter_id);
         
-        msg_counter += 1;
+        jarnxmpp.UI.msg_counter += 1;
         if (document.title.search(/^\(\d\) /) === -1) {
-            document.title = "(" + msg_counter + ") " + document.title;
+            document.title = "(" + jarnxmpp.UI.msg_counter + ") " + document.title;
+            setTimeout(jarnxmpp.UI.focus, 0);
         }
         else {
-            document.title = document.title.replace(/^\(\d\) /, "(" + msg_counter + ") ");
+            document.title = document.title.replace(/^\(\d\) /, "(" + jarnxmpp.UI.msg_counter + ") ");
         }
     });
 });
