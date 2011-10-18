@@ -7,6 +7,20 @@ jarnxmpp.UI = {
     focus: function() {
         window.blur();
         window.focus();
+    },
+
+    updateMsgCounter: function() {
+        if (jarnxmpp.UI.msg_counter > 0) {
+            if (document.title.search(/^\(\d\) /) === -1) {
+                document.title = "(" + jarnxmpp.UI.msg_counter + ") " + document.title;
+            }
+            else {
+                document.title = document.title.replace(/^\(\d\) /, "(" + jarnxmpp.UI.msg_counter + ") ");
+            }
+            setTimeout(jarnxmpp.UI.focus, 0);
+        } else if (document.title.search(/^\(\d\) /) !== -1) {
+            document.title = document.title.replace(/^\(\d\) /, "");
+        }
     }
 };
 
@@ -66,27 +80,18 @@ $(document).bind('jarnxmpp.message', function (event) {
             image: data.portrait_url,
             sticky: true,
             after_close: function () {
-                if (jarnxmpp.UI.msg_counter > 1) {
+                if (jarnxmpp.UI.msg_counter > 1)
                     jarnxmpp.UI.msg_counter -= 1;
-                    document.title = document.title.replace(/^\(\d\) /, "(" + jarnxmpp.UI.msg_counter + ") ");
-                }
-                else {
+                else
                     jarnxmpp.UI.msg_counter = 0;
-                    document.title = document.title.replace(/^\(\d\) /, "");
-                }
+                jarnxmpp.UI.updateMsgCounter();
             }
         });
         // Let the form know the gritter id so that we can easily close it later.
         $('#gritter-item-' + gritter_id + ' form').attr('data-gritter-id', gritter_id);
         
         jarnxmpp.UI.msg_counter += 1;
-        if (document.title.search(/^\(\d\) /) === -1) {
-            document.title = "(" + jarnxmpp.UI.msg_counter + ") " + document.title;
-            setTimeout(jarnxmpp.UI.focus, 0);
-        }
-        else {
-            document.title = document.title.replace(/^\(\d\) /, "(" + jarnxmpp.UI.msg_counter + ") ");
-        }
+        jarnxmpp.UI.updateMsgCounter();
     });
 });
 
