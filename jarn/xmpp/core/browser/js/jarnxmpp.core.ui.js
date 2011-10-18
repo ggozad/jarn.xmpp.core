@@ -29,31 +29,30 @@ jarnxmpp.UI = {
             jarnxmpp.UI.geocoder = new google.maps.Geocoder();
             callback();
         };
-        var $script = $("<script>")
-            .attr('id', 'google-maps-js')
-            .attr('type', 'text/javascript')
-            .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=_initGoogleMaps');
-        $('body').append($script);
+        if (jarnxmpp.UI.geocoder === null) {
+            var $script = $("<script>")
+                .attr('id', 'google-maps-js')
+                .attr('type', 'text/javascript')
+                .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=_initGoogleMaps');
+            $('body').append($script);
+        } else
+            callback();
     },
 
     showGoogleMap: function(id, lat, lng) {
-        _showMap = function () {
-            var latlng = new google.maps.LatLng(lat, lng),
-                options = {
-              zoom: 15,
-              center: latlng,
-              navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            $('#'+id).css({'width':'280px', 'height':'200px'});
-            var map = new google.maps.Map(document.getElementById(id), options);
-            $('#' +id).hide();
-            $('#' +id).slideDown("slow");
-        };
         lat = parseFloat(lat);
         lng = parseFloat(lng);
-        if ($('#google-maps-js').length === 0) jarnxmpp.UI._loadGoogleMapsAPI(_showMap);
-        else _showMap();
+        var latlng = new google.maps.LatLng(lat, lng),
+            options = {
+          zoom: 15,
+          center: latlng,
+          navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        $('#'+id).css({'width':'280px', 'height':'200px'});
+        var map = new google.maps.Map(document.getElementById(id), options);
+        $('#' +id).hide();
+        $('#' +id).slideDown("slow");
     },
 
     reverseGeocode: function(lat, lng, callback) {
@@ -273,26 +272,19 @@ $(document).ready(function () {
 
     $('.pubsubNode').magicLinks();
 
-    if ($('.geolocation').length>0) {
-        jarnxmpp.UI._loadGoogleMapsAPI(function () {
-            $('.location').each(function (idx) {
-                var $geoelem = $(this);
-                var latitude = $geoelem.attr('data-latitude'),
-                    longitude = $geoelem.attr('data-longitude');
-                jarnxmpp.UI.reverseGeocode(latitude, longitude, function(city) {
-                    $geoelem.text(city);
-                });
-            });
-        });
-    }
-
     $('.location').live('click', function (e) {
-        var map_id = $(this).parent().find('.map').attr('id');
-        if ($('#' + map_id).is(':hidden')) {
-            var latitude = $(this).attr('data-latitude'),
-                longitude = $(this).attr('data-longitude');
-            jarnxmpp.UI.showGoogleMap(map_id, latitude, longitude);
-        } else $('#' + map_id).hide();
+        $locelem = $(this);
+        jarnxmpp.UI._loadGoogleMapsAPI(function () {
+            var latitude = $locelem.attr('data-latitude'),
+                longitude = $locelem.attr('data-longitude');
+            jarnxmpp.UI.reverseGeocode(latitude, longitude, function(city) {
+                $locelem.text(city);
+            });
+            var map_id = $locelem.parent().find('.map').attr('id');
+            if ($('#' + map_id).is(':hidden')) {
+                jarnxmpp.UI.showGoogleMap(map_id, latitude, longitude);
+            } else $('#' + map_id).hide();
+        });
     });
 
     if (jarnxmpp.Storage.storage !==null) {
