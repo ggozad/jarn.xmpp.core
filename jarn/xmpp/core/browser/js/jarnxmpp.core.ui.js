@@ -21,32 +21,35 @@ jarnxmpp.UI = {
         } else if (document.title.search(/^\(\d\) /) !== -1) {
             document.title = document.title.replace(/^\(\d\) /, "");
         }
-    }
-};
+    },
 
-$(document).bind('jarnxmpp.showMap', function(event, id, lat, lng) {
-
-    jarnxmpp.UI.showMap = function (){
-        var latlng = new google.maps.LatLng(lat, lng);
-        var options = {
-          zoom: 8,
-          center: latlng,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById(id), options);        
-    };
-
-    loadScript = function () {
+    _loadGMapsAPI: function (callback) {
         var $script = $("<script>")
             .attr('id', 'google-maps-js')
             .attr('type', 'text/javascript')
-            .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=jarnxmpp.UI.showMap');
+            .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=' + callback);
         $('body').append($script);
-    };
+    },
 
-    if ($('#google-maps-js').length === 0) loadScript();
-    else jarnxmpp.UI.showMap();
-});
+    showGMap: function(id, lat, lng) {
+        _showMap = function (){
+            var latlng = new google.maps.LatLng(lat, lng),
+                options = {
+              zoom: 15,
+              center: latlng,
+              navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            $('#'+id).css({'width':'560px', 'height':'400px'});
+            var map = new google.maps.Map(document.getElementById(id), options);
+        };
+        lat = parseFloat(lat);
+        lng = parseFloat(lng);
+        if ($('#google-maps-js').length === 0) jarnxmpp.UI._loadGMapsAPI('_showMap');
+        else _showMap();
+    }
+};
+
 
 // Presence handler
 
@@ -241,10 +244,18 @@ $(document).ready(function () {
 
     $('.pubsubNode').magicLinks();
 
+    $('.geolocation').live('click', function (e) {
+        var latitude = $(this).attr('data-latitude'),
+            longitude = $(this).attr('data-longitude');
+        $(this).css('width:100px; height:100px');
+        jarnxmpp.UI.showGMap($(this).attr('id'), latitude, longitude);
+    });
+
     if (jarnxmpp.Storage.storage !==null) {
         var count = jarnxmpp.Storage.get('online-count');
         if (count !== null) {
             $('#online-count').text(count);
         }
     }
+
 });
