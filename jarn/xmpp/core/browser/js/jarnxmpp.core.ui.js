@@ -122,7 +122,6 @@ $(document).bind('jarnxmpp.message', function (event) {
 // Pub-Sub
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     var i, isLeaf, $li;
-    // Put some stupid animation and let Denys fix it.
     $('#site-stream-link').addClass('newStreamMessage');
     // If we are showing a feed already, and the item should be in it,
     // inject it.
@@ -131,11 +130,12 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
         isLeaf = ($('.pubsubNode[data-node="people"]').length > 0) ? false : true;
         $.get(portal_url + '/@@pubsub-item?',
               {node: event.node,
-               item_id: event.item_id,
+               id: event.id,
                content: event.content,
                author: event.author,
                published: event.published,
                updated: event.updated,
+               geolocation: event.geolocation,
                isLeaf: isLeaf}, function (data) {
             $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
             $('.pubsubNode').prepend($li);

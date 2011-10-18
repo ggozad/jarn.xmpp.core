@@ -4,11 +4,13 @@
             member_tool context/portal_membership;
             item view/item;
             isLeaf view/isLeaf;
+            id item/id | nothing;
             author item/author;
             fullname python: view.fullname(author) or author;
             content item/content;
             updated item/updated;
             links item/urls | nothing;
+            geolocation item/geolocation | nothing;
             portal_url context/portal_url">
   <div class="pubsubAvatar" tal:condition="not: isLeaf">
      <img class="portrait"
@@ -26,6 +28,11 @@
         </b></a>
         <span class="discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
               tal:attributes="data-time updated">May 5</span>
+        <span class="pubsubGeoLoc"
+          tal:condition="geolocation"
+          tal:attributes="id string:geolocation-${id};
+                          data-latitude geolocation/latitude;
+                          data-longitude geolocation/longitude">Location</span> 
     </div>
     <div class="pubsubItemMsg" tal:content="structure content">
         Content goes here.

@@ -174,7 +174,7 @@ jarnxmpp.PubSub = {
                 if (entry.length > 0) {
                     var event = jQuery.Event('jarnxmpp.pubsubEntryPublished');
                     event.node = node;
-                    event.item_id = item_id;
+                    event.id = item_id;
                     event.content = $('content', entry).text();
                     event.author = $('author', entry).text();
                     event.published = $('published', entry).text();
@@ -186,8 +186,6 @@ jarnxmpp.PubSub = {
                         };
                         event.geolocation = coords;
                     });
-                    //event.longitude = $('longitude', entry).text();
-                    //event.longitude = $('latitude', entry).text();
                     $(document).trigger(event);
                 }
             });
