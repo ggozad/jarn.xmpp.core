@@ -257,8 +257,9 @@ $(document).ready(function () {
     $('#pubsub-form').bind('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
-            node = $field.attr('data-node');
-        jarnxmpp.PubSub.publishToPersonalNode(node, text);
+            node = $field.attr('data-node'),
+            share_location = $('input[name="share-location"]', this).attr('checked');
+        jarnxmpp.PubSub.publishToPersonalNode(node, text, share_location);
         $field.attr('value', '');
         return false;
     });

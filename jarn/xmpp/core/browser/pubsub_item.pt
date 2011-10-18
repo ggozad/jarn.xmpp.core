@@ -33,7 +33,7 @@
               tal:condition="geolocation"
               tal:attributes="id string:geolocation-${id};
                               data-latitude geolocation/latitude;
-                              data-longitude geolocation/longitude">Location</span> 
+                              data-longitude geolocation/longitude"></span>
           <div class="map"
               tal:condition="geolocation"
               tal:attributes="id string:geomap-${id};"/>
