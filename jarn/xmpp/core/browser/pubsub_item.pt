@@ -28,11 +28,16 @@
         </b></a>
         <span class="discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
               tal:attributes="data-time updated">May 5</span>
-        <div class="geolocation"
-          tal:condition="geolocation"
-          tal:attributes="id string:geolocation-${id};
-                          data-latitude geolocation/latitude;
-                          data-longitude geolocation/longitude">Location</div> 
+        <div class="geolocation">
+          <span class="location"
+              tal:condition="geolocation"
+              tal:attributes="id string:geolocation-${id};
+                              data-latitude geolocation/latitude;
+                              data-longitude geolocation/longitude">Location</span> 
+          <div class="map"
+              tal:condition="geolocation"
+              tal:attributes="id string:geomap-${id};"/>
+        </div>
     </div>
     <div class="pubsubItemMsg" tal:content="structure content">
         Content goes here.

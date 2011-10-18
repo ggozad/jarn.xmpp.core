@@ -313,6 +313,17 @@ ul.pubsubNode {
     padding-left: 26px;
     font-size: 0.9em;
 }
+.geolocation {
+	float:right;
+}
+.geolocation .location {
+	background: url(++resource++jarn.xmpp.core.images/location_icon.png) 0% 50% no-repeat;
+    padding-left: 18px;
+}
+
+.geolocation .map {
+	display: none;
+}
 
 /* Logging */
 .xmpp-dataSent {

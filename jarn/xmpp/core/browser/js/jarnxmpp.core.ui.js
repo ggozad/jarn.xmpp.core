@@ -3,6 +3,7 @@ jarnxmpp:false, $msg:false, Strophe:false */
 
 jarnxmpp.UI = {
     msg_counter: 0,
+    geocoder: null,
 
     focus: function() {
         window.blur();
@@ -23,16 +24,20 @@ jarnxmpp.UI = {
         }
     },
 
-    _loadGMapsAPI: function (callback) {
+    _loadGoogleMapsAPI: function (callback) {
+        _initGoogleMaps = function() {
+            jarnxmpp.UI.geocoder = new google.maps.Geocoder();
+            callback();
+        };
         var $script = $("<script>")
             .attr('id', 'google-maps-js')
             .attr('type', 'text/javascript')
-            .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=' + callback);
+            .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=_initGoogleMaps');
         $('body').append($script);
     },
 
-    showGMap: function(id, lat, lng) {
-        _showMap = function (){
+    showGoogleMap: function(id, lat, lng) {
+        _showMap = function () {
             var latlng = new google.maps.LatLng(lat, lng),
                 options = {
               zoom: 15,
@@ -40,16 +45,39 @@ jarnxmpp.UI = {
               navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
               mapTypeId: google.maps.MapTypeId.ROADMAP
             };
-            $('#'+id).css({'width':'560px', 'height':'400px'});
+            $('#'+id).css({'width':'280px', 'height':'200px'});
             var map = new google.maps.Map(document.getElementById(id), options);
+            $('#' +id).hide();
+            $('#' +id).slideDown("slow");
         };
         lat = parseFloat(lat);
         lng = parseFloat(lng);
-        if ($('#google-maps-js').length === 0) jarnxmpp.UI._loadGMapsAPI('_showMap');
+        if ($('#google-maps-js').length === 0) jarnxmpp.UI._loadGoogleMapsAPI(_showMap);
         else _showMap();
+    },
+
+    reverseGeocode: function(lat, lng, callback) {
+        lat = parseFloat(lat);
+        lng = parseFloat(lng);
+        var latlng = new google.maps.LatLng(lat, lng);
+        jarnxmpp.UI.geocoder.geocode({'latLng': latlng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var components = {},
+                    result = '';
+                for (var i=0; i<results[0].address_components.length; i++)
+                    components[results[0].address_components[i].types[0]] = results[0].address_components[i].long_name;
+                if (components.administrative_area_level_3)
+                    result += components.administrative_area_level_3 + ', ';
+                if (components.administrative_area_level_2)
+                    result += components.administrative_area_level_2 + ', ';
+                if (components.administrative_area_level_1)
+                    result += components.administrative_area_level_1 + ', ';
+                result += components.country;
+                callback(result);
+            }
+        });
     }
 };
-
 
 // Presence handler
 
@@ -244,11 +272,26 @@ $(document).ready(function () {
 
     $('.pubsubNode').magicLinks();
 
-    $('.geolocation').live('click', function (e) {
-        var latitude = $(this).attr('data-latitude'),
-            longitude = $(this).attr('data-longitude');
-        $(this).css('width:100px; height:100px');
-        jarnxmpp.UI.showGMap($(this).attr('id'), latitude, longitude);
+    if ($('.geolocation').length>0) {
+        jarnxmpp.UI._loadGoogleMapsAPI(function () {
+            $('.location').each(function (idx) {
+                var $geoelem = $(this);
+                var latitude = $geoelem.attr('data-latitude'),
+                    longitude = $geoelem.attr('data-longitude');
+                jarnxmpp.UI.reverseGeocode(latitude, longitude, function(city) {
+                    $geoelem.text(city);
+                });
+            });
+        });
+    }
+
+    $('.location').live('click', function (e) {
+        var map_id = $(this).parent().find('.map').attr('id');
+        if ($('#' + map_id).is(':hidden')) {
+            var latitude = $(this).attr('data-latitude'),
+                longitude = $(this).attr('data-longitude');
+            jarnxmpp.UI.showGoogleMap(map_id, latitude, longitude);
+        } else $('#' + map_id).hide();
     });
 
     if (jarnxmpp.Storage.storage !==null) {
