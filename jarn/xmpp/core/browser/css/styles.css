@@ -218,6 +218,7 @@ div.replyForm > a:hover {
     outline: none;
     float: left;
     border-right: 6em solid #205c90;
+    margin-bottom: 0.5em;
 }
 .postItemWrapper form input[type='text']:focus {
     -webkit-box-shadow: 0 0 10px #bbb;
@@ -313,6 +314,20 @@ ul.pubsubNode {
     padding-left: 26px;
     font-size: 0.9em;
 }
+.geolocation {
+    float:right;
+    display:block;
+	margin-left:0.5em;
+}
+.geolocation .location {
+    background: url(++resource++jarn.xmpp.core.images/location_icon.png) 0% 0% no-repeat;
+    padding-left: 18px;
+	font-style: italic;
+}
+.geolocation .map {
+    display: none;
+}
+
 /* Logging */
 .xmpp-dataSent {
     color: green;

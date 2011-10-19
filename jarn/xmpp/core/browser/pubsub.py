@@ -95,12 +95,18 @@ class PubSubItem(BrowserView):
         if item is None:
             item = {
                 'node': self.request.get('node'),
-                'item_id': self.request.get('item_id'),
+                'id': self.request.get('id'),
                 'content': self.request.get('content'),
                 'author': self.request.get('author'),
                 'published': self.request.get('published'),
                 'updated': self.request.get('updated'),
             }
+            if ('geolocation[latitude]' in self.request and
+                'geolocation[longitude]' in self.request):
+                item['geolocation'] = {
+                    'latitude': self.request.get('geolocation[latitude]'),
+                    'longitude': self.request.get('geolocation[longitude]')
+                }
             if self.request.get('isLeaf') == 'false':
                 isLeaf = False
         self.item = item

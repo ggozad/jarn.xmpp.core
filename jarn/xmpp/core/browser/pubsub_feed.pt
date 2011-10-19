@@ -43,6 +43,8 @@
           <form action="" method="post" id="pubsub-form">
               <input type="text" name="message" placeholder="Post to stream"
                   tal:attributes="data-node publishNode"/>
+              <label for="share-location">Share location</label>
+              <input type="checkbox" name="share-location" />
               <div class="formControls"><button type="submit" name="postButton" class="allowMultiSubmit">Post</button></div>
           </form>
       </div>

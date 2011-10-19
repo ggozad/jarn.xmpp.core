@@ -6,6 +6,10 @@ Changelog
 0.2b2 - Unreleased
 ------------------
 
+- Add geolocation capabilities. Posting to feeds can now include geolocation
+  data.
+  [ggozad]
+
 - Use sessionStorage for user-info data, so that they are only fetched once
   per session.
   [ggozad]

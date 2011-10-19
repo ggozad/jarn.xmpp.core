@@ -28,7 +28,14 @@ class PubSubClientMixIn(object):
         atom = [(child.name, child.children[0])
             for child in entry.children
             if child.children]
-        return dict(atom)
+        atom = dict(atom)
+        atom['id'] = item['id']
+        if entry.geolocation:
+            atom['geolocation'] = {
+                'latitude': entry.geolocation['latitude'],
+                'longitude': entry.geolocation['longitude'],
+            }
+        return atom
 
     def itemsReceived(self, event):
         sender = event.sender

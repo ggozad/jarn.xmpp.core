@@ -174,11 +174,18 @@ jarnxmpp.PubSub = {
                 if (entry.length > 0) {
                     var event = jQuery.Event('jarnxmpp.pubsubEntryPublished');
                     event.node = node;
-                    event.item_id = item_id;
+                    event.id = item_id;
                     event.content = $('content', entry).text();
                     event.author = $('author', entry).text();
                     event.published = $('published', entry).text();
                     event.updated = $('updated', entry).text();
+                    $('geolocation:first', entry).each(function (idx, geoel) {
+                        var coords = {
+                            latitude: $(geoel).attr('latitude'),
+                            longitude: $(geoel).attr('longitude')
+                        };
+                        event.geolocation = coords;
+                    });
                     $(document).trigger(event);
                 }
             });
@@ -186,7 +193,7 @@ jarnxmpp.PubSub = {
         return true;
     },
 
-    publishToPersonalNode: function(node, text, callback) {
+    publishToPersonalNode: function(node, text, share_location, callback) {
         if (text === '' || node === '') return;
         $.getJSON(portal_url+'/content-transform?', {text: text}, function(data) {
             var pubid = jarnxmpp.connection.getUniqueId("publishnode"),
@@ -202,6 +209,15 @@ jarnxmpp.PubSub = {
             entry.appendChild(updated);
             entry.appendChild(published);
             entry.appendChild(content);
+            if (share_location && jarnxmpp.geolocation!==null) {
+                var coords = jarnxmpp.geolocation.coords;
+                //entry.appendChild(Strophe.xmlElement('longitude', [], coords.longitude));
+                //entry.appendChild(Strophe.xmlElement('latitude', [], coords.latitude));
+                entry.appendChild(Strophe.xmlElement(
+                    'geolocation',
+                    [['latitude', coords.latitude],
+                     ['longitude', coords.longitude]]));
+            }
             item.appendChild(entry);
             publish_elem.appendChild(item);
             var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid});
@@ -276,4 +292,11 @@ $(document).ready(function () {
         else
             jarnxmpp.connection.connect(jarnxmpp.jid, data.password, jarnxmpp.onConnect);
     });
+    jarnxmpp.geolocation = null;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(geolocation) {
+                jarnxmpp.geolocation = geolocation;
+            }, function(error) {}, {maximumAge:600000});
+    }
 });

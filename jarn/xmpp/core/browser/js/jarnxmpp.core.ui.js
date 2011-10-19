@@ -3,6 +3,7 @@ jarnxmpp:false, $msg:false, Strophe:false */
 
 jarnxmpp.UI = {
     msg_counter: 0,
+    geocoder: null,
 
     focus: function() {
         window.blur();
@@ -21,6 +22,65 @@ jarnxmpp.UI = {
         } else if (document.title.search(/^\(\d\) /) !== -1) {
             document.title = document.title.replace(/^\(\d\) /, "");
         }
+    },
+
+    _loadGoogleMapsAPI: function (callback) {
+        _initGoogleMaps = function() {
+            jarnxmpp.UI.geocoder = new google.maps.Geocoder();
+            callback();
+        };
+        if (jarnxmpp.UI.geocoder === null) {
+            var hasSensor = 'false',
+                userAgent = navigator.userAgent;
+            if (userAgent.indexOf('iPhone') != -1 || userAgent.indexOf('Android') != -1 )
+                hasSensor = 'true';
+
+            var $script = $("<script>")
+                .attr('id', 'google-maps-js')
+                .attr('type', 'text/javascript')
+                .attr('src', 'http://maps.googleapis.com/maps/api/js?' +
+                             'sensor=' + hasSensor + '&callback=_initGoogleMaps');
+            $('body').append($script);
+        } else
+            callback();
+    },
+
+    showGoogleMap: function(id, lat, lng) {
+        lat = parseFloat(lat);
+        lng = parseFloat(lng);
+        var latlng = new google.maps.LatLng(lat, lng),
+            options = {
+          zoom: 15,
+          center: latlng,
+          navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        $('#'+id).css({'width':'280px', 'height':'200px'});
+        var map = new google.maps.Map(document.getElementById(id), options);
+        $('#' +id).hide();
+        $('#' +id).slideDown("slow");
+    },
+
+    reverseGeocode: function(lat, lng, callback) {
+        lat = parseFloat(lat);
+        lng = parseFloat(lng);
+        var latlng = new google.maps.LatLng(lat, lng);
+        jarnxmpp.UI.geocoder.geocode({'latLng': latlng}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                var components = {},
+                    result = '';
+                for (var i=0; i<results[0].address_components.length; i++)
+                    components[results[0].address_components[i].types[0]] = results[0].address_components[i].long_name;
+                if (components.administrative_area_level_3)
+                    result += components.administrative_area_level_3 + ', ';
+                if (components.administrative_area_level_2)
+                    result += components.administrative_area_level_2 + ', ';
+                if (components.administrative_area_level_1)
+                    result += components.administrative_area_level_1 + ', ';
+                result += components.country;
+                callback(result);
+            }
+        });
     }
 };
 
@@ -98,7 +158,6 @@ $(document).bind('jarnxmpp.message', function (event) {
 // Pub-Sub
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     var i, isLeaf, $li;
-    // Put some stupid animation and let Denys fix it.
     $('#site-stream-link').addClass('newStreamMessage');
     // If we are showing a feed already, and the item should be in it,
     // inject it.
@@ -107,11 +166,12 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
         isLeaf = ($('.pubsubNode[data-node="people"]').length > 0) ? false : true;
         $.get(portal_url + '/@@pubsub-item?',
               {node: event.node,
-               item_id: event.item_id,
+               id: event.id,
                content: event.content,
                author: event.author,
                published: event.published,
                updated: event.updated,
+               geolocation: event.geolocation,
                isLeaf: isLeaf}, function (data) {
             $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
             $('.pubsubNode').prepend($li);
@@ -202,8 +262,9 @@ $(document).ready(function () {
     $('#pubsub-form').bind('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
-            node = $field.attr('data-node');
-        jarnxmpp.PubSub.publishToPersonalNode(node, text);
+            node = $field.attr('data-node'),
+            share_location = $('input[name="share-location"]', this).attr('checked');
+        jarnxmpp.PubSub.publishToPersonalNode(node, text, share_location);
         $field.attr('value', '');
         return false;
     });
@@ -217,10 +278,29 @@ $(document).ready(function () {
 
     $('.pubsubNode').magicLinks();
 
+    $('.location').live('click', function (e) {
+        $locelem = $(this);
+        var map_id = $locelem.parent().find('.map').attr('id');
+        if ($('#' + map_id).is(':hidden')) {
+            jarnxmpp.UI._loadGoogleMapsAPI(function () {
+                var latitude = $locelem.attr('data-latitude'),
+                    longitude = $locelem.attr('data-longitude');
+                jarnxmpp.UI.reverseGeocode(latitude, longitude, function(city) {
+                    $locelem.text(city);
+                });
+                jarnxmpp.UI.showGoogleMap(map_id, latitude, longitude);
+            });
+        } else {
+            $('#' + map_id).hide();
+            $locelem.text('');
+        }
+    });
+
     if (jarnxmpp.Storage.storage !==null) {
         var count = jarnxmpp.Storage.get('online-count');
         if (count !== null) {
             $('#online-count').text(count);
         }
     }
+
 });
