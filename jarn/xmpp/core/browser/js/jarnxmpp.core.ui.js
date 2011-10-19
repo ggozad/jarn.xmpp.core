@@ -30,10 +30,16 @@ jarnxmpp.UI = {
             callback();
         };
         if (jarnxmpp.UI.geocoder === null) {
+            var hasSensor = 'false',
+                userAgent = navigator.userAgent;
+            if (userAgent.indexOf('iPhone') != -1 || userAgent.indexOf('Android') != -1 )
+                hasSensor = 'true';
+
             var $script = $("<script>")
                 .attr('id', 'google-maps-js')
                 .attr('type', 'text/javascript')
-                .attr('src', 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=_initGoogleMaps');
+                .attr('src', 'http://maps.googleapis.com/maps/api/js?' +
+                             'sensor=' + hasSensor + '&callback=_initGoogleMaps');
             $('body').append($script);
         } else
             callback();
