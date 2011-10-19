@@ -53,5 +53,6 @@
         </li>
       </ul>
     </div>
+    <div class="visualClear"><!-- --></div>
   </div>
 </tal:pubsub_item>
