@@ -191,6 +191,13 @@ $(document).bind('jarnxmpp.dataSent', function (ev) {
     $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));
 });
 
+$(document).bind('jarnxmpp.haveGeolocation', function() {
+    $('#share-geolocation').each(function () {
+        if (jarnxmpp.geolocation !== null)
+            $(this).show();
+    });
+});
+
 $.fn.magicLinks = function () {
     $('a.magic-link', this).each(function () {
         var $link = $(this);
@@ -302,5 +309,4 @@ $(document).ready(function () {
             $('#online-count').text(count);
         }
     }
-
 });

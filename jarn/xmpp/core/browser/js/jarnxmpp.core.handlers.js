@@ -297,6 +297,7 @@ $(document).ready(function () {
         navigator.geolocation.getCurrentPosition(
             function(geolocation) {
                 jarnxmpp.geolocation = geolocation;
+                $(document).trigger('jarnxmpp.haveGeolocation');
             }, function(error) {}, {maximumAge:600000});
     }
 });
