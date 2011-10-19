@@ -321,6 +321,7 @@ ul.pubsubNode {
 .geolocation .location {
     background: url(++resource++jarn.xmpp.core.images/location_icon.png) 0% 0% no-repeat;
     padding-left: 18px;
+	font-style: italic;
 }
 .geolocation .map {
     display: none;

@@ -280,17 +280,20 @@ $(document).ready(function () {
 
     $('.location').live('click', function (e) {
         $locelem = $(this);
-        jarnxmpp.UI._loadGoogleMapsAPI(function () {
-            var latitude = $locelem.attr('data-latitude'),
-                longitude = $locelem.attr('data-longitude');
-            jarnxmpp.UI.reverseGeocode(latitude, longitude, function(city) {
-                $locelem.text(city);
-            });
-            var map_id = $locelem.parent().find('.map').attr('id');
-            if ($('#' + map_id).is(':hidden')) {
+        var map_id = $locelem.parent().find('.map').attr('id');
+        if ($('#' + map_id).is(':hidden')) {
+            jarnxmpp.UI._loadGoogleMapsAPI(function () {
+                var latitude = $locelem.attr('data-latitude'),
+                    longitude = $locelem.attr('data-longitude');
+                jarnxmpp.UI.reverseGeocode(latitude, longitude, function(city) {
+                    $locelem.text(city);
+                });
                 jarnxmpp.UI.showGoogleMap(map_id, latitude, longitude);
-            } else $('#' + map_id).hide();
-        });
+            });
+        } else {
+            $('#' + map_id).hide();
+            $locelem.text('');
+        }
     });
 
     if (jarnxmpp.Storage.storage !==null) {
