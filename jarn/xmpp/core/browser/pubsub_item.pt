@@ -42,6 +42,7 @@
     <div class="pubsubItemMsg" tal:content="structure content">
         Content goes here.
     </div>
+    <div class="visualClear"><!-- --></div>
     <div class="pubsubItemDetails" tal:condition="links">
       <ul class="pubsubItemLinks">
         <li tal:repeat="url links">
@@ -53,6 +54,5 @@
         </li>
       </ul>
     </div>
-    <div class="visualClear"><!-- --></div>
   </div>
 </tal:pubsub_item>
