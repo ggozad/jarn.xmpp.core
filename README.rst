@@ -201,7 +201,8 @@ Usage
 * Add a few users.
 * Login as one of them, and in a different browser as some other. Use the frontend to access the site, if you used the settings above this should be ``http://localhost:8080``.
 * All actions are performed through the viewlet on the top right: ``Online users`` will display the users currently logged in. Clicking it will give you the list of users. You can message them directly or look at their personal feed.
-* Try posting an entry to your feed. Links will be transformed automatically. As soon as you submit other logged-in users will receive a notification in real-time.
+* Try posting an entry to your feed. Links will be transformed automatically. As soon as you submit other logged-in users will receive a notification in real-time. Using a recent browser that supports geolocation will allow you
+also share your location at the time of the post.
 * You can see all posts by clicking on ``Site feed`` on the viewlet.
 
 ========
