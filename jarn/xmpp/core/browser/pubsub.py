@@ -107,7 +107,6 @@ class PubSubItem(BrowserView):
                     'latitude': self.request.get('geolocation[latitude]'),
                     'longitude': self.request.get('geolocation[longitude]')
                 }
-                print item['geolocation']
             if self.request.get('isLeaf') == 'false':
                 isLeaf = False
         self.item = item
