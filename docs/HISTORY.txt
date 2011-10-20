@@ -2,9 +2,9 @@
 Changelog
 =========
 
-------------------
-0.2b2 - Unreleased
-------------------
+----------------
+0.2 - 2011-10-20
+----------------
 
 - Add geolocation capabilities. Posting to feeds can now include geolocation
   data.
