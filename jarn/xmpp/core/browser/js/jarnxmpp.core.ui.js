@@ -38,7 +38,7 @@ jarnxmpp.UI = {
             var $script = $("<script>")
                 .attr('id', 'google-maps-js')
                 .attr('type', 'text/javascript')
-                .attr('src', 'http://maps.googleapis.com/maps/api/js?' +
+                .attr('src', '//maps.googleapis.com/maps/api/js?' +
                              'sensor=' + hasSensor + '&callback=_initGoogleMaps');
             $('body').append($script);
         } else
