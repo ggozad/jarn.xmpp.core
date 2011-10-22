@@ -314,17 +314,17 @@ ul.pubsubNode {
     padding-left: 26px;
     font-size: 0.9em;
 }
-.pubsubItem .geolocation {
+.pubsubItem .pubsubGeolocation {
     float:right;
     display:block;
 	margin-left:0.5em;
 }
-.pubsubItem .geolocation .location {
+.pubsubItem .pubsubGeolocation .location {
     background: transparent url(++resource++jarn.xmpp.core.images/location_icon.png) 0% 0% no-repeat;
     padding-left: 18px;
 	font-style: italic;
 }
-.pubsubItem .geolocation .map {
+.pubsubItem .pubsubGeolocation .map {
     display: none;
 }
 

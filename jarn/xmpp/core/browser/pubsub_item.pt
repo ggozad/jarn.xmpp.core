@@ -28,7 +28,7 @@
         </b></a>
         <span class="discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
               tal:attributes="data-time updated">May 5</span>
-        <div class="geolocation">
+        <div class="pubsubGeolocation">
           <span class="location"
               tal:condition="geolocation"
               tal:attributes="id string:geolocation-${id};
