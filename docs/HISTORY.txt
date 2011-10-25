@@ -15,6 +15,9 @@ Changelog
 - Link portrait to personal stream in feed views. (Closes #10).
   [ggozad]
 
+- "Pretty dates" for the pubsub feed. (Closes #8).
+  [ggozad]
+
 ----------------
 0.2 - 2011-10-20
 ----------------

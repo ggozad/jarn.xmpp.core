@@ -24,6 +24,11 @@ jarnxmpp.UI = {
         }
     },
 
+    updatePrettyDates: function() {
+        $('.prettyDate').prettyDate();
+        setTimeout(jarnxmpp.UI.updatePrettyDates, 60000);
+    },
+
     _loadGoogleMapsAPI: function (callback) {
         _initGoogleMaps = function() {
             jarnxmpp.UI.geocoder = new google.maps.Geocoder();
@@ -176,6 +181,7 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
             $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
             $('.pubsubNode').prepend($li);
             $('.pubsubNode li:first').slideDown("slow");
+            $('.pubsubNode li:first .prettyDate').prettyDate();
             $('.pubsubNode li:first').magicLinks();
         });
     }
@@ -215,6 +221,31 @@ $.fn.magicLinks = function () {
                 setLink(data);
             });
         }
+    });
+};
+
+$.fn.prettyDate = function () {
+    $(this).each(function (idx, el) {
+        var d = $(el).attr('data-time');
+        if (typeof(d) === 'undefined')
+            return true;
+        var date = new Date(d),
+            diff = (((new Date()).getTime() - date.getTime()) / 1000),
+            day_diff = Math.floor(diff / 86400),
+            pretty_date;
+        if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
+            return true;
+
+        pretty_date = day_diff === 0 && (
+                diff < 60 && "just now" ||
+                diff < 120 && "1 minute ago" ||
+                diff < 3600 && Math.floor( diff / 60 ) + " minutes ago" ||
+                diff < 7200 && "1 hour ago" ||
+                diff < 86400 && Math.floor( diff / 3600 ) + " hours ago") ||
+            day_diff == 1 && "Yesterday" ||
+            day_diff < 7 && day_diff + " days ago" ||
+            day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago";
+        $(el).text(pretty_date);
     });
 };
 
@@ -301,6 +332,7 @@ $(document).ready(function () {
     });
 
     $('.pubsubNode').magicLinks();
+    jarnxmpp.UI.updatePrettyDates();
 
     $('.location').live('click', function (e) {
         $locelem = $(this);
