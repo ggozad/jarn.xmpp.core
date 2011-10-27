@@ -9,7 +9,10 @@ Changelog
 - Do not track user's geolocation unless it's necessary.
   [ggozad]
 
-- Proxy the downloading of favicons (Closes https://github.com/ggozad/jarn.xmpp.core/issues/11).
+- Proxy the downloading of favicons (Closes #11).
+  [ggozad]
+
+- Link portrait to personal stream in feed views. (Closes #10).
   [ggozad]
 
 ----------------

@@ -13,10 +13,14 @@
             geolocation item/geolocation | nothing;
             portal_url context/portal_url">
   <div class="pubsubAvatar" tal:condition="not: isLeaf">
-     <img class="portrait"
-          tal:define="portrait python:member_tool.getPersonalPortrait(author);"
-          tal:condition="portrait"
-          tal:attributes="src portrait/absolute_url"/>
+    <a href="#" title=""
+       tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
+                       title string:$fullname">
+      <img class="portrait"
+        tal:define="portrait python:member_tool.getPersonalPortrait(author);"
+        tal:condition="portrait"
+        tal:attributes="src portrait/absolute_url"/>
+    </a>
   </div>
   <div class="pubsubItemContent">
     <div>
