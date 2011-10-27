@@ -2,11 +2,14 @@
 Changelog
 =========
 
-----------------
+-----------------
 0.21 - Unreleased
-----------------
+-----------------
 
 - Do not track user's geolocation unless it's necessary.
+  [ggozad]
+
+- Proxy the downloading of favicons (Closes https://github.com/ggozad/jarn.xmpp.core/issues/11).
   [ggozad]
 
 ----------------

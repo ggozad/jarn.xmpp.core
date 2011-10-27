@@ -11,6 +11,14 @@ from Products.Five.browser import BrowserView
 
 
 @ram.cache(lambda method, url: url)
+def getFavIcon(url):
+    try:
+        return urllib2.urlopen(url, timeout=5).read()
+    except urllib2.URLError:
+        return None
+
+
+@ram.cache(lambda method, url: url)
 def getURLData(url):
     try:
         doc = urllib2.urlopen(url, timeout=5).read()
@@ -35,11 +43,13 @@ def getURLData(url):
         description = description.get('content')
 
     # Find favicon
+    host_url = urlparse(url)
     favicon_url = doc.first('link', rel='shortcut icon')
     if favicon_url:
         favicon_url = favicon_url.get('href')
+        if not favicon_url.startswith('http'):
+            favicon_url = host_url[0] + u'://' + host_url[1] + favicon_url
     else:
-        host_url = urlparse(url)
         favicon_url = host_url[0] + u'://' + host_url[1] + u'/favicon.ico'
 
     return json.dumps({
@@ -52,6 +62,13 @@ class MagicLinksView(BrowserView):
 
     def __call__(self, url):
         return getURLData(url)
+
+
+class FavIconsView(BrowserView):
+
+    def __call__(self, url):
+        self.request.response.setHeader("Content-type", "image/x-icon")
+        return getFavIcon(url)
 
 
 class ContentTransform(BrowserView):

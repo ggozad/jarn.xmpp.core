@@ -199,7 +199,7 @@ $.fn.magicLinks = function () {
         var setLink = function(data) {
             $link.children('.magic-link-title').html(data.title);
             $link.children('.magic-link-descr').html(data.description);
-            $link.children('.magic-favicon').attr('src', data.favicon_url);
+            $link.children('.magic-favicon').attr('src', '/fav-icons?url='+data.favicon_url);
             $link.children('.magic-favicon').show();
             $link.show();
         };

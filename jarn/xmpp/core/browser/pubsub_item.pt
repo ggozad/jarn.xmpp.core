@@ -47,7 +47,7 @@
       <ul class="pubsubItemLinks">
         <li tal:repeat="url links">
           <a tal:attributes="href url" class="magic-link external-link">
-            <img src="" height="16" width="16" class="magic-favicon"/>
+            <img height="16" width="16" class="magic-favicon"/>
             <h4 class="magic-link-title">Title</h4>
             <span class="magic-link-descr">Description</span>
           </a>

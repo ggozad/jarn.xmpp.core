@@ -78,6 +78,13 @@
     permission="zope.Public"
     />
 
+  <browser:view
+    for="*"
+    name="fav-icons"
+    class=".transforms.FavIconsView"
+    permission="zope.Public"
+    />
+
   <!-- Viewlets -->
 
   <!--
