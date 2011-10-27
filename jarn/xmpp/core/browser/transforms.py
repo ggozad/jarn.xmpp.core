@@ -20,13 +20,17 @@ def getFavIcon(url):
 
 @ram.cache(lambda method, url: url)
 def getURLData(url):
+
     try:
         doc = urllib2.urlopen(url, timeout=5).read()
     except urllib2.URLError:
         return None
+    try:
+        doc = BeautifulSoup(urllib2.urlopen(url).read())
+    except UnicodeEncodeError: # This is for links to files/images.
+        doc = BeautifulSoup('')
 
-    doc = BeautifulSoup(urllib2.urlopen(url).read())
-    title = u''
+    title = url
     description = u''
 
     # title
