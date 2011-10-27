@@ -3,8 +3,11 @@ Changelog
 =========
 
 ----------------
-0.3 - Unreleased
+0.21 - Unreleased
 ----------------
+
+- Do not track user's geolocation unless it's necessary.
+  [ggozad]
 
 ----------------
 0.2 - 2011-10-20

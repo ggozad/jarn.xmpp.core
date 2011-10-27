@@ -193,7 +193,7 @@ jarnxmpp.PubSub = {
         return true;
     },
 
-    publishToPersonalNode: function(node, text, share_location, callback) {
+    publishToPersonalNode: function(node, text, location, callback) {
         if (text === '' || node === '') return;
         $.getJSON(portal_url+'/content-transform?', {text: text}, function(data) {
             var pubid = jarnxmpp.connection.getUniqueId("publishnode"),
@@ -209,10 +209,8 @@ jarnxmpp.PubSub = {
             entry.appendChild(updated);
             entry.appendChild(published);
             entry.appendChild(content);
-            if (share_location && jarnxmpp.geolocation!==null) {
-                var coords = jarnxmpp.geolocation.coords;
-                //entry.appendChild(Strophe.xmlElement('longitude', [], coords.longitude));
-                //entry.appendChild(Strophe.xmlElement('latitude', [], coords.latitude));
+            if (location!==null && navigator.geolocation) {
+                var coords = location.coords;
                 entry.appendChild(Strophe.xmlElement(
                     'geolocation',
                     [['latitude', coords.latitude],
@@ -292,12 +290,4 @@ $(document).ready(function () {
         else
             jarnxmpp.connection.connect(jarnxmpp.jid, data.password, jarnxmpp.onConnect);
     });
-    jarnxmpp.geolocation = null;
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            function(geolocation) {
-                jarnxmpp.geolocation = geolocation;
-                $(document).trigger('jarnxmpp.haveGeolocation');
-            }, function(error) {}, {maximumAge:600000});
-    }
 });

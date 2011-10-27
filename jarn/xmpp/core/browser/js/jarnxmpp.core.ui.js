@@ -191,13 +191,6 @@ $(document).bind('jarnxmpp.dataSent', function (ev) {
     $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));
 });
 
-$(document).bind('jarnxmpp.haveGeolocation', function() {
-    $('#share-geolocation').each(function () {
-        if (jarnxmpp.geolocation !== null)
-            $(this).show();
-    });
-});
-
 $.fn.magicLinks = function () {
     $('a.magic-link', this).each(function () {
         var $link = $(this);
@@ -266,13 +259,37 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
+    $('#pubsub-form input[name="share-location"]').change(function () {
+        if ($(this).attr('checked')) {
+            var $checkbox = $(this);
+            $('div.discreet', $checkbox.parent()).remove();
+            navigator.geolocation.getCurrentPosition(
+                function(success) {},
+                function(error) {
+                    $checkbox.attr('checked', false);
+                    $checkbox.parent().append(
+                        $('<div>').text('Cannot determine your location. Please allow this site to track your location in your browser settings.').addClass('discreet'));
+                }, {maximumAge:600000});
+        }
+    });
+
     $('#pubsub-form').bind('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.attr('value'),
             node = $field.attr('data-node'),
             share_location = $('input[name="share-location"]', this).attr('checked');
-        jarnxmpp.PubSub.publishToPersonalNode(node, text, share_location);
-        $field.attr('value', '');
+
+        if (share_location && navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(geolocation) {
+                    jarnxmpp.PubSub.publishToPersonalNode(node, text, geolocation);
+                    $field.attr('value', '');
+                },
+                function(error) {});
+        } else {
+            jarnxmpp.PubSub.publishToPersonalNode(node, text, null);
+            $field.attr('value', '');
+        }
         return false;
     });
 
@@ -301,6 +318,11 @@ $(document).ready(function () {
             $('#' + map_id).hide();
             $locelem.text('');
         }
+    });
+
+    $('#share-geolocation').each(function () {
+        if (navigator.geolocation)
+            $(this).show();
     });
 
     if (jarnxmpp.Storage.storage !==null) {
