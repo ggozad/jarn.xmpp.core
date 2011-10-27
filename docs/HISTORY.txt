@@ -3,7 +3,7 @@ Changelog
 =========
 
 -----------------
-0.21 - Unreleased
+0.21 - 2011-10-27
 -----------------
 
 - Do not track user's geolocation unless it's necessary.
