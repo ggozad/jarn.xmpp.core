@@ -151,6 +151,35 @@ jarnxmpp.Presence = {
     }
 };
 
+jarnxmpp.vCard = {
+
+    getvCard: function(jid, callback) {
+        var stanza =
+            $iq({type: 'get', to:jid})
+            .c('vCard', {xmlns: 'vcard-temp'}).tree();
+        jarnxmpp.connection.sendIQ(stanza, function (data) {
+            var result = {};
+            $('vCard[xmlns="vcard-temp"]', data).children().each(function (idx, element) {
+                result[element.nodeName] = element.textContent;
+            });
+            if (typeof(callback) !== 'undefined')
+                callback(result);
+        });
+    },
+
+    setvCard: function(params) {
+        var vCard = Strophe.xmlElement('vCard', [['xmlns', 'vcard-temp']]);
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                vCard.appendChild(
+                    Strophe.xmlElement(key, [], params[key]));
+            }
+        }
+        var stanza = $iq({type: 'set'}).cnode(vCard).tree();
+        jarnxmpp.connection.sendIQ(stanza);
+    }
+};
+
 jarnxmpp.PubSub = {
 
     _ISODateString: function(d) {
@@ -218,8 +247,8 @@ jarnxmpp.PubSub = {
             }
             item.appendChild(entry);
             publish_elem.appendChild(item);
-            var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid});
-            pub.c('pubsub', { xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
+            var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid})
+                .c('pubsub', { xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
             if (typeof(callback) !== 'undefined')
                 jarnxmpp.connection.addHandler(callback, null, 'iq', null, pubid, null);
             jarnxmpp.connection.send(pub);
