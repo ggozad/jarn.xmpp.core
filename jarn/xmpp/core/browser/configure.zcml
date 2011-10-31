@@ -85,6 +85,15 @@
     permission="zope.Public"
     />
 
+  <plone:portlet
+    name="portlets.PubSubFeed"
+    interface=".pubsub_portlet.IPubSubFeedPortlet"
+    assignment=".pubsub_portlet.Assignment"
+    renderer=".pubsub_portlet.Renderer"
+    addview=".pubsub_portlet.AddForm"
+    editview=".pubsub_portlet.EditForm"
+    />
+
   <!-- Viewlets -->
 
   <!--
