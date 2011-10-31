@@ -1,5 +1,4 @@
 import re
-import json
 from urlparse import urlparse
 
 from z3c.form import form
@@ -35,12 +34,10 @@ class ISubscribeToNode(Interface):
                             required=True)
 
 
-class PubSubFeed(BrowserView):
+class PubSubFeedMixIn(object):
 
-    def __init__(self, context, request):
-        super(PubSubFeed, self).__init__(context, request)
+    def __init__(self, context):
         self.storage = getUtility(IPubSubStorage)
-        self.node = request.get('node', None)
         if self.node in self.storage.leaf_nodes:
             self.nodeType = 'leaf'
         else:
@@ -80,6 +77,14 @@ class PubSubFeed(BrowserView):
         return self.storage.node_items[node][:count]
 
 
+class PubSubFeed(BrowserView, PubSubFeedMixIn):
+
+    def __init__(self, context, request):
+        BrowserView.__init__(self, context, request)
+        self.node = request.get('node', None)
+        PubSubFeedMixIn.__init__(self, context)
+
+
 class PubSubItem(BrowserView):
 
     item_template = ViewPageTemplateFile("pubsub_item.pt")
@@ -105,8 +110,7 @@ class PubSubItem(BrowserView):
                 'geolocation[longitude]' in self.request):
                 item['geolocation'] = {
                     'latitude': self.request.get('geolocation[latitude]'),
-                    'longitude': self.request.get('geolocation[longitude]')
-                }
+                    'longitude': self.request.get('geolocation[longitude]')}
             if self.request.get('isLeaf') == 'false':
                 isLeaf = False
         self.item = item
