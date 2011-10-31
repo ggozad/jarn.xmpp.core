@@ -6,6 +6,13 @@ Changelog
 0.22 - Unreleased
 -----------------
 
+- Provide a portlet that shows a PubSub feed.
+  [ggozad]
+
+- Fixed magic link error when the url points to a binary. 
+  https://github.com/ggozad/jarn.xmpp.core/issues/13
+  [ggozad]
+
 -----------------
 0.21 - 2011-10-27
 -----------------
