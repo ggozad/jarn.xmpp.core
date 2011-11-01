@@ -4,5 +4,6 @@
   <dependencies>
     <dependency>profile-plone.app.registry:default</dependency>
     <dependency>profile-plone.app.z3cform:default</dependency>
+    <dependency>profile-jarn.jsi18n:default</dependency>
   </dependencies>
 </metadata>
