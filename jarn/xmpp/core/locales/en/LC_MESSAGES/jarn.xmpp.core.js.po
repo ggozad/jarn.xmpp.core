@@ -12,9 +12,9 @@ msgstr ""
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: jarn.xmpp.core.js\n"
-
+"Domain: DOMAIN\n"
 
 # Javascript i18n
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
 msgstr ""
+

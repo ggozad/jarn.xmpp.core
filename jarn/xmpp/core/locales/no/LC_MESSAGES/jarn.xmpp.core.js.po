@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-11-01 16:13+0000\n"
+"POT-Creation-Date: 2011-11-01 16:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,5 +15,6 @@ msgstr ""
 "Domain: jarn.xmpp.core.js\n"
 
 # Javascript i18n
-msgid "label_no_geolocation"
-msgstr "Fuck you."
+msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
+msgstr ""
+

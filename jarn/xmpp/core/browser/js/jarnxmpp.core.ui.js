@@ -251,6 +251,9 @@ $.fn.prettyDate = function () {
 
 $(document).ready(function () {
 
+    jarn.i18n.loadCatalog('jarn.xmpp.core.js');
+    jarnxmpp.UI._ = jarn.i18n.MessageFactory('jarn.xmpp.core.js');
+
     $('.sendXMPPMessage').live('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.val(),
@@ -299,7 +302,7 @@ $(document).ready(function () {
                 function(error) {
                     $checkbox.attr('checked', false);
                     $checkbox.parent().append(
-                        $('<div>').text('Cannot determine your location. Please allow this site to track your location in your browser settings.').addClass('discreet'));
+                        $('<div>').text(jarnxmpp.UI._('Cannot determine your location. Please allow this site to track your location in your browser settings.')).addClass('discreet'));
                 }, {maximumAge:600000});
         }
     });
