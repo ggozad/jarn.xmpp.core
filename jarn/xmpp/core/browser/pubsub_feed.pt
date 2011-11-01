@@ -42,12 +42,15 @@
            tal:condition="publishNode">
           <form action="" method="post" id="pubsub-form">
               <input type="text" name="message" placeholder="Post to stream"
+                  i18n:attributes="placeholder"
                   tal:attributes="data-node publishNode"/>
               <div id="share-geolocation">
-                <label for="share-location">Share location</label>
+                <label i18n:translate="" for="share-location">Share location</label>
                 <input type="checkbox" name="share-location" />
               </div>
-              <div class="formControls"><button type="submit" name="postButton" class="allowMultiSubmit">Post</button></div>
+              <div class="formControls">
+                <button type="submit" name="postButton" class="allowMultiSubmit"
+                    i18n:translate="">Post</button></div>
           </form>
       </div>
 
