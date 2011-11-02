@@ -111,5 +111,6 @@ msgstr "Rimuovi l'iscrizione"
 #. Default: "\n        Warning: This action should ONLY be run after the initial setup. It\n        will create the necessary users and nodes on your XMPP server\n        according to your plone site users. Unless you know what you are doing\n        you do not need to run it again afterwards.\n        Make sure you have set the correct settings for you XMPP server before\n        submitting.\n        "
 #: ./browser/setup.py:29
 msgid "label_setup_warning"
-msgstr "Attenzione: Questa azione dovrebbe essere eseguita solo DOPO la configurazione iniziale. Verranno creati gli utenti e i nodi necessari per il vostro server XMPP prendendi i vostri utenti del sito Plone. Non è necessario farlo di nuovo a meno di sapere cosa si sta facendo. Accertarsi di eseguire corretamente la configurazione del vostro server XMPP prima di inviare."
+msgstr "Attenzione: Questa azione dovrebbe essere eseguita solo DOPO la configurazione iniziale. Verranno creati gli utenti e i nodi necessari per il vostro server XMPP basandosi sui vostri utenti del sito Plone. Non è necessario farlo di nuovo a meno di sapere cosa si sta facendo. Accertarsi di eseguire corretamente la configurazione del vostro server XMPP prima di inviare."
+
 
