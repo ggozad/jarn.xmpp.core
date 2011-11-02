@@ -19,19 +19,19 @@ msgstr ""
 #: ./browser/pubsub_portlet.py:50
 #: ./profiles/default/portlets.xml
 msgid "A portlet that renders the feed from a PubSub node."
-msgstr "Una portlet che mostra il feed dal nodo PubSub"
+msgstr "Una portlet che mostra il flusso proveninente da un nodo PubSub"
 
 #: ./browser/pubsub_portlet.py:49
 msgid "Add PubSub feed portlet"
-msgstr "Aggiungi una portlet feed PubSub"
+msgstr "Aggiungi una portlet di flusso PubSub"
 
 #: ./browser/user_details.pt:8
 msgid "Click to toggle user's details"
-msgstr "Clicca per espandere/collassare i dettagli dell'utente."
+msgstr "Clicca per mostrare i dettagli dell'utente."
 
 #: ./browser/pubsub_portlet.py:59
 msgid "Edit PubSub feed portlet"
-msgstr "Modifica la portlet feed PubSub"
+msgstr "Modifica la portlet di flusso PubSub"
 
 #: ./browser/pubsub.py:27
 msgid "Message"
@@ -56,16 +56,16 @@ msgstr "Flusso personale"
 #: ./browser/pubsub_feed.pt:52
 #: ./browser/pubsub_portlet.pt:40
 msgid "Post"
-msgstr "Post"
+msgstr "Invia"
 
 #: ./browser/pubsub_feed.pt:44
 #: ./browser/pubsub_portlet.pt:32
 msgid "Post to stream"
-msgstr "Messaggio per lo stream"
+msgstr "Inviare nel flusso"
 
 #: ./profiles/default/portlets.xml
 msgid "PubSub feed portlet"
-msgstr "Portlet feed PubSub"
+msgstr "Portlet di flusso PubSub"
 
 #: ./browser/pubsub_portlet.py:15
 msgid "PubSub node"
@@ -85,7 +85,7 @@ msgstr "Configurazione"
 
 #: ./browser/setup.py:28
 msgid "Setup XMPP"
-msgstr "Configura XMPP"
+msgstr "Configurazione XMPP"
 
 #: ./browser/pubsub_feed.pt:48
 #: ./browser/pubsub_portlet.pt:36
@@ -106,10 +106,11 @@ msgstr "Titolo"
 
 #: ./browser/pubsub.py:172
 msgid "Unsubscribe"
-msgstr "Rimuovi iscrizione"
+msgstr "Rimuovi l'iscrizione"
 
 #. Default: "\n        Warning: This action should ONLY be run after the initial setup. It\n        will create the necessary users and nodes on your XMPP server\n        according to your plone site users. Unless you know what you are doing\n        you do not need to run it again afterwards.\n        Make sure you have set the correct settings for you XMPP server before\n        submitting.\n        "
 #: ./browser/setup.py:29
 msgid "label_setup_warning"
-msgstr "Attenzione: Questa azione dovrebbe essere eseguita solo DOPO la configurazione iniziale. Verranno creati gli utenti e i nodi necessari per il vostro server XMPP prendendi i vostri utenti del sito Plone. Non è necessario farlo di nuovo a meno di sapere cosa si sta facendo. Accertarsi di eseguire corretamente la configurazione del vostro server XMPP prima di inviare.\n        "
+msgstr "Attenzione: Questa azione dovrebbe essere eseguita solo DOPO la configurazione iniziale. Verranno creati gli utenti e i nodi necessari per il vostro server XMPP basandosi sui vostri utenti del sito Plone. Non è necessario farlo di nuovo a meno di sapere cosa si sta facendo. Accertarsi di eseguire corretamente la configurazione del vostro server XMPP prima di inviare."
+
 
