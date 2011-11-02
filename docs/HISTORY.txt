@@ -6,6 +6,8 @@ Changelog
 0.3 - Unreleased
 -----------------
 
+- Add German translations [potzenheimer]
+
 - Added Italian translation [giacomos]
 
 -----------------
