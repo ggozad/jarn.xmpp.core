@@ -34,7 +34,7 @@
                tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
                                title string:$fullname"
                i18n:translate="">
-                Personal Stream
+                Personal stream
             </a>
         </div>
     </li>

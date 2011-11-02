@@ -17,7 +17,7 @@ CATALOGNAME="jarn.xmpp.core"
 JSCATALOGNAME="jarn.xmpp.core.js"
 
 # List of languages
-LANGUAGES="en no"
+LANGUAGES="en no el"
 
 # Create locales folder structure for languages
 install -d locales

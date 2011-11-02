@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-11-01 16:35+0000\n"
+"POT-Creation-Date: 2011-11-02 08:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,53 +17,49 @@ msgstr ""
 #: ./browser/pubsub_portlet.py:50
 #: ./profiles/default/portlets.xml
 msgid "A portlet that renders the feed from a PubSub node."
-msgstr ""
+msgstr "En infoboks med statusoppdateringer fra an PubSub node."
 
 #: ./browser/pubsub_portlet.py:49
 msgid "Add PubSub feed portlet"
-msgstr ""
+msgstr "Legg til PubSub statusoppdatering infoboks"
 
 #: ./browser/user_details.pt:8
 msgid "Click to toggle user's details"
-msgstr ""
+msgstr "Klikk for å utvide"
 
 #: ./browser/pubsub_portlet.py:59
 msgid "Edit PubSub feed portlet"
-msgstr ""
+msgstr "Rediger PubSub infoboks"
 
 #: ./browser/pubsub.py:27
 msgid "Message"
-msgstr ""
+msgstr "Melding"
 
 #: ./browser/pubsub.py:24
 msgid "Node"
-msgstr ""
+msgstr "Node"
 
 #: ./browser/viewlet.pt:11
 msgid "Online users:"
-msgstr ""
-
-#: ./browser/user_details.pt:33
-msgid "Personal Stream"
-msgstr ""
+msgstr "Påloggede brukere"
 
 #: ./browser/user_details.pt:14
 msgid "Personal stream"
-msgstr ""
+msgstr "Personlige meldinger"
 
 #: ./browser/pubsub_feed.pt:52
 #: ./browser/pubsub_portlet.pt:40
 msgid "Post"
-msgstr ""
+msgstr "Publiser"
 
 #: ./browser/pubsub_feed.pt:44
 #: ./browser/pubsub_portlet.pt:32
 msgid "Post to stream"
-msgstr ""
+msgstr "Oppdater status"
 
 #: ./profiles/default/portlets.xml
 msgid "PubSub feed portlet"
-msgstr ""
+msgstr "PubSub statusboks"
 
 #: ./browser/pubsub_portlet.py:15
 msgid "PubSub node"
@@ -71,40 +67,40 @@ msgstr ""
 
 #: ./browser/user_details.pt:22
 msgid "Reply"
-msgstr ""
+msgstr "Svar"
 
 #: ./browser/user_details.pt:28
 msgid "Send"
-msgstr ""
+msgstr "Send"
 
 #: ./browser/setup.py:41
 msgid "Setup"
-msgstr ""
+msgstr "Oppsett"
 
 #: ./browser/setup.py:28
 msgid "Setup XMPP"
-msgstr ""
+msgstr "Oppsett XMPP"
 
 #: ./browser/pubsub_feed.pt:48
 #: ./browser/pubsub_portlet.pt:36
 msgid "Share location"
-msgstr ""
+msgstr "Angi sted"
 
 #: ./browser/viewlet.pt:6
 msgid "Site stream"
-msgstr ""
+msgstr "Status oppdatering"
 
 #: ./browser/pubsub.py:157
 msgid "Subscribe"
-msgstr ""
+msgstr "Følge bruker"
 
 #: ./browser/pubsub_portlet.py:14
 msgid "Title"
-msgstr ""
+msgstr "Tittel"
 
 #: ./browser/pubsub.py:172
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Avslutt å følge"
 
 #. Default: "\n        Warning: This action should ONLY be run after the initial setup. It\n        will create the necessary users and nodes on your XMPP server\n        according to your plone site users. Unless you know what you are doing\n        you do not need to run it again afterwards.\n        Make sure you have set the correct settings for you XMPP server before\n        submitting.\n        "
 #: ./browser/setup.py:29

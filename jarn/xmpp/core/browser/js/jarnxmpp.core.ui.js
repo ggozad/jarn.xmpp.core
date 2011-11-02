@@ -235,16 +235,17 @@ $.fn.prettyDate = function () {
             pretty_date;
         if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
             return true;
-
-        pretty_date = day_diff === 0 && (
-                diff < 60 && "just now" ||
-                diff < 120 && "1 minute ago" ||
-                diff < 3600 && Math.floor( diff / 60 ) + " minutes ago" ||
-                diff < 7200 && "1 hour ago" ||
-                diff < 86400 && Math.floor( diff / 3600 ) + " hours ago") ||
-            day_diff == 1 && "Yesterday" ||
-            day_diff < 7 && day_diff + " days ago" ||
-            day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago";
+        pretty_date =
+            day_diff === 0 && (
+                diff < 60 && jarnxmpp.UI._('just now') ||
+                diff < 120 && jarnxmpp.UI._('1 minute ago') ||
+                diff < 3600 && jarnxmpp.UI._('${count} minutes ago', {count: Math.floor( diff / 60 )}) ||
+                diff < 7200 && jarnxmpp.UI._('1 hour ago') ||
+                diff < 86400 && jarnxmpp.UI._('${count} hours ago', {count: Math.floor( diff / 3600 )})
+            ) ||
+            day_diff == 1 && jarnxmpp.UI._('Yesterday') ||
+            day_diff < 7 && jarnxmpp.UI._('${count} days ago', {count: day_diff}) ||
+            day_diff < 31 && jarnxmpp.UI._('${count} weeks ago', {count: Math.ceil( day_diff / 7 )});
         $(el).text(pretty_date);
     });
 };

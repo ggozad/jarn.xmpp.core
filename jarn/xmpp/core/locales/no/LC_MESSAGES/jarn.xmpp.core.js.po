@@ -14,7 +14,31 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: jarn.xmpp.core.js\n"
 
+msgid "${count} days ago"
+msgstr ""
+
+msgid "${count} hours ago"
+msgstr ""
+
+msgid "${count} minutes ago"
+msgstr ""
+
+msgid "${count} weeks ago"
+msgstr ""
+
+msgid "1 hour ago"
+msgstr ""
+
+msgid "1 minute ago"
+msgstr ""
+
 # Javascript i18n
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
+msgstr ""
+
+msgid "Yesteray"
+msgstr ""
+
+msgid "just now"
 msgstr ""
 
