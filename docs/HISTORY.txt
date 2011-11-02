@@ -6,6 +6,9 @@ Changelog
 0.22 - Unreleased
 -----------------
 
+- i18n support. Norwegian and Greek for the time being.
+  [ggozad]
+
 - Provide a portlet that shows a PubSub feed.
   [ggozad]
 
