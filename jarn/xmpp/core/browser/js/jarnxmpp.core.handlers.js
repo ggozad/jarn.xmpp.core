@@ -153,6 +153,19 @@ jarnxmpp.Presence = {
 
 jarnxmpp.vCard = {
 
+    getBase64Image: function (url, callback) {
+        // Create the element, then draw it on a canvas to get the base64 data.
+        var img = new Image();
+        $(img).load(function () {
+            var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            callback(canvas.toDataURL('image/png'));
+        }).attr('src', url);
+    },
+
     getvCard: function(jid, callback) {
         var stanza =
             $iq({type: 'get', to:jid})
@@ -167,16 +180,29 @@ jarnxmpp.vCard = {
         });
     },
 
-    setvCard: function(params) {
-        var vCard = Strophe.xmlElement('vCard', [['xmlns', 'vcard-temp']]);
+    setvCard: function(params, photoUrl) {
+        var vCard = Strophe.xmlElement('vCard', [['xmlns', 'vcard-temp'], ['version', '2.0']]);
         for (var key in params) {
             if (params.hasOwnProperty(key)) {
                 vCard.appendChild(
                     Strophe.xmlElement(key, [], params[key]));
             }
         }
-        var stanza = $iq({type: 'set'}).cnode(vCard).tree();
-        jarnxmpp.connection.sendIQ(stanza);
+        var send = function() {
+            var stanza = $iq({type: 'set'}).cnode(vCard).tree();
+            jarnxmpp.connection.sendIQ(stanza);
+        };
+        if (typeof(photoUrl) === 'undefined')
+            send();
+        else
+            jarnxmpp.vCard.getBase64Image(photoUrl, function (base64img) {
+                base64img = base64img.replace(/^data:image\/png;base64,/, "");
+                var photo = Strophe.xmlElement('PHOTO');
+                photo.appendChild(Strophe.xmlElement('TYPE', [], 'image/png'));
+                photo.appendChild(Strophe.xmlElement('BINVAL', [], base64img));
+                vCard.appendChild(photo);
+                send();
+            });
     }
 };
 
