@@ -7,6 +7,7 @@ Changelog
 -----------------
 
 - Added Italian translation [giacomos]
+- Added French translation [toutpt]
 
 -----------------
 0.22 - 2011-11-02
