@@ -1,0 +1,46 @@
+# Giacomo Spettoli <giacomo.spettoli@gmail.com>, 2011
+msgid ""
+msgstr ""
+"Project-Id-Version: jarn.xmpp.core\n"
+"POT-Creation-Date: 2011-11-01 16:05+0000\n"
+"PO-Revision-Date: 2011-11-02 10:48 +0200\n"
+"Last-Translator: Giacomo Spettoli <giacomo.spettoli@gmail.com>\n"
+"Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n!=1\n"
+"Language-Code: it\n"
+"Language-Name: Italiano\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: jarn.xmpp.core.js\n"
+"X-Is-Fallback-For: it-ch it-it\n"
+
+
+# Javascript i18n
+msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
+msgstr "Impossibile determinare la tua posizione. Permetti a questo sito di tracciare la tua posizione nelle impostazioni del browser."
+
+msgid "just now"
+msgstr "ora"
+
+msgid "1 minute ago"
+msgstr "1 minuto fa"
+
+msgid "${count} minutes ago"
+msgstr "${count} minuti fa"
+
+msgid "1 hour ago"
+msgstr "1 ora fa"
+
+msgid "${count} hours ago"
+msgstr "${count} ore fa"
+
+msgid "yesterday"
+msgstr "ieri"
+
+msgid "${count} days ago"
+msgstr "${count} giorni fa"
+
+msgid "${count} weeks ago"
+msgstr "${count} settimane fa"
