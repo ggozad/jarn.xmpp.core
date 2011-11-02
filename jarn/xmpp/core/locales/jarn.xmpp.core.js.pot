@@ -34,7 +34,7 @@ msgstr ""
 msgid "${count} hours ago"
 msgstr ""
 
-msgid "Yesteray"
+msgid "Yesterday"
 msgstr ""
 
 msgid "${count} days ago"

@@ -36,7 +36,7 @@ msgstr ""
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
 msgstr ""
 
-msgid "Yesteray"
+msgid "Yesterday"
 msgstr ""
 
 msgid "just now"
