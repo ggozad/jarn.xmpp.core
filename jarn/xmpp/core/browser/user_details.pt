@@ -1,34 +1,40 @@
-<metal:userdetails tal:condition="view/available"
+<metal:userdetails i18n:domain="jarn.xmpp.core"
+  tal:condition="view/available"
   tal:define="user_id view/user_id;
               fullname view/fullname;
               portal_url context/portal_url">
     <li tal:attributes="id string:online-users-${user_id};
                         data-userid user_id">
         <a href="#" class="user-details-toggle"
-           title="Click to toggle user's details">
+           title="Click to toggle user's details"
+           i18n:attributes="title">
            <tal:name replace="fullname">Jon Doe</tal:name>
         </a>
         <div class="user-details-form">
-            <a tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
-                               title string:Personal stream of $fullname">
-               <img tal:attributes="alt string:Personal stream of $fullname;
-                                    src view/portrait_url" />
+            <a title="Personal stream"
+                tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id"
+                i18n:attributes="title">
+               <img alt="Personal stream"
+                  tal:attributes="src view/portrait_url"
+                  i18n:attributes="alt"/>
             </a>
             <div class="replyForm">
                 <a href="#" i18n:translate="">Reply</a>
                 <form class="sendXMPPMessage" action="" method="post">
-                    <input type="text" name="message" placeholder=""
-                           tal:attributes="placeholder string:Personal message;
-                                           data-recipient view/jid"/>
+                    <input type="text" name="message" placeholder="Personal message"
+                           tal:attributes="data-recipient view/jid"
+                           i18n:attributes="placeholder"/>
                     <div class="formControls">
-                        <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"/>
+                        <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"
+                            i18n:attributes="value"/>
                     </div>
                 </form>
             </div>
             <a href="#" title="" class="user-personal-stream"
                tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
-                               title string:$fullname">
-                Personal Stream
+                               title string:$fullname"
+               i18n:translate="">
+                Personal stream
             </a>
         </div>
     </li>

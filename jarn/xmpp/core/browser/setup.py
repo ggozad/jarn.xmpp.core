@@ -26,7 +26,8 @@ class SetupXMPPForm(form.Form):
 
     fields = field.Fields(ISetupXMPP)
     label = _("Setup XMPP")
-    description = _("""
+    description = _("label_setup_warning",
+        """
         Warning: This action should ONLY be run after the initial setup. It
         will create the necessary users and nodes on your XMPP server
         according to your plone site users. Unless you know what you are doing

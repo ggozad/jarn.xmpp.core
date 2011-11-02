@@ -29,6 +29,7 @@ setup(name='jarn.xmpp.core',
           'plone.app.registry',
           'plone.app.z3cform',
           'jarn.xmpp.twisted',
+          'jarn.jsi18n'
       ],
       extras_require = {
           'test': [
