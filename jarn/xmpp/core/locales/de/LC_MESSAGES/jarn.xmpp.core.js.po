@@ -1,0 +1,44 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: jarn.xmpp.core\n"
+"POT-Creation-Date: 2011-11-01 16:05+0000\n"
+"PO-Revision-Date: 2011-11-02 13:05+0100\n"
+"Last-Translator: Christoph Boehner <cb@vorwaerts-werbung.de>\n"
+"Language-Team: VW Language Team <hallo@vorwaerts-werbung.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: de\n"
+"Language-Name: German\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: jarn.xmpp.core\n"
+
+msgid "${count} days ago"
+msgstr "Vor ${count} Tagen"
+
+msgid "${count} hours ago"
+msgstr "Vor ${count} Stunden"
+
+msgid "${count} minutes ago"
+msgstr "vor ${count} Minuten"
+
+msgid "${count} weeks ago"
+msgstr "Vor ${count} Wochen"
+
+msgid "1 hour ago"
+msgstr "Vor einer Stunde"
+
+msgid "1 minute ago"
+msgstr "Vor einer Minute"
+
+# Javascript i18n
+msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
+msgstr "Ihr Standort kann nciht festgestellt werden. Bitte erlauben Sie dieser Seite Ihren Standort anhand Ihrer Browser Einstellungen verfolgen zu dürfen."
+
+msgid "just now"
+msgstr "In diesem Moment"
+
+msgid "yesterday"
+msgstr "Gestern"
+
