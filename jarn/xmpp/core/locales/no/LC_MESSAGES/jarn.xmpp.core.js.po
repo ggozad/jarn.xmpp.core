@@ -15,30 +15,30 @@ msgstr ""
 "Domain: jarn.xmpp.core.js\n"
 
 msgid "${count} days ago"
-msgstr ""
+msgstr "${count} dager siden"
 
 msgid "${count} hours ago"
-msgstr ""
+msgstr "${count} timer siden"
 
 msgid "${count} minutes ago"
-msgstr ""
+msgstr "${count} minutter siden"
 
 msgid "${count} weeks ago"
-msgstr ""
+msgstr "${count} uker siden"
 
 msgid "1 hour ago"
-msgstr ""
+msgstr "1 time siden"
 
 msgid "1 minute ago"
-msgstr ""
+msgstr "1 minutt siden"
 
 # Javascript i18n
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
-msgstr ""
-
-msgid "Yesterday"
-msgstr ""
+msgstr "Kan ikke fastslå din plassering. Vennligst tillat nettleseren din å angi hvor du er."
 
 msgid "just now"
-msgstr ""
+msgstr "nå"
+
+msgid "yesterday"
+msgstr "igår"
 

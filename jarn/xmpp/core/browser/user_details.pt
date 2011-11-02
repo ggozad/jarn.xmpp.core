@@ -21,9 +21,9 @@
             <div class="replyForm">
                 <a href="#" i18n:translate="">Reply</a>
                 <form class="sendXMPPMessage" action="" method="post">
-                    <input type="text" name="message" placeholder=""
-                           tal:attributes="placeholder string:Personal message;
-                                           data-recipient view/jid"/>
+                    <input type="text" name="message" placeholder="Personal message"
+                           tal:attributes="data-recipient view/jid"
+                           i18n:attributes="placeholder"/>
                     <div class="formControls">
                         <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"
                             i18n:attributes="value"/>

@@ -36,9 +36,9 @@ msgstr "πριν 1 λεπτό"
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
 msgstr "Δεν μπορούμε να προσδιορίσουμε την τοποθεσία σας. Παρακαλούμε ρυθμίστε το φυλλομετρητή σας ώστε να το επιτρέψει."
 
-msgid "Yesterday"
-msgstr "χθές"
-
 msgid "just now"
 msgstr "μόλις τώρα"
+
+msgid "yesterday"
+msgstr "χθές"
 

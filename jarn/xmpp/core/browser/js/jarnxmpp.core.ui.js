@@ -243,7 +243,7 @@ $.fn.prettyDate = function () {
                 diff < 7200 && jarnxmpp.UI._('1 hour ago') ||
                 diff < 86400 && jarnxmpp.UI._('${count} hours ago', {count: Math.floor( diff / 3600 )})
             ) ||
-            day_diff == 1 && jarnxmpp.UI._('Yesterday') ||
+            day_diff == 1 && jarnxmpp.UI._('yesterday') ||
             day_diff < 7 && jarnxmpp.UI._('${count} days ago', {count: day_diff}) ||
             day_diff < 31 && jarnxmpp.UI._('${count} weeks ago', {count: Math.ceil( day_diff / 7 )});
         $(el).text(pretty_date);
