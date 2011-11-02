@@ -23,7 +23,7 @@ msgid "just now"
 msgstr "à l'instant"
 
 msgid "1 minute ago"
-msgstr "il y une minute"
+msgstr "il y a une minute"
 
 msgid "${count} minutes ago"
 msgstr "il y a ${count} minutes"
