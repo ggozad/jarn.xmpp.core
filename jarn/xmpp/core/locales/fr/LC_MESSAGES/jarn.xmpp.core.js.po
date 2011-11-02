@@ -1,0 +1,44 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2011-11-01 16:05+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: toutpt <toutpt@gmail.com>\n"
+"Language-Team: French <plone-fr@lists.plone.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Language-Code: fr\n"
+"Language-Name: French\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: jarn.xmpp.core.js\n"
+
+
+# Javascript i18n
+msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
+msgstr "Impossible de trouver votre position. Merci d'autoriser ce site à utiliser votre position. Ce paramètre est disponible dans les paramètres de votre navigateur."
+
+msgid "just now"
+msgstr "à l'instant"
+
+msgid "1 minute ago"
+msgstr "il y a une minute"
+
+msgid "${count} minutes ago"
+msgstr "il y a ${count} minutes"
+
+msgid "1 hour ago"
+msgstr "il y a une heure"
+
+msgid "${count} hours ago"
+msgstr "il y a ${count} heures"
+
+msgid "yesterday"
+msgstr "hier"
+
+msgid "${count} days ago"
+msgstr "il y a ${count} jours"
+
+msgid "${count} weeks ago"
+msgstr "il y a ${count} semaines"
