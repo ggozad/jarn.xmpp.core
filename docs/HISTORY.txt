@@ -3,7 +3,7 @@ Changelog
 =========
 
 -----------------
-0.22 - Unreleased
+0.22 - 2011-11-02
 -----------------
 
 - i18n support. Norwegian and Greek for the time being.
