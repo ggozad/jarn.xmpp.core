@@ -5,7 +5,8 @@ Changelog
 -----------------
 0.3 - Unreleased
 -----------------
-- added Italian translation [giacomos]
+
+- Added Italian translation [giacomos]
 
 -----------------
 0.22 - 2011-11-02
