@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="jarn.xmpp.core">
+<body>
+<metal:main fill-slot="main">
+
+  <h1 class="documentFirstHeading"
+    i18n:translate="">My XMPP profile</h1>
+
+  <div id="content-core">
+    <div id='profile-vCard'>
+      <h3 i18n:translate="">My vCard</h3> 
+      <label i18n:translate="">Full name</label>
+      <span id="vCard-fullname"></span>
+      <br/>
+      <label i18n:translate="">Avatar</label>
+      <img id="vCard-photo" />
+      <form action="" method="post" id="vCard-form">
+        <div class="formControls">
+          <button type="submit" name="updatevCard" class="allowMultiSubmit"
+            i18n:translate="">Update vCard from my site profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</metal:main>
+</body>
+</html>
+
