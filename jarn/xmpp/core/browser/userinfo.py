@@ -38,12 +38,6 @@ class XMPPUserDetails(BrowserView):
             self._portrait_url = ''
 
     @property
-    def available(self):
-        if self.pm.isAnonymousUser() or self.user_id is None:
-            return False
-        return True
-
-    @property
     def fullname(self):
         return self._fullname
 

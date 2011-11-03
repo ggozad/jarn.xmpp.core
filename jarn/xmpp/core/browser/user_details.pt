@@ -1,5 +1,4 @@
 <metal:userdetails i18n:domain="jarn.xmpp.core"
-  tal:condition="view/available"
   tal:define="user_id view/user_id;
               fullname view/fullname;
               portal_url context/portal_url">
