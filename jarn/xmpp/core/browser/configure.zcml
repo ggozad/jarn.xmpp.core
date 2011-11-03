@@ -30,7 +30,7 @@
 
   <browser:page
     for="*"
-    name="xmpp-user-profile"
+    name="xmpp-personal-profile"
     class=".user_profile.XMPPUserProfile"
     template="user_profile.pt"
     permission="zope2.View"
