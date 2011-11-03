@@ -20,6 +20,7 @@ Installation
 Before setting up the package you need to have a working XMPP server and access to the administration account on the server. The package has only been tested with ejabberd version 2.1.5 and above which is recommended. In any case the following XMPP extensions need to be supported by the server you are going to use:
 
 * `XEP-0071`_ XHTML-IM.
+* `XEP-0054`_ vCard-temp.
 * `XEP-0144`_ Roster Item Exchange.
 * `XEP-0060`_ Publish-Subscribe.
 * `XEP-0248`_ PubSub Collection Nodes.
@@ -232,6 +233,7 @@ Credits
 * Most of this work was done using the 10% time available to `Jarn AS`_ employees for the development of open-source projects.
 
 .. _XEP-0071: http://xmpp.org/extensions/xep-0071.html
+.. _XEP-0054: http://xmpp.org/extensions/xep-0054.html
 .. _XEP-0144: http://xmpp.org/extensions/xep-0144.html
 .. _XEP-0060: http://xmpp.org/extensions/xep-0060.html
 .. _XEP-0248: http://xmpp.org/extensions/xep-0248.html
