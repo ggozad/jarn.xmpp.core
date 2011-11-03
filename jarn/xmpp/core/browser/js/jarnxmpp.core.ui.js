@@ -1,10 +1,68 @@
 /*global $:false, document:false, window:false, portal_url:false,
 jarnxmpp:false, $msg:false, Strophe:false */
 
+$.fn.magicLinks = function () {
+    $('a.magic-link', this).each(function () {
+        var $link = $(this);
+        $link.hide();
+        $link.children('.magic-favicon').hide();
+        var setLink = function(data) {
+            $link.children('.magic-link-title').html(data.title);
+            $link.children('.magic-link-descr').html(data.description);
+            $link.children('.magic-favicon').attr('src', '/fav-icons?url='+data.favicon_url);
+            $link.children('.magic-favicon').show();
+            $link.show();
+        };
+        if (jarnxmpp.Storage.storage !==null && 'ml' + $link.attr('href') in jarnxmpp.Storage.storage) {
+            var data = jarnxmpp.Storage.get('ml' + $link.attr('href'));
+            setLink(data);
+        } else {
+            $.getJSON(portal_url + "/magic-links?url=" + $link.attr('href'), function (data) {
+                if (data===null) return;
+                if (jarnxmpp.Storage.storage!==null) {
+                    jarnxmpp.Storage.set('ml' + $link.attr('href'), data);
+                }
+                setLink(data);
+            });
+        }
+    });
+};
+
+$.fn.prettyDate = function () {
+    $(this).each(function (idx, el) {
+        var d = $(el).attr('data-time');
+        if (typeof(d) === 'undefined')
+            return true;
+        var date = new Date(d),
+            diff = (((new Date()).getTime() - date.getTime()) / 1000),
+            day_diff = Math.floor(diff / 86400),
+            pretty_date;
+        if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
+            return true;
+        pretty_date =
+            day_diff === 0 && (
+                diff < 60 && jarnxmpp.UI._('just now') ||
+                diff < 120 && jarnxmpp.UI._('1 minute ago') ||
+                diff < 3600 && jarnxmpp.UI._('${count} minutes ago', {count: Math.floor( diff / 60 )}) ||
+                diff < 7200 && jarnxmpp.UI._('1 hour ago') ||
+                diff < 86400 && jarnxmpp.UI._('${count} hours ago', {count: Math.floor( diff / 3600 )})
+            ) ||
+            day_diff == 1 && jarnxmpp.UI._('yesterday') ||
+            day_diff < 7 && jarnxmpp.UI._('${count} days ago', {count: day_diff}) ||
+            day_diff < 31 && jarnxmpp.UI._('${count} weeks ago', {count: Math.ceil( day_diff / 7 )});
+        $(el).text(pretty_date);
+    });
+};
+
 jarnxmpp.UI = {
+
+    _: null,
     msg_counter: 0,
     geocoder: null,
 
+    //
+    // New message notification
+    //
     focus: function() {
         window.blur();
         window.focus();
@@ -29,6 +87,9 @@ jarnxmpp.UI = {
         setTimeout(jarnxmpp.UI.updatePrettyDates, 60000);
     },
 
+    //
+    // Geocoding and maps
+    //
     _loadGoogleMapsAPI: function (callback) {
         _initGoogleMaps = function() {
             jarnxmpp.UI.geocoder = new google.maps.Geocoder();
@@ -89,8 +150,9 @@ jarnxmpp.UI = {
     }
 };
 
+//
 // Presence handler
-
+//
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var user_id = Strophe.getNodeFromJid(jid),
         barejid = Strophe.getBareJidFromJid(jid),
@@ -129,6 +191,9 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     $('#online-count').text(jarnxmpp.Presence.onlineCount());
 });
 
+//
+// Message handler
+//
 $(document).bind('jarnxmpp.message', function (event) {
     var user_id = Strophe.getNodeFromJid(event.from),
         jid = Strophe.getBareJidFromJid(event.from),
@@ -160,7 +225,9 @@ $(document).bind('jarnxmpp.message', function (event) {
     });
 });
 
-// Pub-Sub
+//
+// PubSub handler
+//
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     var i, isLeaf, $li;
     $('#site-stream-link').addClass('newStreamMessage');
@@ -187,8 +254,9 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     }
 });
 
+//
 // Logging
-
+//
 $(document).bind('jarnxmpp.dataReceived', function (ev) {
     $('#xmpp-log').append($('<div>').addClass('xmpp-dataRcvd').text(ev.text));
 });
@@ -197,64 +265,45 @@ $(document).bind('jarnxmpp.dataSent', function (ev) {
     $('#xmpp-log').append($('<div>').addClass('xmpp-dataSent').text(ev.text));
 });
 
-$.fn.magicLinks = function () {
-    $('a.magic-link', this).each(function () {
-        var $link = $(this);
-        $link.hide();
-        $link.children('.magic-favicon').hide();
-        var setLink = function(data) {
-            $link.children('.magic-link-title').html(data.title);
-            $link.children('.magic-link-descr').html(data.description);
-            $link.children('.magic-favicon').attr('src', '/fav-icons?url='+data.favicon_url);
-            $link.children('.magic-favicon').show();
-            $link.show();
-        };
-        if (jarnxmpp.Storage.storage !==null && 'ml' + $link.attr('href') in jarnxmpp.Storage.storage) {
-            var data = jarnxmpp.Storage.get('ml' + $link.attr('href'));
-            setLink(data);
-        } else {
-            $.getJSON(portal_url + "/magic-links?url=" + $link.attr('href'), function (data) {
-                if (data===null) return;
-                if (jarnxmpp.Storage.storage!==null) {
-                    jarnxmpp.Storage.set('ml' + $link.attr('href'), data);
-                }
-                setLink(data);
-            });
-        }
-    });
-};
-
-$.fn.prettyDate = function () {
-    $(this).each(function (idx, el) {
-        var d = $(el).attr('data-time');
-        if (typeof(d) === 'undefined')
-            return true;
-        var date = new Date(d),
-            diff = (((new Date()).getTime() - date.getTime()) / 1000),
-            day_diff = Math.floor(diff / 86400),
-            pretty_date;
-        if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
-            return true;
-        pretty_date =
-            day_diff === 0 && (
-                diff < 60 && jarnxmpp.UI._('just now') ||
-                diff < 120 && jarnxmpp.UI._('1 minute ago') ||
-                diff < 3600 && jarnxmpp.UI._('${count} minutes ago', {count: Math.floor( diff / 60 )}) ||
-                diff < 7200 && jarnxmpp.UI._('1 hour ago') ||
-                diff < 86400 && jarnxmpp.UI._('${count} hours ago', {count: Math.floor( diff / 3600 )})
-            ) ||
-            day_diff == 1 && jarnxmpp.UI._('yesterday') ||
-            day_diff < 7 && jarnxmpp.UI._('${count} days ago', {count: day_diff}) ||
-            day_diff < 31 && jarnxmpp.UI._('${count} weeks ago', {count: Math.ceil( day_diff / 7 )});
-        $(el).text(pretty_date);
-    });
-};
-
 $(document).ready(function () {
 
+    //
+    // Load i18n translations
+    //
     jarn.i18n.loadCatalog('jarn.xmpp.core.js');
     jarnxmpp.UI._ = jarn.i18n.MessageFactory('jarn.xmpp.core.js');
 
+    //
+    // Online users viewlet
+    //
+    $('a#toggle-online-users').bind('click', function (e) {
+        if ($("ul#online-users").hasClass('activated')) {
+            $("ul#online-users").removeClass('activated');
+            $('a.user-details-toggle').removeClass('expanded');
+        }
+        else {
+            $("ul#online-users").addClass('activated');
+        }
+        e.preventDefault();
+    });
+
+    $('a.user-details-toggle').live('click', function (e) {
+        $('a.user-details-toggle').removeClass('expanded');
+        $(this).toggleClass('expanded');
+        $(this).next().find('input[name="message"]').focus();
+        e.preventDefault();
+    });
+
+    if (jarnxmpp.Storage.storage !==null) {
+        var count = jarnxmpp.Storage.get('online-count');
+        if (count !== null) {
+            $('#online-count').text(count);
+        }
+    }
+
+    //
+    // Send message
+    //
     $('.sendXMPPMessage').live('submit', function (e) {
         var $field = $('input[name="message"]', this),
             text = $field.val(),
@@ -276,24 +325,9 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $('a#toggle-online-users').bind('click', function (e) {
-        if ($("ul#online-users").hasClass('activated')) {
-            $("ul#online-users").removeClass('activated');
-            $('a.user-details-toggle').removeClass('expanded');
-        }
-        else {
-            $("ul#online-users").addClass('activated');
-        }
-        e.preventDefault();
-    });
-
-    $('a.user-details-toggle').live('click', function (e) {
-        $('a.user-details-toggle').removeClass('expanded');
-        $(this).toggleClass('expanded');
-        $(this).next().find('input[name="message"]').focus();
-        e.preventDefault();
-    });
-
+    //
+    // PubSub
+    //
     $('#pubsub-form input[name="share-location"]').change(function () {
         if ($(this).attr('checked')) {
             var $checkbox = $(this);
@@ -335,9 +369,6 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    $('.pubsubNode').magicLinks();
-    jarnxmpp.UI.updatePrettyDates();
-
     $('.location').live('click', function (e) {
         $locelem = $(this);
         var map_id = $locelem.parent().find('.map').attr('id');
@@ -361,10 +392,6 @@ $(document).ready(function () {
             $(this).show();
     });
 
-    if (jarnxmpp.Storage.storage !==null) {
-        var count = jarnxmpp.Storage.get('online-count');
-        if (count !== null) {
-            $('#online-count').text(count);
-        }
-    }
+    $('.pubsubNode').magicLinks();
+    jarnxmpp.UI.updatePrettyDates();
 });
