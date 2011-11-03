@@ -3,8 +3,12 @@ Changelog
 =========
 
 -----------------
-0.24 - Unreleased
+0.3 - Unreleased
 -----------------
+
+- Implement vCard 2.0 support. Allows all user meta-data/avatars to be stored
+  on the XMPP server, avoiding all calls to Plone.
+  [ggozad]
 
 -----------------
 0.23 - 2011-11-02
