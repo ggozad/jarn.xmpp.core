@@ -166,7 +166,7 @@ jarnxmpp.vCard = {
         }).attr('src', url);
     },
 
-    getvCard: function(jid, callback) {
+    getVCard: function(jid, callback) {
         var stanza =
             $iq({type: 'get', to:jid})
             .c('vCard', {xmlns: 'vcard-temp'}).tree();
@@ -180,7 +180,7 @@ jarnxmpp.vCard = {
         });
     },
 
-    setvCard: function(params, photoUrl) {
+    setVCard: function(params, photoUrl) {
         var vCard = Strophe.xmlElement('vCard', [['xmlns', 'vcard-temp'], ['version', '2.0']]);
         for (var key in params) {
             if (params.hasOwnProperty(key)) {

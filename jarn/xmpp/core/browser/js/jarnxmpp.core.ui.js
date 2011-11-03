@@ -394,4 +394,16 @@ $(document).ready(function () {
 
     $('.pubsubNode').magicLinks();
     jarnxmpp.UI.updatePrettyDates();
+
+    //
+    // User profile
+    //
+    $('#vCard-form button[name="updateVCard"]').click(function () {
+        var user_id = Strophe.getNodeFromJid(jarnxmpp.connection.jid);
+        $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
+            jarnxmpp.vCard.setVCard({FN: data.fullname}, data.portrait_url);
+        });
+        return false;
+    });
+
 });
