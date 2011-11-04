@@ -12,6 +12,8 @@ jarnxmpp.Storage = {
                     jarnxmpp.Storage.storage = sessionStorage;
                     if (!('_user_info' in jarnxmpp.Storage.storage))
                         jarnxmpp.Storage.set('_user_info', {});
+                    if (!('_vCards' in jarnxmpp.Storage.storage))
+                        jarnxmpp.Storage.set('_vCards', {});
                 }
         } catch(e) {}
 
@@ -137,7 +139,7 @@ jarnxmpp.Presence = {
                 });
             }
         } else {
-            _user_info = jarnxmpp.Storage.get('_user_info');
+            var _user_info = jarnxmpp.Storage.get('_user_info');
             if (user_id in _user_info) {
                 callback(_user_info[user_id]);
             } else {
@@ -153,20 +155,9 @@ jarnxmpp.Presence = {
 
 jarnxmpp.vCard = {
 
-    getBase64Image: function (url, callback) {
-        // Create the element, then draw it on a canvas to get the base64 data.
-        var img = new Image();
-        $(img).load(function () {
-            var canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0);
-            callback(canvas.toDataURL('image/png'));
-        }).attr('src', url);
-    },
+    _vCards: {},
 
-    getVCard: function(jid, callback) {
+    _getVCard: function(jid, callback) {
         var stanza =
             $iq({type: 'get', to:jid})
             .c('vCard', {xmlns: 'vcard-temp'}).tree();
@@ -178,6 +169,32 @@ jarnxmpp.vCard = {
             if (typeof(callback) !== 'undefined')
                 callback(result);
         });
+    },
+
+    getVCard: function (jid, callback) {
+        jid = Strophe.getBareJidFromJid(jid);
+        if (jarnxmpp.Storage.storage === null) {
+            if (jid in jarnxmpp.vCard._vCards) {
+                callback(jarnxmpp.vCard._vCards[jid]);
+            }
+            else {
+                jarnxmpp.vCard._getVCard(jid, function (result) {
+                    jarnxmpp.vCard._vCards[jid] = result;
+                    callback(result);
+                });
+            }
+        } else {
+            var _vCards = jarnxmpp.Storage.get('_vCards');
+            if (jid in _vCards) {
+                callback(_vCards[jid]);
+            } else {
+                jarnxmpp.vCard._getVCard(jid, function (result) {
+                    _vCards[jid] = result;
+                    jarnxmpp.Storage.set('_vCards', _vCards);
+                    callback(result);
+                });
+            }
+        }
     },
 
     setVCard: function(params, photoUrl) {
@@ -203,6 +220,19 @@ jarnxmpp.vCard = {
                 vCard.appendChild(photo);
                 send();
             });
+    },
+
+    getBase64Image: function (url, callback) {
+        // Create the element, then draw it on a canvas to get the base64 data.
+        var img = new Image();
+        $(img).load(function () {
+            var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            callback(canvas.toDataURL('image/png'));
+        }).attr('src', url);
     }
 };
 
