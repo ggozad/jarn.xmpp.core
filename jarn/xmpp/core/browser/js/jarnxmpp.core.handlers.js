@@ -311,6 +311,15 @@ jarnxmpp.PubSub = {
         });
 
     },
+
+    getSubscriptions: function (callback) {
+        var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid})
+            .c('pubsub', {xmlns: Strophe.NS.PUBSUB})
+            .c('subscriptions').tree();
+        jarnxmpp.connection.sendIQ(stanza, function (result) {
+            callback($('subscription', result));
+        });
+    }
 };
 
 jarnxmpp.onConnect = function (status) {
