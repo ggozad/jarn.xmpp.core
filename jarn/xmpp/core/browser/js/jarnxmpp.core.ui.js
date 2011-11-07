@@ -398,7 +398,7 @@ $(document).ready(function () {
     //
     // User profile
     //
-    $('#vCard-form button[name="updateVCard"]').click(function () {
+    $('#xmpp-user-profile #vCard-form button[name="updateVCard"]').click(function () {
         var user_id = Strophe.getNodeFromJid(jarnxmpp.connection.jid);
         $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
             jarnxmpp.vCard.setVCard({FN: data.fullname}, data.portrait_url);
@@ -406,4 +406,30 @@ $(document).ready(function () {
         return false;
     });
 
+});
+
+//
+// Initialization after connect.
+//
+
+$(document).bind('jarnxmpp.connected', function () {
+
+    //
+    // User profile
+    //
+
+    $('#xmpp-user-profile #pubsub-subscriptions').ready(function () {
+        jarnxmpp.PubSub.getNodes(function (available_nodes) {
+            $.each(available_nodes, function (idx, node) {
+                $('#subscriptions-list').append($('<option>').text(node).attr('value', node));
+            });
+            jarnxmpp.PubSub.getSubscriptions(function (subscribed_nodes) {
+                if (subscribed_nodes.indexOf('people')!==-1)
+                    $('#follow-all').attr('checked', 'checked');
+                $.each(subscribed_nodes, function (idx, node) {
+                    $('#subscriptions-list option[value=' + node +']').attr('selected', 'selected');
+                });
+            });
+        }, 'people');
+    });
 });

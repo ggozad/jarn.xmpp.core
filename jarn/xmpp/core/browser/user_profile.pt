@@ -11,17 +11,37 @@
     i18n:translate="">My XMPP profile</h1>
 
   <div id="content-core">
-    <div id='profile-vCard'>
-      <h3 i18n:translate="">My vCard</h3> 
-      <form action="" method="post" id="vCard-form">
-        <div class="formControls">
-          <button type="submit" name="updateVCard" class="allowMultiSubmit"
-            i18n:translate="">Update vCard from my site profile</button>
-        </div>
-      </form>
+    <div id='xmpp-user-profile'>
+      <div id='profile-vCard'>
+        <h3 i18n:translate="">My vCard</h3>
+        <form action="" method="post" id="vCard-form">
+          <div class="formControls">
+            <button type="submit" name="updateVCard" class="allowMultiSubmit"
+              i18n:translate="">Update vCard from my site profile</button>
+          </div>
+        </form>
+      </div>
+      <div id='pubsub-subscriptions'>
+        <h3 i18n:translate="">Stream subscriptions</h3>
+        <form action="" method="post" id="subscriptions-form">
+          <div class="formControls">
+            <label for="followAll">Follow all users</label>
+            <input type="checkbox"
+                   id="follow-all"
+                   name="followAll"
+                   title="Follow all users"
+                   i18n:attributes="title"/>
+            <br/>
+            <label for="subscriptions:list">Select who to follow</label>
+            <select name="subscriptions:list"
+                   id="subscriptions-list"
+                   multiple="multiple">
+            </select>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-
 </metal:main>
 </body>
 </html>
