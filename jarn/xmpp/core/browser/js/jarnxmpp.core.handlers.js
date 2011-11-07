@@ -304,12 +304,23 @@ jarnxmpp.PubSub = {
             item.appendChild(entry);
             publish_elem.appendChild(item);
             var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid})
-                .c('pubsub', { xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
+                .c('pubsub', {xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
             if (typeof(callback) !== 'undefined')
                 jarnxmpp.connection.addHandler(callback, null, 'iq', null, pubid, null);
             jarnxmpp.connection.send(pub);
         });
 
+    },
+
+    getNodes: function (callback, node) {
+        var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid});
+        if (node)
+            stanza.c('query', {xmlns: Strophe.NS.DISCO_ITEMS, node: node});
+        else
+            stanza.c('query', {xmlns: Strophe.NS.DISCO_ITEMS});
+        jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+            callback($('item', result));
+        });
     },
 
     getSubscriptions: function (callback) {
