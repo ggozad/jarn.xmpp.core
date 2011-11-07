@@ -422,6 +422,13 @@ $(document).bind('jarnxmpp.connected', function () {
         jarnxmpp.PubSub.getNodes(function (available_nodes) {
             $.each(available_nodes, function (idx, node) {
                 $('#subscriptions-list').append($('<option>').text(node).attr('value', node));
+                jarnxmpp.Presence.getUserInfo(node, function (info) {
+                    if (info) {
+                        $('#subscriptions-list option[value=' + node + ']').text(info.fullname);
+                    } else {
+                        $('#subscriptions-list option[value=' + node + ']').remove();
+                    }
+                });
             });
             jarnxmpp.PubSub.getSubscriptions(function (subscribed_nodes) {
                 if (subscribed_nodes.indexOf('people')!==-1)
