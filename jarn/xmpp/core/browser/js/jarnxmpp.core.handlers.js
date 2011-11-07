@@ -319,7 +319,8 @@ jarnxmpp.PubSub = {
         else
             stanza.c('query', {xmlns: Strophe.NS.DISCO_ITEMS});
         jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
-            callback($('item', result));
+            var nodes = $.map($('item', result), function (item) { return $(item).attr('node'); });
+            callback(nodes);
         });
     },
 
@@ -328,7 +329,8 @@ jarnxmpp.PubSub = {
             .c('pubsub', {xmlns: Strophe.NS.PUBSUB})
             .c('subscriptions').tree();
         jarnxmpp.connection.sendIQ(stanza, function (result) {
-            callback($('subscription', result));
+            var subscriptions = $.map($('subscription', result), function (item) { return $(item).attr('node'); });
+            callback(subscriptions);
         });
     }
 };
