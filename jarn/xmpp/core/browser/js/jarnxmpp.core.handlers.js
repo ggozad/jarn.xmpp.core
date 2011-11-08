@@ -312,7 +312,7 @@ jarnxmpp.PubSub = {
 
     },
 
-    getNodes: function (callback, node) {
+    getNodes: function (node, callback) {
         var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid});
         if (node)
             stanza.c('query', {xmlns: Strophe.NS.DISCO_ITEMS, node: node});

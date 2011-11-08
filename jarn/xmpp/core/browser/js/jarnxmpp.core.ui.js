@@ -418,7 +418,7 @@ $(document).bind('jarnxmpp.connected', function () {
     //
 
     $('#xmpp-user-profile #pubsub-subscriptions').ready(function () {
-        jarnxmpp.PubSub.getNodes(function (available_nodes) {
+        jarnxmpp.PubSub.getNodes('people', function (available_nodes) {
             $.each(available_nodes, function (idx, node) {
                 $('#subscriptions-list').append($('<option>').text(node).attr('value', node));
                 jarnxmpp.Presence.getUserInfo(node, function (info) {
@@ -438,7 +438,7 @@ $(document).bind('jarnxmpp.connected', function () {
                     $('#subscriptions-list option[value=' + node +']').attr('selected', 'selected');
                 });
             });
-        }, 'people');
+        });
     });
 
     $('#xmpp-user-profile #follow-all').click(function () {
