@@ -320,6 +320,15 @@ jarnxmpp.PubSub = {
         });
     },
 
+    items: function (node, callback) {
+        var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid})
+            .c('pubsub', {xmlns: Strophe.NS.PUBSUB, node: node})
+            .c('items', {node: node});
+        jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+            callback($('item', result));
+        });
+    },
+
     getNodes: function (node, callback) {
         var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid});
         if (node)
