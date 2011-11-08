@@ -6,6 +6,9 @@ Changelog
 0.3 - Unreleased
 -----------------
 
+- Implement XEP-0049 private storage on XMPP.
+  [ggozad]
+
 - Implement vCard 2.0 support. Allows all user meta-data/avatars to be stored
   on the XMPP server, avoiding all calls to Plone.
   [ggozad]
