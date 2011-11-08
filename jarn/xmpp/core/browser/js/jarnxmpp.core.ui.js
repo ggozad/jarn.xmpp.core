@@ -288,8 +288,9 @@ $(document).ready(function () {
     });
 
     $('a.user-details-toggle').live('click', function (e) {
+        $('a.user-details-toggle').removeClass('expanded');
         $(this).toggleClass('expanded');
-        $(this).next().find('input[name="message"]').focus();
+        $(this).next().find('[name="message"]:input').focus();
         e.preventDefault();
     });
 
@@ -304,7 +305,7 @@ $(document).ready(function () {
     // Send message
     //
     $('.sendXMPPMessage').live('submit', function (e) {
-        var $field = $('input[name="message"]', this),
+        var $field = $('[name="message"]:input', this),
             text = $field.val(),
             recipient = $field.attr('data-recipient'),
             message;
@@ -342,7 +343,7 @@ $(document).ready(function () {
     });
 
     $('#pubsub-form').bind('submit', function (e) {
-        var $field = $('input[name="message"]', this),
+        var $field = $('[name="message"]:input', this),
             text = $field.attr('value'),
             node = $field.attr('data-node'),
             share_location = $('input[name="share-location"]', this).attr('checked');
@@ -364,7 +365,7 @@ $(document).ready(function () {
     $('.replyForm').find('> a').live('click', function (e) {
         $(this).hide();
         $(this).next('form.sendXMPPMessage').fadeIn('medium');
-        $(this).next('form.sendXMPPMessage').find('input[name="message"]').focus();
+        $(this).next('form.sendXMPPMessage').find('[name="message"]:input').focus();
         e.preventDefault();
     });
 
