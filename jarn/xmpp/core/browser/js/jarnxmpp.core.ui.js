@@ -444,11 +444,17 @@ $(document).bind('jarnxmpp.connected', function () {
     $('#xmpp-user-profile #follow-all').click(function () {
         var follow_all_checkbox = this;
         if ($(follow_all_checkbox).attr('checked')) {
-            jarnxmpp.PubSub.subscribe('people', function (result) {
-                $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
-                               text: jarnxmpp.UI._('You now follow everybody'),
-                               time: 5000,
-                               sticky: false});
+            $('#xmpp-user-profile #subscriptions-list').val([]);
+            jarnxmpp.PubSub.getSubscriptions(function (following) {
+                $(following).each(function (idx, node) {
+                    jarnxmpp.PubSub.unsubscribe(node, null, function (result) {});
+                });
+                jarnxmpp.PubSub.subscribe('people', function (result) {
+                    $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                                   text: jarnxmpp.UI._('You now follow everybody'),
+                                   time: 5000,
+                                   sticky: false});
+                });
             });
         } else {
             jarnxmpp.PubSub.unsubscribe('people', null, function (result) {
@@ -461,7 +467,7 @@ $(document).bind('jarnxmpp.connected', function () {
     });
 
     $('#xmpp-user-profile #subscriptions-list').change(function () {
-        var tofollow = $(this).val();
+        var tofollow = $(this).val() || [];
         jarnxmpp.PubSub.getSubscriptions(function (following) {
             var subscribe_to = tofollow.filter(function(node) { return following.indexOf(node) < 0; }),
                 unsubscribe_from = following.filter(function(node) { return tofollow.indexOf(node) < 0; }),
