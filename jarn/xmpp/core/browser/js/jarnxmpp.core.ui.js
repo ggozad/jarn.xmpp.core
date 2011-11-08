@@ -316,7 +316,7 @@ $(document).ready(function () {
             var gritter_id = $(this).attr('data-gritter-id');
             if (typeof(gritter_id) !== 'undefined')
                 $.gritter.remove(gritter_id);
-            $("div#online-users-container").hide();
+            $("div#online-users-container.autohide").hide('slow');
             $field.val('');
         $.getJSON(portal_url + '/content-transform?', {text: text}, function (data) {
             message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
