@@ -390,6 +390,7 @@ jarnxmpp.rawOutput = function (data) {
 };
 
 $(document).bind('jarnxmpp.connected', function () {
+    Strophe.addNamespace('PUBSUB',"http://jabber.org/protocol/pubsub");
     // Logging
     jarnxmpp.connection.rawInput = jarnxmpp.rawInput;
     jarnxmpp.connection.rawOutput = jarnxmpp.rawOutput;
