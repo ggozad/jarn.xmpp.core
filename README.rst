@@ -27,6 +27,7 @@ Before setting up the package you need to have a working XMPP server and access 
 * `XEP-0133`_ Service Administration.
 * `XEP-0124`_ Bidirectional-streams Over Synchronous HTTP (BOSH)
 * `XEP-0206`_ XMPP over BOSH
+* `XEP-0049`_ Private XML Storage
 
 --------
 Buildout
@@ -240,6 +241,7 @@ Credits
 .. _XEP-0133: http://xmpp.org/extensions/xep-0133.html
 .. _XEP-0124: http://xmpp.org/extensions/xep-0124.html
 .. _XEP-0206: http://xmpp.org/extensions/xep-0206.html
+.. _XEP-0049: http://xmpp.org/extensions/xep-0049.html
 .. _ejabberd: http://www.ejabberd.im
 .. _Jarn AS: http://jarn.com
 .. _jarn.xmpp.buildout: http://github.com/ggozad/jarn.xmpp.buildout

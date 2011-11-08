@@ -28,8 +28,32 @@ jarnxmpp.Storage = {
 
     set: function (key, value) {
         sessionStorage[key] = JSON.stringify(value);
-    }
+    },
 
+    xmppGet: function(key, callback) {
+        jarnxmpp.Storage.xmppGetXml(function (xml) {
+            callback($(key, xml).first().text());
+        });
+    },
+
+    xmppGetXml: function(callback) {
+        var stanza = $iq({type: 'get'})
+          .c('query', {xmlns: 'jabber:iq:private'})
+          .c('jarnxmpp', {xmlns: 'http://jarn.com/ns/jarnxmpp:prefs'})
+          .tree();
+        jarnxmpp.connection.sendIQ(stanza, function success(result) {
+            callback(result);
+        });
+    },
+
+    xmppSet: function(key, value) {
+        var stanza = $iq({type: 'set'})
+            .c('query', {xmlns: 'jabber:iq:private'})
+            .c('jarnxmpp', {xmlns: 'http://jarn.com/ns/jarnxmpp:prefs'})
+            .c(key, value)
+            .tree();
+        jarnxmpp.connection.sendIQ(stanza);
+    }
 };
 
 jarnxmpp.Storage.init();
