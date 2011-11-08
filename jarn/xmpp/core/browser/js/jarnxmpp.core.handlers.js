@@ -278,7 +278,7 @@ jarnxmpp.PubSub = {
         return true;
     },
 
-    publishToPersonalNode: function(node, text, location, callback) {
+    publish: function(node, text, location, callback) {
         if (text === '' || node === '') return;
         $.getJSON(portal_url+'/content-transform?', {text: text}, function(data) {
             var pubid = jarnxmpp.connection.getUniqueId("publishnode"),
@@ -322,6 +322,31 @@ jarnxmpp.PubSub = {
             var nodes = $.map($('item', result), function (item) { return $(item).attr('node'); });
             callback(nodes);
         });
+    },
+
+    subscribe: function(node, callback) {
+        var stanza = $iq({type: 'set', to:jarnxmpp.pubsub_jid})
+            .c('pubsub', {xmlns: Strophe.NS.PUBSUB})
+            .c('subscribe', {node: node, jid: Strophe.getBareJidFromJid(jarnxmpp.connection.jid) });
+        jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+                callback(true);
+            }, function (error) {
+                callback(false);
+            });
+    },
+
+    unsubscribe: function(node, subid, callback) {
+        var stanza = $iq({type: 'set', to:jarnxmpp.pubsub_jid})
+            .c('pubsub', {xmlns: Strophe.NS.PUBSUB});
+        if (subid)
+            stanza.c('unsubscribe', {node: node, subid: subid, jid: Strophe.getBareJidFromJid(jarnxmpp.connection.jid) });
+        else
+            stanza.c('unsubscribe', {node: node, jid: Strophe.getBareJidFromJid(jarnxmpp.connection.jid) });
+        jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+                callback(true);
+            }, function (error) {
+                callback(false);
+            });
     },
 
     getSubscriptions: function (callback) {

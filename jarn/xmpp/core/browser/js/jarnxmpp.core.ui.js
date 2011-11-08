@@ -351,12 +351,12 @@ $(document).ready(function () {
         if (share_location && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(geolocation) {
-                    jarnxmpp.PubSub.publishToPersonalNode(node, text, geolocation);
+                    jarnxmpp.PubSub.publish(node, text, geolocation);
                     $field.attr('value', '');
                 },
                 function(error) {});
         } else {
-            jarnxmpp.PubSub.publishToPersonalNode(node, text, null);
+            jarnxmpp.PubSub.publish(node, text, null);
             $field.attr('value', '');
         }
         return false;
