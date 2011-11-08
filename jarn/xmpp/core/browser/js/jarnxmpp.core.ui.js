@@ -405,7 +405,6 @@ $(document).ready(function () {
         });
         return false;
     });
-
 });
 
 //
@@ -431,12 +430,41 @@ $(document).bind('jarnxmpp.connected', function () {
                 });
             });
             jarnxmpp.PubSub.getSubscriptions(function (subscribed_nodes) {
-                if (subscribed_nodes.indexOf('people')!==-1)
+                if (subscribed_nodes.indexOf('people')!==-1) {
                     $('#follow-all').attr('checked', 'checked');
+                    $('#subscriptions-list').attr('disabled', true);
+                }
                 $.each(subscribed_nodes, function (idx, node) {
                     $('#subscriptions-list option[value=' + node +']').attr('selected', 'selected');
                 });
             });
         }, 'people');
+    });
+
+    $('#xmpp-user-profile #follow-all').click(function () {
+        var follow_all_checkbox = this;
+        if ($(follow_all_checkbox).attr('checked')) {
+            jarnxmpp.PubSub.subscribe('people', function (result) {
+                if (result) {
+                    $.gritter.add({title: 'Subscription updated',
+                                   text: 'You now follow everybody',
+                                   time: 5000,
+                                   sticky: false});
+                } else {
+                    $(follow_all_checkbox).attr('checked', false);
+                }
+            });
+        } else {
+            jarnxmpp.PubSub.unsubscribe('people', null, function (result) {
+                if (result) {
+                    $.gritter.add({title: 'Subscription updated',
+                                   text: 'You now follow noone and can individually select who to follow',
+                                   time: 5000,
+                                   sticky: false});
+                } else {
+                    $(follow_all_checkbox).attr('checked', true);
+                }
+            });
+        }
     });
 });
