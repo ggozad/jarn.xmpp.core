@@ -37,8 +37,10 @@
     background-color: darkorange;
     color: #fff;
 }
-#online-users {
+#online-users-container {
     display: none;
+}
+#online-users {
     z-index: 10;
     position: absolute;
     right: 0;

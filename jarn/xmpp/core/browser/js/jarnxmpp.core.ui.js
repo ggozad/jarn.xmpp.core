@@ -288,7 +288,6 @@ $(document).ready(function () {
     });
 
     $('a.user-details-toggle').live('click', function (e) {
-        $('a.user-details-toggle').removeClass('expanded');
         $(this).toggleClass('expanded');
         $(this).next().find('input[name="message"]').focus();
         e.preventDefault();
@@ -316,7 +315,7 @@ $(document).ready(function () {
             var gritter_id = $(this).attr('data-gritter-id');
             if (typeof(gritter_id) !== 'undefined')
                 $.gritter.remove(gritter_id);
-            $("ul#online-users").removeClass('activated');
+            $("div#online-users-container").hide();
             $field.val('');
         $.getJSON(portal_url + '/content-transform?', {text: text}, function (data) {
             message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
