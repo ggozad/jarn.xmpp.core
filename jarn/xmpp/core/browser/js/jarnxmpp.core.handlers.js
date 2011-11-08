@@ -312,6 +312,14 @@ jarnxmpp.PubSub = {
 
     },
 
+    discoItems: function (node, callback) {
+        var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid})
+            .c('query', {xmlns: Strophe.NS.DISCO_ITEMS, node: node});
+        jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+            callback($('item', result));
+        });
+    },
+
     getNodes: function (node, callback) {
         var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid});
         if (node)
