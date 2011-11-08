@@ -277,12 +277,12 @@ $(document).ready(function () {
     // Online users viewlet
     //
     $('a#toggle-online-users').bind('click', function (e) {
-        if ($("ul#online-users").hasClass('activated')) {
-            $("ul#online-users").removeClass('activated');
+        if ($("div#online-users-container").is(':visible')) {
+            $("div#online-users-container").hide();
             $('a.user-details-toggle').removeClass('expanded');
         }
         else {
-            $("ul#online-users").addClass('activated');
+            $("div#online-users-container").show();
         }
         e.preventDefault();
     });
