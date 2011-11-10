@@ -1,14 +1,10 @@
-/.installed.cfg
-/.mr.developer.cfg
 /include
 /lib
 /bin
 /build
-/develop-eggs
 /dist
 /eggs
 /parts
 *.egg-info
-Paste*
 *.mo
 *.pyc
