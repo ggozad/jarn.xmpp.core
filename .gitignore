@@ -12,7 +12,3 @@
 Paste*
 *.mo
 *.pyc
-*~
-*.bak
-*.swp
-*.pt.py
