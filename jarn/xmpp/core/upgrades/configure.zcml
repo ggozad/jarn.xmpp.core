@@ -1,0 +1,17 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="jarn.xmpp.core">
+
+  <!-- Upgrade Steps -->
+  <genericsetup:upgradeStep
+      title="Upgrade jarn.xmpp.core from revision 1 to 2"
+      description=""
+      source="1"
+      destination="2"
+      handler="jarn.xmpp.core.upgrades.one_to_two.upgrade"
+      sortkey="1"
+      profile="jarn.xmpp.core:default"
+      />
+
+</configure>
