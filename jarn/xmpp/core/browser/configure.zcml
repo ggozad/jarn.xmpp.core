@@ -60,20 +60,6 @@
 
   <browser:page
     for="*"
-    name="pubsub-subscribe"
-    class=".pubsub.SubscribeToNode"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="*"
-    name="pubsub-unsubscribe"
-    class=".pubsub.UnsubscribeFromNode"
-    permission="zope2.View"
-    />
-
-  <browser:page
-    for="*"
     name="setup-xmpp"
     class=".setup.SetupXMPPForm"
     permission="cmf.ManagePortal"

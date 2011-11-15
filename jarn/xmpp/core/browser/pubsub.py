@@ -1,10 +1,6 @@
 import re
 from urlparse import urlparse
 
-from z3c.form import form
-from z3c.form import field
-from z3c.form import button
-
 from zope import schema
 from zope.component import getUtility
 from zope.interface import Interface
@@ -14,8 +10,6 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from jarn.xmpp.core import messageFactory as _
-from jarn.xmpp.core.interfaces import IAdminClient
-from jarn.xmpp.core.interfaces import IXMPPUsers
 from jarn.xmpp.core.interfaces import IPubSubStorage
 
 
@@ -126,57 +120,3 @@ class PubSubItem(BrowserView):
                              if url.startswith('http')
                              and urlparse(url).netloc != portal_url_netloc]
         return self.item_template()
-
-
-class SubscribeUnsubscribeBase(form.Form):
-
-    fields = field.Fields(ISubscribeToNode)
-    ignoreContext = True
-
-    def __init__(self, context, request, node=None, user_jid=None):
-        super(SubscribeUnsubscribeBase, self).__init__(context, request)
-        self.node = node
-        if user_jid is not None:
-            self.user_jid = user_jid
-        else:
-            pm = getToolByName(self.context, 'portal_membership')
-            user_id = pm.getAuthenticatedMember().getId()
-            xmpp_users = getUtility(IXMPPUsers)
-            self.user_jid = xmpp_users.getUserJID(user_id)
-
-    def updateWidgets(self):
-        form.Form.updateWidgets(self)
-        if self.node:
-            # Hide fields which we don't want to bother user with
-            self.widgets["node"].value = self.node
-            self.widgets["node"].mode = form.interfaces.HIDDEN_MODE
-
-
-class SubscribeToNode(SubscribeUnsubscribeBase):
-
-    label = _("Subscribe")
-
-    @button.buttonAndHandler(_('Subscribe'), name='subscribe_node')
-    def subscribe_handler(self, action):
-        data, errors = self.extractData()
-        if errors:
-            return
-        node = data['node']
-        client = getUtility(IAdminClient)
-        d = client.setSubscriptions(node, [(self.user_jid, 'subscribed')])
-        return d
-
-
-class UnsubscribeFromNode(SubscribeUnsubscribeBase):
-
-    label = _("Unsubscribe")
-
-    @button.buttonAndHandler(_('Unsubscribe'), name='unsubscribe_node')
-    def unsubscribe_handler(self, action):
-        data, errors = self.extractData()
-        if errors:
-            return
-        node = data['node']
-        client = getUtility(IAdminClient)
-        d = client.setSubscriptions(node, [(self.user_jid, 'none')])
-        return d
