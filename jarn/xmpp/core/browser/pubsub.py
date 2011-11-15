@@ -1,31 +1,13 @@
 import re
 from urlparse import urlparse
 
-from zope import schema
 from zope.component import getUtility
-from zope.interface import Interface
 
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from jarn.xmpp.core import messageFactory as _
 from jarn.xmpp.core.interfaces import IPubSubStorage
-
-
-class IPublishToNode(Interface):
-
-    node = schema.ASCIILine(title=_(u'Node'),
-                          required=True)
-
-    message = schema.TextLine(title=_(u'Message'),
-                          required=True)
-
-
-class ISubscribeToNode(Interface):
-
-    node = schema.ASCIILine(title=_(u'Node'),
-                            required=True)
 
 
 class PubSubFeedMixIn(object):
