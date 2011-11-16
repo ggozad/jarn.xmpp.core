@@ -53,6 +53,6 @@ class PubSubStorage(object):
         all_items = [self.node_items[node]
                      for node in nodes
                      if node in self.node_items]
-        result = sorted(itertools.chain(*all_items), 
-                        key=lambda item: item['updated'])
+        result = sorted(itertools.chain(*all_items),
+                        key=lambda item: item['updated'], reverse=True)
         return result[:count]

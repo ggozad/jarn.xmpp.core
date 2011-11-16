@@ -44,6 +44,21 @@
     permission="zope2.View"
     />
 
+  <browser:page
+    for="*"
+    name="my-stream"
+    class=".pubsub.MyPubSubFeed"
+    template="pubsub_feed.pt"
+    permission="zope2.View"
+    />
+
+  <browser:view
+    for="*"
+    name="pubsub-items"
+    class=".pubsub.PubSubItems"
+    permission="zope2.View"
+    />
+
   <browser:view
     for="*"
     name="pubsub-item"

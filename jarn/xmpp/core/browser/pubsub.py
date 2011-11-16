@@ -10,6 +10,65 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from jarn.xmpp.core.interfaces import IPubSubStorage
 
 
+class PubSubItem(BrowserView):
+
+    item_template = ViewPageTemplateFile("pubsub_item.pt")
+
+    def __init__(self, context, request):
+        super(PubSubItem, self).__init__(context, request)
+        self.mt = getToolByName(self.context, 'portal_membership')
+        self.host = urlparse(getToolByName(self.context, 'portal_url')()).netloc
+
+    def fullname(self, author):
+        member = self.mt.getMemberById(author)
+        return member.getProperty('fullname', None)
+
+    def isLeaf(self):
+        return self._isLeaf
+
+    def __call__(self, item=None, isLeaf=False):
+        if item is None:
+            item = {
+                'node': self.request.get('node'),
+                'id': self.request.get('id'),
+                'content': self.request.get('content'),
+                'author': self.request.get('author'),
+                'published': self.request.get('published'),
+                'updated': self.request.get('updated'),
+            }
+            if ('geolocation[latitude]' in self.request and
+                'geolocation[longitude]' in self.request):
+                item['geolocation'] = {
+                    'latitude': self.request.get('geolocation[latitude]'),
+                    'longitude': self.request.get('geolocation[longitude]')}
+            if self.request.get('isLeaf') == 'false':
+                isLeaf = False
+        self.item = item
+        self.isLeaf = isLeaf
+
+        # Calculate magic links
+        urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
+        self.item['urls'] = [url
+                             for url in urls
+                             if url.startswith('http')
+                             and urlparse(url).netloc != self.host]
+        return self.item_template()
+
+
+class PubSubItems(BrowserView):
+
+    def __init__(self, context, request):
+        super(PubSubItems, self).__init__(context, request)
+        self.storage = getUtility(IPubSubStorage)
+
+    def __call__(self, nodes, count=10):
+        items = self.storage.itemsFromNodes(nodes, count)
+        item_view = PubSubItem(self.context, self.request)
+        html = '\n'.join(['<li class="pubsubItem">' + item_view(item) + "</li>"
+                        for item in items])
+        return html
+
+
 class PubSubFeedMixIn(object):
 
     def __init__(self, context):
@@ -59,44 +118,14 @@ class PubSubFeed(BrowserView, PubSubFeedMixIn):
         PubSubFeedMixIn.__init__(self, context)
 
 
-class PubSubItem(BrowserView):
+class MyPubSubFeed(BrowserView, PubSubFeedMixIn):
 
-    item_template = ViewPageTemplateFile("pubsub_item.pt")
+    def __init__(self, context, request):
+        BrowserView.__init__(self, context, request)
+        self.node = None
+        PubSubFeedMixIn.__init__(self, context)
 
-    def fullname(self, author):
-        member = self.mt.getMemberById(author)
-        return member.getProperty('fullname', None)
-
-    def isLeaf(self):
-        return self._isLeaf
-
-    def __call__(self, item=None, isLeaf=True):
-        if item is None:
-            item = {
-                'node': self.request.get('node'),
-                'id': self.request.get('id'),
-                'content': self.request.get('content'),
-                'author': self.request.get('author'),
-                'published': self.request.get('published'),
-                'updated': self.request.get('updated'),
-            }
-            if ('geolocation[latitude]' in self.request and
-                'geolocation[longitude]' in self.request):
-                item['geolocation'] = {
-                    'latitude': self.request.get('geolocation[latitude]'),
-                    'longitude': self.request.get('geolocation[longitude]')}
-            if self.request.get('isLeaf') == 'false':
-                isLeaf = False
-        self.item = item
-        self.isLeaf = isLeaf
-        self.mt = getToolByName(self.context, 'portal_membership')
-
-        # Calculate magic links
-        portal_url_netloc = urlparse(
-            getToolByName(self.context, 'portal_url')()).netloc
-        urls = re.findall(r'href=[\'"]?([^\'" >]+)', item['content'])
-        self.item['urls'] = [url
-                             for url in urls
-                             if url.startswith('http')
-                             and urlparse(url).netloc != portal_url_netloc]
-        return self.item_template()
+    def canPublish(self):
+        if self.mt.isAnonymousUser():
+            return
+        return self.mt.getAuthenticatedMember().id

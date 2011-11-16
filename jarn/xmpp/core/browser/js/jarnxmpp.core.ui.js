@@ -493,4 +493,22 @@ $(document).bind('jarnxmpp.connected', function () {
 
         });
     });
+
+    $('.pubsubNode').each(function () {
+        // If this doesn't have a data-node it must a personal stream.
+        if (!$(this).attr('data-node')) {
+            $node = $(this);
+            jarnxmpp.PubSub.getSubscriptions(function (following) {
+                $.ajax({url: '/@@pubsub-items',
+                        data: {nodes: following},
+                        dataType: 'html',
+                        traditional:true,
+                        success: function (data) {
+                            $node.html(data);
+                            $node.magicLinks();
+                        }
+                });
+            });
+        }
+    });
 });
