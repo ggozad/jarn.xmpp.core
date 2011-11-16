@@ -1,3 +1,4 @@
+import itertools
 import string
 import random
 
@@ -45,3 +46,13 @@ class PubSubStorage(object):
         self.collections = dict()
         self.leaf_nodes = []
         self.publishers = dict()
+
+    def itemsFromNodes(self, nodes, count=100):
+        if not isinstance(nodes, list):
+            nodes = [nodes]
+        all_items = [self.node_items[node]
+                     for node in nodes
+                     if node in self.node_items]
+        result = sorted(itertools.chain(*all_items), 
+                        key=lambda item: item['updated'])
+        return result[:count]

@@ -48,9 +48,7 @@ class PubSubFeedMixIn(object):
     def items(self, node=None, count=100):
         if node is None:
             node = self.node
-        if node not in self.storage.node_items:
-            return []
-        return self.storage.node_items[node][:count]
+        return self.storage.itemsFromNodes([node], count)
 
 
 class PubSubFeed(BrowserView, PubSubFeedMixIn):
