@@ -32,26 +32,20 @@ jarnxmpp.Storage = {
     },
 
     xmppGet: function(key, callback) {
-        jarnxmpp.Storage.xmppGetXml(function (xml) {
-            callback($(key, xml).first().text());
-        });
-    },
-
-    xmppGetXml: function(callback) {
         var stanza = $iq({type: 'get'})
           .c('query', {xmlns: 'jabber:iq:private'})
-          .c('jarnxmpp', {xmlns: 'http://jarn.com/ns/jarnxmpp:prefs'})
+          .c('jarnxmpp', {xmlns: 'http://jarn.com/ns/jarnxmpp:prefs:' + key})
           .tree();
         jarnxmpp.connection.sendIQ(stanza, function success(result) {
-            callback(result);
+            callback($('jarnxmpp ' + 'value', result).first().text());
         });
     },
 
     xmppSet: function(key, value) {
         var stanza = $iq({type: 'set'})
             .c('query', {xmlns: 'jabber:iq:private'})
-            .c('jarnxmpp', {xmlns: 'http://jarn.com/ns/jarnxmpp:prefs'})
-            .c(key, value)
+            .c('jarnxmpp', {xmlns: 'http://jarn.com/ns/jarnxmpp:prefs:' + key})
+            .c('value', value)
             .tree();
         jarnxmpp.connection.sendIQ(stanza);
     }
