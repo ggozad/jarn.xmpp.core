@@ -47,7 +47,7 @@ class PubSubStorage(object):
         self.leaf_nodes = []
         self.publishers = dict()
 
-    def itemsFromNodes(self, nodes, count=100):
+    def itemsFromNodes(self, nodes, count=20):
         if not isinstance(nodes, list):
             nodes = [nodes]
         all_items = [self.node_items[node]
