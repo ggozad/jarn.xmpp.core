@@ -417,7 +417,7 @@ $(document).bind('jarnxmpp.connected', function () {
     // User profile
     //
 
-    $('#xmpp-user-profile #pubsub-subscriptions').ready(function () {
+    $('#xmpp-user-profile #pubsub-subscriptions').each(function () {
         jarnxmpp.PubSub.getNodes('people', function (available_nodes) {
             $.each(available_nodes, function (idx, node) {
                 $('#subscriptions-list').append($('<option>').text(node).attr('value', node));
