@@ -424,8 +424,10 @@ $(document).bind('jarnxmpp.connected', function () {
                         dataType: 'html',
                         traditional:true,
                         success: function (data) {
+                            $node.hide();
                             $node.html(data);
                             $node.magicLinks();
+                            $node.slideDown("slow");
                         }
                 });
             });
