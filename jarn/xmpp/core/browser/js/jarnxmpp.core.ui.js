@@ -413,6 +413,25 @@ $(document).ready(function () {
 
 $(document).bind('jarnxmpp.connected', function () {
 
+    // Load my stream.
+    $('.pubsubNode').each(function () {
+        // If this doesn't have a data-node it must a personal stream.
+        if (!$(this).attr('data-node')) {
+            $node = $(this);
+            jarnxmpp.PubSub.getSubscriptions(function (following) {
+                $.ajax({url: '/@@pubsub-items',
+                        data: {nodes: following},
+                        dataType: 'html',
+                        traditional:true,
+                        success: function (data) {
+                            $node.html(data);
+                            $node.magicLinks();
+                        }
+                });
+            });
+        }
+    });
+
     //
     // User profile
     //
@@ -442,8 +461,8 @@ $(document).bind('jarnxmpp.connected', function () {
     });
 
     $('#xmpp-user-profile #follow-all').click(function () {
-        var follow_all_checkbox = this;
-        if ($(follow_all_checkbox).attr('checked')) {
+        if ($(this).attr('checked')) {
+            $('#subscriptions-list').attr('disabled', true);
             $('#xmpp-user-profile #subscriptions-list').val([]);
             jarnxmpp.PubSub.getSubscriptions(function (following) {
                 $(following).each(function (idx, node) {
@@ -457,6 +476,7 @@ $(document).bind('jarnxmpp.connected', function () {
                 });
             });
         } else {
+            $('#subscriptions-list').attr('disabled', false);
             jarnxmpp.PubSub.unsubscribe('people', null, function (result) {
                 $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
                                text: jarnxmpp.UI._('You now follow noone and can individually select who to follow'),
@@ -492,23 +512,5 @@ $(document).bind('jarnxmpp.connected', function () {
             });
 
         });
-    });
-
-    $('.pubsubNode').each(function () {
-        // If this doesn't have a data-node it must a personal stream.
-        if (!$(this).attr('data-node')) {
-            $node = $(this);
-            jarnxmpp.PubSub.getSubscriptions(function (following) {
-                $.ajax({url: '/@@pubsub-items',
-                        data: {nodes: following},
-                        dataType: 'html',
-                        traditional:true,
-                        success: function (data) {
-                            $node.html(data);
-                            $node.magicLinks();
-                        }
-                });
-            });
-        }
     });
 });
