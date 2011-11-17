@@ -14,9 +14,10 @@ jarnxmpp.Storage = {
                         jarnxmpp.Storage.set('_user_info', {});
                     if (!('_vCards' in jarnxmpp.Storage.storage))
                         jarnxmpp.Storage.set('_vCards', {});
+                    if (!('_subscriptions' in jarnxmpp.Storage.storage))
+                        jarnxmpp.Storage.set('_subscriptions', null);
                 }
         } catch(e) {}
-
     },
 
     get: function (key) {
@@ -370,6 +371,12 @@ jarnxmpp.PubSub = {
             .c('pubsub', {xmlns: Strophe.NS.PUBSUB})
             .c('subscribe', {node: node, jid: Strophe.getBareJidFromJid(jarnxmpp.connection.jid) });
         jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+                if (jarnxmpp.Storage.storage !== null) {
+                    jarnxmpp.PubSub.getSubscriptions(function (subscriptions) {
+                        subscriptions.push(node);
+                        jarnxmpp.Storage.set('_subscriptions', subscriptions);
+                    });
+                }
                 callback(true);
             }, function (error) {
                 callback(false);
@@ -383,19 +390,38 @@ jarnxmpp.PubSub = {
             stanza.c('unsubscribe', {node: node, subid: subid, jid: Strophe.getBareJidFromJid(jarnxmpp.connection.jid) });
         else
             stanza.c('unsubscribe', {node: node, jid: Strophe.getBareJidFromJid(jarnxmpp.connection.jid) });
-        jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+        jarnxmpp.connection.sendIQ(stanza.tree(),
+            function (result) {
+                if (jarnxmpp.Storage.storage !== null) {
+                    jarnxmpp.PubSub.getSubscriptions(function (subscriptions) {
+                        var idx = subscriptions.indexOf(node);
+                        subscriptions.splice(idx, 1);
+                        jarnxmpp.Storage.set('_subscriptions', subscriptions);
+                    });
+                }
                 callback(true);
-            }, function (error) {
+            },
+            function (error) {
                 callback(false);
-            });
+            }
+        );
     },
 
     getSubscriptions: function (callback) {
+        if (jarnxmpp.Storage.storage !== null) {
+            var subscriptions = jarnxmpp.Storage.get('_subscriptions');
+            if (subscriptions) {
+                callback(subscriptions);
+                return;                
+            }
+        }
         var stanza = $iq({type: 'get', to:jarnxmpp.pubsub_jid})
             .c('pubsub', {xmlns: Strophe.NS.PUBSUB})
             .c('subscriptions').tree();
         jarnxmpp.connection.sendIQ(stanza, function (result) {
             var subscriptions = $.map($('subscription', result), function (item) { return $(item).attr('node'); });
+            if (jarnxmpp.Storage.storage !== null)
+                jarnxmpp.Storage.set('_subscriptions', subscriptions);
             callback(subscriptions);
         });
     }

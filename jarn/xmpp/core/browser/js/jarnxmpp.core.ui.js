@@ -495,6 +495,9 @@ $(document).bind('jarnxmpp.connected', function () {
     $('#xmpp-user-profile #subscriptions-list').change(function () {
         var tofollow = $(this).val() || [];
         jarnxmpp.PubSub.getSubscriptions(function (following) {
+            var my_node = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
+                idx = following.indexOf(my_node);
+            if (idx!==-1) following.splice(idx, 1);
             var subscribe_to = tofollow.filter(function(node) { return following.indexOf(node) < 0; }),
                 unsubscribe_from = following.filter(function(node) { return tofollow.indexOf(node) < 0; }),
                 fullname;
