@@ -11,6 +11,9 @@
             <span i18n:translate="">Online users:</span>
             <span id="online-count">0</span>
         </a>
-        <ul id="online-users"></ul>
+        <div id="online-users-container"
+             class="autohide">
+            <ul id="online-users"></ul>
+        </div>
     </div>
 </div>
