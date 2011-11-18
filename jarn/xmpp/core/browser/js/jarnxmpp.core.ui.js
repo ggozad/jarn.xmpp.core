@@ -230,9 +230,12 @@ $(document).bind('jarnxmpp.message', function (event) {
 //
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     var i, isLeaf, $li;
-    $('#site-stream-link').addClass('newStreamMessage');
     // If we are showing a feed already, and the item should be in it,
     // inject it.
+    jarnxmpp.Storage.xmppGet('last_read_stream_on', function (date) {
+        if (date<event.updated)
+            $('#site-stream-link').addClass('newStreamMessage');
+    });
     if ($('.pubsubNode[data-node="people"]').length > 0 ||
         $('.pubsubNode[data-node=event.node]').length > 0) {
         isLeaf = ($('.pubsubNode[data-node="people"]').length > 0) ? false : true;
@@ -245,11 +248,11 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                updated: event.updated,
                geolocation: event.geolocation,
                isLeaf: isLeaf}, function (data) {
-            $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
-            $('.pubsubNode').prepend($li);
-            $('.pubsubNode li:first').slideDown("slow");
-            $('.pubsubNode li:first .prettyDate').prettyDate();
-            $('.pubsubNode li:first').magicLinks();
+                    $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
+                    $('.pubsubNode').prepend($li);
+                    $('.pubsubNode li:first').slideDown("slow");
+                    $('.pubsubNode li:first .prettyDate').prettyDate();
+                    $('.pubsubNode li:first').magicLinks();
         });
     }
 });
@@ -418,6 +421,7 @@ $(document).bind('jarnxmpp.connected', function () {
         // If this doesn't have a data-node it must a personal stream.
         if (!$(this).attr('data-node')) {
             $node = $(this);
+            jarnxmpp.Storage.xmppSet('last_read_stream_on', jarnxmpp.PubSub._ISODateString(new Date()));
             jarnxmpp.PubSub.getSubscriptions(function (following) {
                 $.ajax({url: '/@@pubsub-items',
                         data: {nodes: following},
@@ -437,7 +441,6 @@ $(document).bind('jarnxmpp.connected', function () {
     //
     // User profile
     //
-
     $('#xmpp-user-profile #pubsub-subscriptions').each(function () {
         jarnxmpp.PubSub.getNodes('people', function (available_nodes) {
             var my_node = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
