@@ -10,7 +10,8 @@ def cleanJSRegistry(context):
         js_registry.unregisterResource('++resource++jarn.xmpp.core.js/strophe.pubsub.js')
     context.runImportStepFromProfile('profile-jarn.xmpp.core:default',
                                      'jsregistry')
-    logger.info('Cleaned js registry.')
+    context.runImportStepFromProfile('profile-jarn.xmpp.core:default',
+                                     'actions')
 
 
 def upgrade(context):
