@@ -7,11 +7,9 @@
 <body>
 <metal:main fill-slot="main">
 
-  <h1 class="documentFirstHeading"
-    i18n:translate="">My XMPP profile</h1>
-
   <div id="content-core">
     <div id='xmpp-user-profile'>
+      <!--
       <div id='profile-vCard'>
         <h3 i18n:translate="">My vCard</h3>
         <form action="" method="post" id="vCard-form">
@@ -21,6 +19,7 @@
           </div>
         </form>
       </div>
+      -->
       <div id='pubsub-subscriptions'>
         <h3 i18n:translate="">Stream subscriptions</h3>
         <form action="" method="post" id="subscriptions-form">
