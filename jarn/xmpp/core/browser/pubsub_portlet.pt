@@ -5,7 +5,7 @@
     i18n:domain="jarn.xmpp.core"
     tal:define="node view/node;
               isLeaf python: view.nodeType=='leaf';
-              canPublish view/canPublish;
+              postNode view/postNode;
               feed_items view/items;
               limit_display limit_display|request/limit_display|nothing;
               limit_display python:limit_display and int(limit_display) or None;
@@ -26,12 +26,12 @@
     </dt>
     <dd class="portletItem">
       <div class="postItemWrapper"
-          tal:define="publishNode view/canPublish"
-          tal:condition="publishNode">
+          tal:define="postNode view/postNode"
+          tal:condition="postNode">
           <form action="" method="post" id="pubsub-form">
               <input type="text" name="message" placeholder="Post to stream"
                   i18n:attributes="placeholder"
-                  tal:attributes="data-node publishNode"/>
+                  tal:attributes="data-post-node postNode"/>
               <div id="share-geolocation">
                 <label for="share-location" i18n:translate="">Share location</label>
                 <input type="checkbox" name="share-location" />

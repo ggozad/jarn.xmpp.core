@@ -300,7 +300,7 @@ jarnxmpp.PubSub = {
     publish: function(node, text, location, callback) {
         if (text === '' || node === '') return;
         $.getJSON(portal_url+'/content-transform?', {text: text}, function(data) {
-            var pubid = jarnxmpp.connection.getUniqueId("publishnode"),
+            var pubid = jarnxmpp.connection.getUniqueId("postNode"),
                 publish_elem = Strophe.xmlElement("publish", [["node",node],["jid",jarnxmpp.jid]]),
                 item = Strophe.xmlElement("item",[]),
                 entry = Strophe.xmlElement('entry', [['xmlns', 'http://www.w3.org/2005/Atom']]),

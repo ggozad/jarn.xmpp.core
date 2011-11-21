@@ -83,7 +83,7 @@ class PubSubFeedMixIn(object):
         member = self.mt.getMemberById(author)
         return member.getProperty('fullname', None)
 
-    def canPublish(self):
+    def postNode(self):
         """
         Checks whether the user can publish in this node. If it's a leaf
         node check whether the user is in the publishers. If it's a collection
@@ -125,7 +125,7 @@ class MyPubSubFeed(BrowserView, PubSubFeedMixIn):
         self.node = None
         PubSubFeedMixIn.__init__(self, context)
 
-    def canPublish(self):
+    def postNode(self):
         if self.mt.isAnonymousUser():
             return
         return self.mt.getAuthenticatedMember().id

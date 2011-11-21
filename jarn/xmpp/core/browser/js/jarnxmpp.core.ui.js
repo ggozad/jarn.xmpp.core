@@ -348,7 +348,7 @@ $(document).ready(function () {
     $('#pubsub-form').bind('submit', function (e) {
         var $field = $('[name="message"]:input', this),
             text = $field.attr('value'),
-            node = $field.attr('data-node'),
+            node = $field.attr('data-post-node'),
             share_location = $('input[name="share-location"]', this).attr('checked');
 
         if (share_location && navigator.geolocation) {
