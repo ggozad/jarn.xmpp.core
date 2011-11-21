@@ -15,12 +15,7 @@
   tal:define="node view/node;
               isLeaf python: view.nodeType=='leaf';
               postNode view/postNode;
-              feed_items view/items;
-              limit_display limit_display|request/limit_display|nothing;
-              limit_display python:limit_display and int(limit_display) or None;
-              Batch python:modules['Products.CMFPlone'].Batch;
-              b_start python:request.get('b_start', 0);
-              batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);          ">
+              feed_items view/items;">
 
     <div id="content-core">
 
@@ -55,14 +50,13 @@
       </div>
 
       <ul class="pubsubNode" tal:attributes="data-node node; data-leaf isLeaf">
-        <tal:pubsubitems tal:repeat="obj batch">
+        <tal:pubsubitems tal:repeat="obj feed_items">
           <li class="pubsubItem">
             <div tal:replace="structure python:context.unrestrictedTraverse('@@pubsub-item')(obj, isLeaf=isLeaf)"/>
           </li>
         </tal:pubsubitems>
       </ul>
       <div class="visualClear"><!-- --></div>
-      <div metal:use-macro="context/batch_macros/macros/navigation" />
     </div>
 </metal:main>
 </body>
