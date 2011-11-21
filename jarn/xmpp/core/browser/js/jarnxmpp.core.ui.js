@@ -247,7 +247,7 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
         if (date>event.updated)
             return;
         $('#site-stream-link').addClass('newStreamMessage');
-        $('.pubsubNode[data-node*="' + event.node + '"]').each(function (idx, node) {
+        $('.pubsubNode[data-node*=' + event.node + '], .pubsubNode[data-node=people]').each(function (idx, node) {
             var $li,
                 $node = $(node),
                 isLeaf = $node.attr('data-leaf') === 'True';
