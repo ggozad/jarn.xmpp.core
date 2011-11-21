@@ -168,6 +168,18 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
                 return;
             }
             user_details = $(user_details);
+            // Set-up following link.
+            jarnxmpp.PubSub.getSubscriptions(function (following) {
+                $following = $('a.following', user_details);
+                if (following.indexOf('people')!==-1) {
+                    $following.remove();
+                    return;
+                }
+                if (following.indexOf(user_id)===-1)
+                     $following.text(jarnxmpp.UI._('Follow user'));
+                else
+                    $following.text(jarnxmpp.UI._('Unfollow user'));
+            });
             // Put users in alphabetical order. This is stupidly done but works.
             var name = $('a.user-details-toggle', user_details).text().trim(),
                 existing_users = $('#online-users > li'),
@@ -304,6 +316,33 @@ $(document).ready(function () {
             $('#online-count').text(count);
         }
     }
+    // Follow/unfollow user.
+    $('a.following').live('click', function (e) {
+        var $following_link = $(this),
+            node_id = $following_link.attr('data-user'),
+            fullname = $following_link.attr('data-fullname');
+        jarnxmpp.PubSub.getSubscriptions(function (following) {
+            if (following.indexOf(node_id)>-1) {
+                jarnxmpp.PubSub.unsubscribe(node_id, null, function (result) {
+                    $following_link.text(jarnxmpp.UI._('Follow user'));
+                    $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                                   text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
+                                   time: 5000,
+                                   sticky: false
+                    });
+                });
+            } else {
+                jarnxmpp.PubSub.subscribe(node_id, function (result) {
+                    $following_link.text(jarnxmpp.UI._('Unfollow user'));
+                    $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                                   text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
+                                   time: 5000,
+                                   sticky: false});
+                });
+            }
+        });
+        e.preventDefault();
+    });
 
     //
     // Send message

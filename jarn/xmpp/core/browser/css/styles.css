@@ -184,6 +184,10 @@ div.replyForm > a {
     padding-left: 13px;
     color: #ccc;
 }
+a.following {
+	display: inline-block;
+	margin-bottom: 1.5em;
+}
 div.replyForm > a:hover {
     color: #fff;
 }
