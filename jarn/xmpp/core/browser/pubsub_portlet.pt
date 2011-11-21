@@ -11,7 +11,7 @@
               limit_display python:limit_display and int(limit_display) or None;
               Batch python:modules['Products.CMFPlone'].Batch;
               b_start python:request.get('b_start', 0);
-              batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);          ">
+              batch python:isinstance(feed_items, Batch) and feed_items or Batch(feed_items, limit_display or 20, int(b_start), orphan=1);">
 
     <dt class="portletHeader">
       <span class="portletTopLeft"></span>
@@ -42,7 +42,7 @@
           </form>
       </div>
 
-      <ul class="pubsubNode" tal:attributes="data-node node">
+      <ul class="pubsubNode" tal:attributes="data-node node; data-leaf isLeaf">
         <tal:pubsubitems tal:repeat="obj batch">
           <li class="pubsubItem">
             <div tal:replace="structure python:context.unrestrictedTraverse('@@pubsub-item')(obj, isLeaf=isLeaf)"/>

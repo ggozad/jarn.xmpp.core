@@ -229,32 +229,33 @@ $(document).bind('jarnxmpp.message', function (event) {
 // PubSub handler
 //
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
-    var i, isLeaf, $li;
     // If we are showing a feed already, and the item should be in it,
     // inject it.
     jarnxmpp.Storage.xmppGet('last_read_stream_on', function (date) {
-        if (date<event.updated)
-            $('#site-stream-link').addClass('newStreamMessage');
-    });
-    if ($('.pubsubNode[data-node="people"]').length > 0 ||
-        $('.pubsubNode[data-node=event.node]').length > 0) {
-        isLeaf = ($('.pubsubNode[data-node="people"]').length > 0) ? false : true;
-        $.get(portal_url + '/@@pubsub-item?',
-              {node: event.node,
-               id: event.id,
-               content: event.content,
-               author: event.author,
-               published: event.published,
-               updated: event.updated,
-               geolocation: event.geolocation,
-               isLeaf: isLeaf}, function (data) {
-                    $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
-                    $('.pubsubNode').prepend($li);
-                    $('.pubsubNode li:first').slideDown("slow");
-                    $('.pubsubNode li:first .prettyDate').prettyDate();
-                    $('.pubsubNode li:first').magicLinks();
+        if (date>event.updated)
+            return;
+        $('#site-stream-link').addClass('newStreamMessage');
+        $('.pubsubNode[data-node*="' + event.node + '"]').each(function (idx, node) {
+            var $li,
+                $node = $(node),
+                isLeaf = $node.attr('data-leaf') === 'True';
+            $.get(portal_url + '/@@pubsub-item?',
+                  {node: event.node,
+                   id: event.id,
+                   content: event.content,
+                   author: event.author,
+                   published: event.published,
+                   updated: event.updated,
+                   geolocation: event.geolocation,
+                   isLeaf: isLeaf}, function (data) {
+                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
+                        $node.prepend($li);
+                        $li.slideDown("slow");
+                        $('li:first .prettyDate', $node).prettyDate();
+                        $('li:first', $node).magicLinks();
+            });
         });
-    }
+    });
 });
 
 //
@@ -423,6 +424,7 @@ $(document).bind('jarnxmpp.connected', function () {
             $node = $(this);
             jarnxmpp.Storage.xmppSet('last_read_stream_on', jarnxmpp.PubSub._ISODateString(new Date()));
             jarnxmpp.PubSub.getSubscriptions(function (following) {
+                $node.attr('data-node', following.join(' '));
                 $.ajax({url: '/@@pubsub-items',
                         data: {nodes: following},
                         dataType: 'html',
