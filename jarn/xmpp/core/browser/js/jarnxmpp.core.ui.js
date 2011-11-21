@@ -423,6 +423,7 @@ $(document).ready(function () {
                     traditional:true,
                     success: function (data) {
                         $node.append(data);
+                        $('.prettyDate', $node).prettyDate();
                         $node.magicLinks();
                     }
             });
@@ -488,6 +489,7 @@ $(document).bind('jarnxmpp.connected', function () {
                             $node.hide();
                             $node.html(data);
                             $node.magicLinks();
+                            $('.prettyDate', $node).prettyDate();
                             $node.slideDown("slow");
                         }
                 });
