@@ -55,4 +55,4 @@ class PubSubStorage(object):
                      if node in self.node_items]
         result = sorted(itertools.chain(*all_items),
                         key=lambda item: item['updated'], reverse=True)
-        return result[start:count]
+        return result[start:count + start]

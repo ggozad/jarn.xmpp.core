@@ -56,6 +56,7 @@
           </li>
         </tal:pubsubitems>
       </ul>
+      <button type="submit" name="loadMore" class="allowMultiSubmit" i18n:translate="">Load more...</button>
       <div class="visualClear"><!-- --></div>
     </div>
 </metal:main>

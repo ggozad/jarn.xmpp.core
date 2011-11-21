@@ -248,11 +248,11 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                    updated: event.updated,
                    geolocation: event.geolocation,
                    isLeaf: isLeaf}, function (data) {
-                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
-                        $node.prepend($li);
-                        $li.slideDown("slow");
-                        $('li:first .prettyDate', $node).prettyDate();
-                        $('li:first', $node).magicLinks();
+                       $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
+                       $node.prepend($li);
+                       $li.slideDown("slow");
+                       $('li:first .prettyDate', $node).prettyDate();
+                       $('li:first', $node).magicLinks();
             });
         });
     });
@@ -329,6 +329,13 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
+    $('.replyForm').find('> a').live('click', function (e) {
+        $(this).hide();
+        $(this).next('form.sendXMPPMessage').fadeIn('medium');
+        $(this).next('form.sendXMPPMessage').find('[name="message"]:input').focus();
+        e.preventDefault();
+    });
+
     //
     // PubSub
     //
@@ -366,11 +373,21 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.replyForm').find('> a').live('click', function (e) {
-        $(this).hide();
-        $(this).next('form.sendXMPPMessage').fadeIn('medium');
-        $(this).next('form.sendXMPPMessage').find('[name="message"]:input').focus();
-        e.preventDefault();
+    $('button[name="loadMore"]').click(function () {
+        var $node = $('.pubsubNode', $(this).parent()).first(),
+            nodes = $node.attr('data-node').split(' ');
+            start = $('li.pubsubItem', $node).length;
+            $.ajax({url: '/@@pubsub-items',
+                    data: {nodes: nodes, start:start},
+                    dataType: 'html',
+                    traditional:true,
+                    success: function (data) {
+                        $node.hide();
+                        $node.append(data);
+                        $node.magicLinks();
+                        $node.slideDown("slow");
+                    }
+            });
     });
 
     $('.location').live('click', function (e) {
@@ -431,7 +448,7 @@ $(document).bind('jarnxmpp.connected', function () {
                         traditional:true,
                         success: function (data) {
                             $node.hide();
-                            $node.html('<li class="pubsubItem">' + data + '</li>');
+                            $node.html(data);
                             $node.magicLinks();
                             $node.slideDown("slow");
                         }

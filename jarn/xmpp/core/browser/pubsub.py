@@ -61,10 +61,13 @@ class PubSubItems(BrowserView):
         super(PubSubItems, self).__init__(context, request)
         self.storage = getUtility(IPubSubStorage)
 
-    def __call__(self, nodes, count=20, start=0):
+    def __call__(self, nodes, start=0, count=20):
+        start = int(start)
+        count = int(count)
         items = self.storage.itemsFromNodes(nodes, start=start, count=count)
         item_view = PubSubItem(self.context, self.request)
-        html = '\n'.join([item_view(item) for item in items])
+        html = '\n'.join(['<li class="pubsubItem">' + item_view(item) + "</li>"
+                         for item in items])
         return html
 
 
@@ -103,10 +106,10 @@ class PubSubFeedMixIn(object):
             if len(publisher_nodes) == 1:
                 return publisher_nodes[0]
 
-    def items(self, node=None, count=20):
+    def items(self, node=None, start=0, count=20):
         if node is None:
             node = self.node
-        return self.storage.itemsFromNodes([node], count=count)
+        return self.storage.itemsFromNodes([node], start=start, count=count)
 
 
 class PubSubFeed(BrowserView, PubSubFeedMixIn):
