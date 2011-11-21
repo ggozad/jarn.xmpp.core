@@ -431,7 +431,7 @@ $(document).bind('jarnxmpp.connected', function () {
                         traditional:true,
                         success: function (data) {
                             $node.hide();
-                            $node.html(data);
+                            $node.html('<li class="pubsubItem">' + data + '</li>');
                             $node.magicLinks();
                             $node.slideDown("slow");
                         }

@@ -47,7 +47,7 @@ class PubSubStorage(object):
         self.leaf_nodes = []
         self.publishers = dict()
 
-    def itemsFromNodes(self, nodes, count=20):
+    def itemsFromNodes(self, nodes, start=0, count=20):
         if not isinstance(nodes, list):
             nodes = [nodes]
         all_items = [self.node_items[node]
@@ -55,4 +55,4 @@ class PubSubStorage(object):
                      if node in self.node_items]
         result = sorted(itertools.chain(*all_items),
                         key=lambda item: item['updated'], reverse=True)
-        return result[:count]
+        return result[start:count]
