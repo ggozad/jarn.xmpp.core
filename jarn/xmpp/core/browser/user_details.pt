@@ -34,7 +34,7 @@
                 Follow/unfollow
             </a>
             <div tal:condition="view/isSelf">
-                <a href="#" tal:attributes="href string:${portal_url}/@@xmpp-personal-profile" i18n:translate="">Personal profile</a>
+                <a href="#" tal:attributes="href string:${portal_url}/@@xmpp-personal-profile" i18n:translate="">Following</a>
             </div>
             <a href="#" title="" class="user-personal-stream"
                tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
