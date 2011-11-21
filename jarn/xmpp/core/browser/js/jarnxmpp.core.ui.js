@@ -383,12 +383,8 @@ $(document).ready(function () {
                     dataType: 'html',
                     traditional:true,
                     success: function (data) {
-                        $node.hide();
                         $node.append(data);
                         $node.magicLinks();
-                        $node.slideDown("slow", function () {
-                            $(document).scrollTop(curr_offset);
-                        });
                     }
             });
     });
