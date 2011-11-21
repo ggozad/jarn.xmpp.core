@@ -93,8 +93,10 @@ class PubSubFeedMixIn(object):
         user has publisher rights.
         """
 
-        if self.mt.isAnonymousUser() or self.node is None:
+        if self.mt.isAnonymousUser():
             return
+        if self.node is None:
+            return self.mt.getAuthenticatedMember().id
         user_id = self.mt.getAuthenticatedMember().id
         if self.nodeType == 'leaf':
             if user_id in self.storage.publishers[self.node]:
@@ -118,16 +120,3 @@ class PubSubFeed(BrowserView, PubSubFeedMixIn):
         BrowserView.__init__(self, context, request)
         self.node = request.get('node', None)
         PubSubFeedMixIn.__init__(self, context)
-
-
-class MyPubSubFeed(BrowserView, PubSubFeedMixIn):
-
-    def __init__(self, context, request):
-        BrowserView.__init__(self, context, request)
-        self.node = None
-        PubSubFeedMixIn.__init__(self, context)
-
-    def postNode(self):
-        if self.mt.isAnonymousUser():
-            return
-        return self.mt.getAuthenticatedMember().id

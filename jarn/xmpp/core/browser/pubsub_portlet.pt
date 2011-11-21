@@ -58,7 +58,7 @@
         <a href="#"
            class="tile"
            tal:condition="not: node"
-           tal:attributes="href string:${context/portal_url}/@@my-stream"
+           tal:attributes="href string:${context/portal_url}/@@pubsub-feed"
            i18n:translate="more">
            More&hellip;
         </a>
