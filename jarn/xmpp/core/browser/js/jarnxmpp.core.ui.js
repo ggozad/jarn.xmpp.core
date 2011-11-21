@@ -374,6 +374,7 @@ $(document).ready(function () {
     });
 
     $('button[name="loadMore"]').click(function () {
+        var curr_offset = $('li.pubsubItem:last', $(this).parent()).offset().top;
         var $node = $('.pubsubNode', $(this).parent()).first(),
             nodes = $node.attr('data-node').split(' ');
             start = $('li.pubsubItem', $node).length;
@@ -385,7 +386,9 @@ $(document).ready(function () {
                         $node.hide();
                         $node.append(data);
                         $node.magicLinks();
-                        $node.slideDown("slow");
+                        $node.slideDown("slow", function () {
+                            $(document).scrollTop(curr_offset);
+                        });
                     }
             });
     });
