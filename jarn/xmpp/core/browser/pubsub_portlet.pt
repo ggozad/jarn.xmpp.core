@@ -48,6 +48,20 @@
     </dd>
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
+        <a href="#"
+           class="tile"
+           tal:condition="node"
+           tal:attributes="href string:${context/portal_url}/@@pubsub-feed?node=${node}"
+           i18n:translate="more">
+           More&hellip;
+        </a>
+        <a href="#"
+           class="tile"
+           tal:condition="not: node"
+           tal:attributes="href string:${context/portal_url}/@@my-stream"
+           i18n:translate="more">
+           More&hellip;
+        </a>
         <span class="portletBottomRight"></span>
     </dd>
 </dl>

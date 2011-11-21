@@ -12,7 +12,9 @@ from jarn.xmpp.core.browser.pubsub import PubSubFeedMixIn
 class IPubSubFeedPortlet(IPortletDataProvider):
 
     name = schema.TextLine(title=_(u'Title'), required=False)
-    node = schema.ASCIILine(title=_(u'PubSub node'), required=True)
+    node = schema.ASCIILine(title=_(u'PubSub node'),
+                            description=_(u'The name of the PubSub node displayed (typically a user id or "people" in order to include all users). Leaving this empty, will populate the portlet with items from the users the user follows.'),
+                            required=False)
 
 
 class Assignment(base.Assignment):
