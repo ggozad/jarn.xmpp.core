@@ -477,7 +477,7 @@ $(document).bind('jarnxmpp.connected', function () {
     $('.pubsubNode').each(function () {
         // If this doesn't have a data-node it must a personal stream.
         if (!$(this).attr('data-node')) {
-            $node = $(this);
+            var $node = $(this);
             jarnxmpp.Storage.xmppSet('last_read_stream_on', jarnxmpp.PubSub._ISODateString(new Date()));
             jarnxmpp.PubSub.getSubscriptions(function (following) {
                 $node.attr('data-node', following.join(' '));
