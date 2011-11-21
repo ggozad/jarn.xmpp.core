@@ -6,6 +6,15 @@ Changelog
 0.3 - Unreleased
 -----------------
 
+- Allow users to subscribe to individual nodes.
+  [ggozad]
+
+- Load PubSub items asyncronously.
+  [ggozad]
+
+- Remove plone batch, use async loading of items.
+  [ggozad]
+
 - Implement XEP-0049 private storage on XMPP.
   [ggozad]
 
