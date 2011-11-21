@@ -280,12 +280,12 @@ $(document).ready(function () {
     // Online users viewlet
     //
     $('a#toggle-online-users').bind('click', function (e) {
-        if ($("ul#online-users").hasClass('activated')) {
-            $("ul#online-users").removeClass('activated');
+        if ($("div#online-users-container").is(':visible')) {
+            $("div#online-users-container").hide();
             $('a.user-details-toggle').removeClass('expanded');
         }
         else {
-            $("ul#online-users").addClass('activated');
+            $("div#online-users-container").show();
         }
         e.preventDefault();
     });
@@ -293,7 +293,7 @@ $(document).ready(function () {
     $('a.user-details-toggle').live('click', function (e) {
         $('a.user-details-toggle').removeClass('expanded');
         $(this).toggleClass('expanded');
-        $(this).next().find('input[name="message"]').focus();
+        $(this).next().find('[name="message"]:input').focus();
         e.preventDefault();
     });
 
@@ -308,7 +308,7 @@ $(document).ready(function () {
     // Send message
     //
     $('.sendXMPPMessage').live('submit', function (e) {
-        var $field = $('input[name="message"]', this),
+        var $field = $('[name="message"]:input', this),
             text = $field.val(),
             recipient = $field.attr('data-recipient'),
             message;
@@ -319,7 +319,7 @@ $(document).ready(function () {
             var gritter_id = $(this).attr('data-gritter-id');
             if (typeof(gritter_id) !== 'undefined')
                 $.gritter.remove(gritter_id);
-            $("ul#online-users").removeClass('activated');
+            $("div#online-users-container.autohide").hide('slow');
             $field.val('');
         $.getJSON(portal_url + '/content-transform?', {text: text}, function (data) {
             message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
@@ -346,7 +346,7 @@ $(document).ready(function () {
     });
 
     $('#pubsub-form').bind('submit', function (e) {
-        var $field = $('input[name="message"]', this),
+        var $field = $('[name="message"]:input', this),
             text = $field.attr('value'),
             node = $field.attr('data-node'),
             share_location = $('input[name="share-location"]', this).attr('checked');
@@ -368,7 +368,7 @@ $(document).ready(function () {
     $('.replyForm').find('> a').live('click', function (e) {
         $(this).hide();
         $(this).next('form.sendXMPPMessage').fadeIn('medium');
-        $(this).next('form.sendXMPPMessage').find('input[name="message"]').focus();
+        $(this).next('form.sendXMPPMessage').find('[name="message"]:input').focus();
         e.preventDefault();
     });
 
