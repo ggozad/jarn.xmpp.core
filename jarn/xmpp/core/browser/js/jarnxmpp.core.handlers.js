@@ -297,7 +297,7 @@ jarnxmpp.PubSub = {
         return true;
     },
 
-    publish: function(node, text, location, callback) {
+    publish: function(node, pnode, text, location, callback) {
         if (text === '' || node === '') return;
         $.getJSON(portal_url+'/content-transform?', {text: text}, function(data) {
             var pubid = jarnxmpp.connection.getUniqueId("postNode"),
@@ -319,6 +319,9 @@ jarnxmpp.PubSub = {
                     'geolocation',
                     [['latitude', coords.latitude],
                      ['longitude', coords.longitude]]));
+            }
+            if (pnode) {
+                entry.appendChild(Strophe.xmlElement('parent', [], pnode));
             }
             item.appendChild(entry);
             publish_elem.appendChild(item);

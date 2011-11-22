@@ -37,7 +37,7 @@
       <div class="postItemWrapper"
             tal:define="postNode view/postNode"
            tal:condition="postNode">
-          <form action="" method="post" id="pubsub-form">
+          <form action="" method="post" class="pubsub-form">
               <input type="text" name="message" placeholder="Post to stream"
                   i18n:attributes="placeholder"
                   tal:attributes="data-post-node postNode"/>
@@ -45,6 +45,7 @@
                 <label i18n:translate="" for="share-location">Share location</label>
                 <input type="checkbox" name="share-location" />
               </div>
+              <input type="hidden" name="parent" value=""/>
               <div class="formControls">
                 <button type="submit" name="postButton" class="allowMultiSubmit"
                     i18n:translate="">Post</button></div>

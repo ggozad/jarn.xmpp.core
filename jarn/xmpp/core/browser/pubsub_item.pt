@@ -11,6 +11,7 @@
             updated item/updated;
             links item/urls | nothing;
             geolocation item/geolocation | nothing;
+            parent item/parent | nothing;
             portal_url context/portal_url">
   <div class="pubsubAvatar" tal:condition="not: isLeaf">
     <a href="#" title=""
@@ -22,7 +23,7 @@
         tal:attributes="src portrait/absolute_url"/>
     </a>
   </div>
-  <div class="pubsubItemContent">
+  <div class="pubsubItemContent" tal:attributes="id id">
     <div>
         <a href="#" title=""
            tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
@@ -46,6 +47,10 @@
     <div class="pubsubItemMsg" tal:content="structure content">
         Content goes here.
     </div>
+    <a href="#" class="commentOnThread" tal:condition="not: parent"
+      i18n:translate="">
+        Comment
+    </a>
     <div class="visualClear"><!-- --></div>
     <div class="pubsubItemDetails" tal:condition="links">
       <ul class="pubsubItemLinks">

@@ -35,6 +35,7 @@ class PubSubItem(BrowserView):
                 'author': self.request.get('author'),
                 'published': self.request.get('published'),
                 'updated': self.request.get('updated'),
+                'parent': self.request.get('parent')
             }
             if ('geolocation[latitude]' in self.request and
                 'geolocation[longitude]' in self.request):

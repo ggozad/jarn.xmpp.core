@@ -388,7 +388,7 @@ $(document).ready(function () {
     //
     // PubSub
     //
-    $('#pubsub-form input[name="share-location"]').change(function () {
+    $('.pubsub-form input[name="share-location"]').change(function () {
         if ($(this).attr('checked')) {
             var $checkbox = $(this);
             $('div.discreet', $checkbox.parent()).remove();
@@ -402,23 +402,33 @@ $(document).ready(function () {
         }
     });
 
-    $('#pubsub-form').bind('submit', function (e) {
+    $('.pubsub-form').live('submit', function (e) {
         var $field = $('[name="message"]:input', this),
             text = $field.attr('value'),
             node = $field.attr('data-post-node'),
+            pnode = $('input[name="parent"]', this).val(),
             share_location = $('input[name="share-location"]', this).attr('checked');
 
         if (share_location && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(geolocation) {
-                    jarnxmpp.PubSub.publish(node, text, geolocation);
+                    jarnxmpp.PubSub.publish(node, pnode, text, geolocation);
                     $field.attr('value', '');
                 },
                 function(error) {});
         } else {
-            jarnxmpp.PubSub.publish(node, text, null);
+            jarnxmpp.PubSub.publish(node, pnode,  text, null);
             $field.attr('value', '');
         }
+        return false;
+    });
+
+    $('.commentOnThread').live('click', function () {
+        var form = $('.pubsub-form').first().clone();
+        $('input[name="parent"]', form).val($(this).parent().attr('id'));
+        $(this).parent().append(form);
+        form.hide();
+        form.slideDown('slow');
         return false;
     });
 
