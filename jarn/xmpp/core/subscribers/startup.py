@@ -64,12 +64,6 @@ def adminDisconnected(event):
 
 
 def populatePubSubStorage():
-    """ XXX TODO:
-    1) I retrieve every node and items. Change this to retrieve only those
-    where the admin is subscribed. The rest are not used.
-    2) This would have been simpler if ejabberd supported retrieving
-    collection items as it should. Argue in the mailing list.
-    """
 
     client = getUtility(IAdminClient)
     storage = getUtility(IPubSubStorage)
@@ -82,9 +76,6 @@ def populatePubSubStorage():
             if parent:
                 storage.node_items[parent] = \
                     storage.node_items[parent] + (items)
-                storage.node_items[parent].sort(
-                    key=lambda item: item['updated'],
-                    reverse=True)
 
         def gotNodeAffiliations(result):
             node, affiliations = result
@@ -137,5 +128,32 @@ def populatePubSubStorage():
         d.addCallback(gotNodes)
         return d
 
+    def postProcess(result):
+        # Look for comments and take them out from the node's items while
+        # putting them in the comments list.
+        for node in storage.node_items:
+            for item in storage.node_items[node][:]:
+                if 'parent' in item:
+                    storage.node_items[node].remove(item)
+                    for cnode in storage.collections:
+                        if node in storage.collections[cnode] and item in storage.node_items[cnode]:
+                            storage.node_items[cnode].remove(item)
+                    parent = item['parent']
+                    if parent in storage.comments:
+                        storage.comments[parent].append(item)
+                    else:
+                        storage.comments[parent] = [item]
+
+        # Then sort them chronologically
+        for node in storage.node_items:
+            storage.node_items[node].sort(
+                key=lambda item: item['updated'],
+                reverse=True)
+        for thread in storage.comments:
+            storage.comments[thread].sort(
+                key=lambda item: item['updated'])
+        logger.info('Post-processing PubSub storage done.')
+
     d = getChildNodes(None)
+    d.addCallback(postProcess)
     return d

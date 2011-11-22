@@ -2,6 +2,7 @@ import logging
 
 from twisted.internet import defer
 from twisted.words.protocols.jabber.jid import JID
+from twisted.words.xish.domish import Element
 from zope.component import getUtility
 from zope.event import notify
 from zope.interface import implements
@@ -37,6 +38,20 @@ class PubSubClientMixIn(object):
             }
         return atom
 
+    def _dictToPubSubItem(self, adict):
+        item = Element((None, 'item'))
+        item['id'] = adict['id']
+        entry = Element(('http://www.w3.org/2005/Atom', 'entry'))
+        for key in ['author', 'updated', 'published', 'content']:
+            entry.addElement(key, content=adict[key])
+        geolocation = adict.get('geolocation')
+        if geolocation:
+            entry.addElement('geolocation')
+            entry.geolocation['lattitude'] = geolocation['lattitude']
+            entry.geolocation['longitude'] = geolocation['longitude']
+        item.addChild(entry)
+        return item
+
     def itemsReceived(self, event):
         sender = event.sender
         items = event.items
@@ -51,9 +66,25 @@ class PubSubClientMixIn(object):
                   if item.name == 'item']
         storage = getUtility(IPubSubStorage)
         for item in items:
-            storage.node_items[node].insert(0, item)
-            for collection in collections:
-                storage.node_items[collection].insert(0, item)
+            if 'parent' not in item:
+                storage.node_items[node].insert(0, item)
+                for collection in collections:
+                    storage.node_items[collection].insert(0, item)
+            else:
+                parent_id = item['parent']
+                if parent_id in storage.comments:
+                    storage.comments[parent_id].append(item)
+                else:
+                    storage.comments[parent_id] = [item]
+                # Get the parent of the comment and remove it from the storage.
+                parent_node, parent = storage.getNodeAndItemById(parent_id)
+                storage.node_items[parent_node].remove(parent)
+                for collection in collections:
+                    storage.node_items[collection].remove(parent)
+                # Update the parent and republish.
+                parent['updated'] = item['published']
+                item = self._dictToPubSubItem(parent)
+                self.publish(parent_node, [item])
 
     def getNodes(self, identifier=None):
         d = self.pubsub.getNodes(self.pubsub_jid, identifier)

@@ -46,6 +46,7 @@ class PubSubStorage(object):
         self.collections = dict()
         self.leaf_nodes = []
         self.publishers = dict()
+        self.comments = dict()
 
     def itemsFromNodes(self, nodes, start=0, count=20):
         if not isinstance(nodes, list):
@@ -56,3 +57,9 @@ class PubSubStorage(object):
         result = sorted(itertools.chain(*all_items),
                         key=lambda item: item['updated'], reverse=True)
         return result[start:count + start]
+
+    def getNodeAndItemById(self, item_id):
+        for node in self.leaf_nodes:
+            for item in self.node_items[node]:
+                if item['id'] == item_id:
+                    return (node, item)
