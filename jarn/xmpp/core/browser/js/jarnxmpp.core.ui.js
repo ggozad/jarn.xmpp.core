@@ -298,7 +298,7 @@ $(document).ready(function () {
     jarnxmpp.UI._ = jarn.i18n.MessageFactory('jarn.xmpp.core.js');
 
     //
-    // Online users viewlet
+    // People online viewlet
     //
     $('a#toggle-online-users').bind('click', function (e) {
         if ($("div#online-users-container").is(':visible')) {

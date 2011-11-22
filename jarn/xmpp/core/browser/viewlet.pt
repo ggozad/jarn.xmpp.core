@@ -8,7 +8,7 @@
            i18n:translate="">
               My stream
         </a><a href="#" id="toggle-online-users">
-            <span i18n:translate="">Online users:</span>
+            <span i18n:translate="">People online:</span>
             <span id="online-count">0</span>
         </a>
         <div id="online-users-container"

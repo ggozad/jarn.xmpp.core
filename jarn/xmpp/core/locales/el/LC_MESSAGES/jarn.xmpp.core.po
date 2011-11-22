@@ -40,7 +40,7 @@ msgid "Node"
 msgstr "Κόμβος"
 
 #: ./browser/viewlet.pt:11
-msgid "Online users:"
+msgid "People online:"
 msgstr "Συνδεδεμένοι χρήστες"
 
 #: ./browser/user_details.pt:24

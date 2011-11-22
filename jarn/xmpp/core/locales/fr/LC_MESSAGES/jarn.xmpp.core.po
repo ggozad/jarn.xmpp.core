@@ -43,7 +43,7 @@ msgid "Node"
 msgstr "Noeud"
 
 #: ./browser/viewlet.pt:11
-msgid "Online users:"
+msgid "People online:"
 msgstr "Utilisateurs connectés:"
 
 #: ./browser/user_details.pt:24
