@@ -18,6 +18,7 @@ class PubSubItem(BrowserView):
         super(PubSubItem, self).__init__(context, request)
         self.mt = getToolByName(self.context, 'portal_membership')
         self.host = urlparse(getToolByName(self.context, 'portal_url')()).netloc
+        self.storage = getUtility(IPubSubStorage)
 
     def fullname(self, author):
         member = self.mt.getMemberById(author)
@@ -25,6 +26,11 @@ class PubSubItem(BrowserView):
 
     def isLeaf(self):
         return self._isLeaf
+
+    def comments(self):
+        if self.item['id'] in self.storage.comments:
+            return self.storage.comments[self.item['id']]
+        return []
 
     def __call__(self, item=None, isLeaf=False):
         if item is None:

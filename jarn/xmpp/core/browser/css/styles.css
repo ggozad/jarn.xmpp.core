@@ -353,6 +353,11 @@ div.replyForm > a:hover {
     margin-top: 1em;
     color: #444;
 }
+
+.pubsubItemComment {
+	padding-left:3em;
+}
+
 ul.pubsubNode {
     max-width: 671px;
 }

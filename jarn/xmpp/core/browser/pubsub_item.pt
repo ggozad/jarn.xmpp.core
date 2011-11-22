@@ -4,7 +4,7 @@
             member_tool context/portal_membership;
             item view/item;
             isLeaf view/isLeaf;
-            id item/id | nothing;
+            item_id item/id | nothing;
             author item/author;
             fullname python: view.fullname(author) or author;
             content item/content;
@@ -13,6 +13,7 @@
             geolocation item/geolocation | nothing;
             parent item/parent | nothing;
             portal_url context/portal_url">
+  <div tal:omit-tag="not: parent" class="pubsubItemComment">
   <div class="pubsubAvatar" tal:condition="not: isLeaf">
     <a href="#" title=""
        tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
@@ -23,7 +24,7 @@
         tal:attributes="src portrait/absolute_url"/>
     </a>
   </div>
-  <div class="pubsubItemContent" tal:attributes="id id">
+  <div class="pubsubItemContent" tal:attributes="id item_id">
     <div>
         <a href="#" title=""
            tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
@@ -36,12 +37,12 @@
         <div class="pubsubGeolocation">
           <span class="location"
               tal:condition="geolocation"
-              tal:attributes="id string:geolocation-${id};
+              tal:attributes="id string:geolocation-${item_id};
                               data-latitude geolocation/latitude;
                               data-longitude geolocation/longitude"></span>
           <div class="map"
               tal:condition="geolocation"
-              tal:attributes="id string:geomap-${id};"/>
+              tal:attributes="id string:geomap-${item_id};"/>
         </div>
     </div>
     <div class="pubsubItemMsg" tal:content="structure content">
@@ -64,4 +65,8 @@
       </ul>
     </div>
   </div>
+  </div>
+  <tal:comments tal:repeat="comment view/comments">
+    <div tal:content="structure python: view(comment)"></div>
+  </tal:comments>
 </tal:pubsub_item>

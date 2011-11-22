@@ -270,6 +270,9 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                    updated: event.updated,
                    geolocation: event.geolocation,
                    isLeaf: isLeaf}, function (data) {
+                       if (event.pnode) {
+                           $('#'+event.pnode).parent().remove();
+                       }
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
                        $li.slideDown("slow");

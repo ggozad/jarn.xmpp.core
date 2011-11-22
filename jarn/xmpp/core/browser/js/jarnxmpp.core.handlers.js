@@ -290,6 +290,7 @@ jarnxmpp.PubSub = {
                         };
                         event.geolocation = coords;
                     });
+                    event.pnode = $('parent', entry).text();
                     $(document).trigger(event);
                 }
             });
