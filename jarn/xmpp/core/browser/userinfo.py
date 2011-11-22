@@ -44,7 +44,3 @@ class XMPPUserDetails(BrowserView):
     @property
     def portrait_url(self):
         return self._portrait_url
-
-    @property
-    def isSelf(self):
-        return self.user_id == self.pm.getAuthenticatedMember().getId()

@@ -17,7 +17,7 @@
                   tal:attributes="src view/portrait_url"
                   i18n:attributes="alt"/>
             </a>
-            <div class="replyForm" tal:condition="not: view/isSelf">
+            <div class="replyForm">
                 <a href="#" i18n:translate="">Reply</a>
                 <form class="sendXMPPMessage" action="" method="post">
                     <input type="text" name="message" placeholder="Personal message"
@@ -29,13 +29,10 @@
                     </div>
                 </form>
             </div>
-            <a href="#" title="" class="following" tal:condition="not: view/isSelf"
+            <a href="#" title="" class="following"
                tal:attributes="data-user user_id; data-fullname fullname">
                 Follow/unfollow
             </a>
-            <div tal:condition="view/isSelf">
-                <a href="#" tal:attributes="href string:${portal_url}/@@xmpp-personal-profile" i18n:translate="">Following</a>
-            </div>
             <a href="#" title="" class="user-personal-stream"
                tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
                                title string:$fullname"
