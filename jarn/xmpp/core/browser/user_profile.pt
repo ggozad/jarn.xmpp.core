@@ -8,7 +8,7 @@
 <metal:main fill-slot="main">
 
   <div id="content-core">
-    <div id='xmpp-user-profile'>
+    <!-- <div id='xmpp-user-profile'> -->
       <!--
       <div id='profile-vCard'>
         <h3 i18n:translate="">My vCard</h3>
@@ -20,27 +20,38 @@
         </form>
       </div>
       -->
-      <div id='pubsub-subscriptions'>
-        <h3 i18n:translate="">Stream subscriptions</h3>
-        <form action="" method="post" id="subscriptions-form">
-          <div class="formControls">
-            <label for="followAll">Follow all users</label>
-            <input type="checkbox"
-                   id="follow-all"
-                   name="followAll"
-                   title="Follow all users"
-                   i18n:attributes="title"/>
-            <br/>
-            <label for="subscriptions:list">Select who to follow</label>
-            <select name="subscriptions:list"
-                   id="subscriptions-list"
-                   multiple="multiple">
-            </select>
-          </div>
+      <!-- <div id='pubsub-subscriptions'> -->
+        <h1 i18n:translate="" class="documentFirstHeading">Receive the updates</h1>
+        <form action="" method="post" id="subscriptions-form" class="row">
+            <fieldset>
+                <label>
+                    <input type="radio"
+                           id="follow-all"
+                           name="followWho"
+                           title="Follow everybody"
+                           i18n:attributes="title"/>
+                    I want to receive the updates from everybody.
+                </label>
+                <div class="formHelp" i18n:translate="label_follow_all_help">Receive the updates from all people
+                including those who will join the team in the future.</div>                       
+            </fieldset>
+            <span i18n:translate="text_or">or</span>
+            <fieldset>
+                <label>
+                    <input type="radio"
+                           id="follow-selected"
+                           name="followWho"
+                           title="Follow the selected peopl"
+                           i18n:attributes="title"/>
+                    I want to receive the updates only from the people
+                    selected.
+                </label>
+                <div id="subscriptions-list"></div>
+            </fieldset>
         </form>
       </div>
-    </div>
-  </div>
+    <!-- </div> -->
+  <!-- </div> -->
 </metal:main>
 </body>
 </html>
