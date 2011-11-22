@@ -1,4 +1,5 @@
-/* XMPP viewlet */
+/* @group XMPP viewlet */
+
 #xmpp-viewlet {
     float:right;
 }
@@ -17,6 +18,7 @@
     margin-left: 1px;
     -webkit-transition: background-color 1.0s ease-in-out;
        -moz-transition: background-color 1.0s ease-in-out;
+        -ms-transition: background-color 1.0s ease-in-out;       
          -o-transition: background-color 1.0s ease-in-out;
             transition: background-color 1.0s ease-in-out;
 }
@@ -191,7 +193,11 @@ a.following {
 div.replyForm > a:hover {
     color: #fff;
 }
-/* PubSub feed */
+
+/* @end */
+
+/* @group PubSub feed */
+
 .postItemWrapper {
     margin: 0 0 1em 95px;
     border: 1px solid #ccc;
@@ -337,7 +343,11 @@ ul.pubsubNode {
 #share-geolocation {
 	display: none;
 }
-/* Logging */
+
+/* @end */
+
+/* @group Logging */
+
 .xmpp-dataSent {
     color: green;
     margin-top: 1em;
@@ -346,3 +356,58 @@ ul.pubsubNode {
     color: blue;
     margin-top: 1em;
 }
+
+/* @end */
+
+/* @group Subscription form */
+
+#subscriptions-form fieldset {
+    clear: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+#subscriptions-form > span {
+	display: block;
+    text-align: center;
+    font-size: 2.5em;
+    padding: 0.3em 0;
+}
+#subscriptions-list {
+    margin-top: 0.5em;
+}
+#subscriptions-list label {
+    font-weight: normal;
+    margin-left: -1.3em;
+    padding: 0.3em 0.5em 0.3em 1.8em;
+	-webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+  	-moz-background-clip: padding;
+  	-webkit-background-clip: padding-box;
+  	background-clip: padding-box;
+  	background: #E3E3E3;
+  	border: 1px solid #ccc;
+    -webkit-transition: opacity .3s ease-in-out;
+    -moz-transition: opacity .3s ease-in-out;
+    -ms-transition: opacity .3s ease-in-out;       
+    -o-transition: opacity .3s ease-in-out;
+    transition: opacity .3s ease-in-out;
+}
+#subscriptions-list input {
+    position: relative;
+    z-index: 1;
+}
+#subscriptions-list input[disabled] + label {
+    opacity: .7;
+}
+#subscriptions-list input:checked +label {
+    background: #75AD0A;
+    border-color: #75AD0A;
+    color: #fff;
+}
+
+
+/* @end */
+
+
