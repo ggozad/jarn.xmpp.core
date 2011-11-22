@@ -13,7 +13,9 @@
         </a>
         <div id="online-users-container"
              class="autohide">
-            <ul id="online-users"></ul>
+            <ul id="online-users">
+              <li id="no-users-online">No other users online</li>
+            </ul>
         </div>
     </div>
 </div>

@@ -95,7 +95,7 @@ jarnxmpp.Presence = {
     _user_info: {},
 
     onlineCount: function () {
-        var counter = 0;
+        var counter = -1; //exclude self
         for (var user in jarnxmpp.Presence.online) {
             if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
                 counter += 1;

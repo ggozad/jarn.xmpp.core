@@ -156,7 +156,10 @@ jarnxmpp.UI = {
 $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
     var user_id = Strophe.getNodeFromJid(jid),
         barejid = Strophe.getBareJidFromJid(jid),
-        existing_user_element = $('#online-users-' + user_id);
+        existing_user_element = $('#online-users-' + user_id),
+        online_count;
+    if (barejid == Strophe.getBareJidFromJid(jarnxmpp.connection.jid))
+        return;
     if (existing_user_element.length) {
         if (status === 'offline' && jarnxmpp.Presence.online.hasOwnProperty(user_id)) {
             return;
@@ -200,7 +203,12 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         if (jarnxmpp.Storage.storage !== null)
             jarnxmpp.Presence.getUserInfo(user_id, function (data) {});
     }
-    $('#online-count').text(jarnxmpp.Presence.onlineCount());
+    online_count = jarnxmpp.Presence.onlineCount();
+    if (online_count>0)
+        $('#no-users-online').hide();
+    else
+        $('#no-users-online').show();
+    $('#online-count').text(online_count);
 });
 
 //
