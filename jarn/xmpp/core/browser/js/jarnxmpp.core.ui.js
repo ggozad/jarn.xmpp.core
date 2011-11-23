@@ -443,8 +443,8 @@ $(document).ready(function () {
     });
 
     $('button[name="loadMore"]').click(function () {
-        var curr_offset = $('li.pubsubItem:last', $(this).parent()).offset().top;
-        var $node = $('.pubsubNode', $(this).parent()).first(),
+        var curr_offset = $('li.pubsubItem:last').offset().top;
+        var $node = $('.pubsubNode').first(),
             nodes = $node.attr('data-node').split(' ');
             start = $('li.pubsubItem', $node).length;
             $.ajax({url: '/@@pubsub-items',
@@ -455,6 +455,9 @@ $(document).ready(function () {
                         $node.append(data);
                         $('.prettyDate', $node).prettyDate();
                         $node.magicLinks();
+                        if ($(data)
+                            .filter(function() { return this.nodeType !== 3;})
+                            .length <20) $('.loadMoreToggle').remove();
                     }
             });
     });
