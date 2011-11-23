@@ -23,21 +23,13 @@
                     <input type="text" name="message" placeholder="Personal message"
                            tal:attributes="data-recipient view/jid"
                            i18n:attributes="placeholder"/>
-                    <div class="formControls">
-                        <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"
-                            i18n:attributes="value"/>
-                    </div>
+                    <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"
+                        i18n:attributes="value"/>
                 </form>
             </div>
-            <a href="#" title="" class="following"
+            <a href="#" title="" class="followingStatus"
                tal:attributes="data-user user_id; data-fullname fullname">
                 Follow/unfollow
-            </a>
-            <a href="#" title="" class="user-personal-stream"
-               tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$user_id;
-                               title string:$fullname"
-               i18n:translate="">
-                Personal stream
             </a>
         </div>
     </li>
