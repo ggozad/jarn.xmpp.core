@@ -4,11 +4,15 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="jarn.xmpp.core">
+<head>
+    <metal:block fill-slot="top_slot"
+                 tal:define="dummy python:request.set('disable_border',1);" />
+</head>
 <body>
 <metal:main fill-slot="main">
 
   <div id="content-core">
-    <!-- <h1 i18n:translate="" class="documentFirstHeading">Receive the updates</h1> -->
+    <h1 i18n:translate="" class="documentFirstHeading">Choose whose updates to receive</h1>
     <form action="" method="post" id="subscriptions-form" class="row">
         <fieldset>
             <label>
@@ -19,7 +23,7 @@
                        i18n:attributes="title"/>
                 Receive updates from everybody.
             </label>
-        </feldset>
+        </fieldset>
         <span i18n:translate="text_or">or</span>
         <fieldset>
             <label>
