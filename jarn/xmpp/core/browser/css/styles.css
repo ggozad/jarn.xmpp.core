@@ -378,8 +378,8 @@ ul.pubsubNode {
 }
 #subscriptions-list label {
     font-weight: normal;
-    margin-left: -1.3em;
-    padding: 0.3em 0.5em 0.3em 1.8em;
+    margin-left: -0.6em;
+    padding: 0.3em 0.5em;
 	-webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
     border-radius: 0.5em;
@@ -394,18 +394,21 @@ ul.pubsubNode {
     -o-transition: opacity .3s ease-in-out;
     transition: opacity .3s ease-in-out;
 }
-#subscriptions-list input {
+#subscriptions-list input[type="checkbox"] {
+    margin-right: 0.5em;
+}
+/*#subscriptions-list input {
     position: relative;
     z-index: 1;
-}
-#subscriptions-list input[disabled] + label {
+}*/
+.disabledField label {
     opacity: .7;
 }
-#subscriptions-list input:checked +label {
+/*#subscriptions-list input:checked +label {
     background: #75AD0A;
     border-color: #75AD0A;
     color: #fff;
-}
+}*/
 
 
 /* @end */

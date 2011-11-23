@@ -458,7 +458,7 @@ $(document).ready(function () {
     //
     // User profile
     //
-    $('#xmpp-user-profile #vCard-form button[name="updateVCard"]').click(function () {
+    $('#vCard-form button[name="updateVCard"]').click(function () {
         var user_id = Strophe.getNodeFromJid(jarnxmpp.connection.jid);
         $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
             jarnxmpp.vCard.setVCard({FN: data.fullname}, data.portrait_url);
@@ -500,37 +500,55 @@ $(document).bind('jarnxmpp.connected', function () {
     //
     // User profile
     //
-    $('#xmpp-user-profile #pubsub-subscriptions').each(function () {
+    $('#subscriptions-form').each(function () {
         jarnxmpp.PubSub.getNodes('people', function (available_nodes) {
             var my_node = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
-                idx = available_nodes.indexOf(my_node);
+                idx = available_nodes.indexOf(my_node),
+                $sl = $('#subscriptions-list');
             if (idx!==-1) available_nodes.splice(idx, 1);
             $.each(available_nodes, function (idx, node) {
-                $('#subscriptions-list').append($('<option>').text(node).attr('value', node));
+                $sl.append($('<label />')
+                            .append($('<input type="checkbox" name="subscriptions:list" />')
+                                        .attr('value', node)));
                 jarnxmpp.Presence.getUserInfo(node, function (info) {
                     if (info) {
-                        $('#subscriptions-list option[value=' + node + ']').text(info.fullname);
+                        $('input[value=' + node + ']', $sl).after(info.fullname);
                     } else {
-                        $('#subscriptions-list option[value=' + node + ']').remove();
+                        $('input[value=' + node + ']', $sl).parent().remove();
                     }
                 });
             });
             jarnxmpp.PubSub.getSubscriptions(function (subscribed_nodes) {
                 if (subscribed_nodes.indexOf('people')!==-1) {
                     $('#follow-all').attr('checked', 'checked');
-                    $('#subscriptions-list').attr('disabled', true);
+                    $sl.addClass('disabledField');
+                    $('input', $sl).attr('disabled', 'disabled');
+                }
+                else {
+                    $('#follow-selected').attr('checked', 'checked');                    
                 }
                 $.each(subscribed_nodes, function (idx, node) {
-                    $('#subscriptions-list option[value=' + node +']').attr('selected', 'selected');
+                    $('input[value=' + node +']', $sl).attr('checked', 'checked');
                 });
             });
         });
     });
 
-    $('#xmpp-user-profile #follow-all').click(function () {
-        if ($(this).attr('checked')) {
-            $('#subscriptions-list').attr('disabled', true);
-            $('#xmpp-user-profile #subscriptions-list').val([]);
+    $('input[name="followWho"]').bind('change', function () {
+        if ($(this).attr('id') === 'follow-selected') {
+            $('#subscriptions-list').removeClass('disabledField');
+            $('#subscriptions-list input').removeAttr('disabled');
+            jarnxmpp.PubSub.unsubscribe('people', null, function (result) {
+                $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                               text: jarnxmpp.UI._('You now follow noone and can individually select who to follow'),
+                               time: 5000,
+                               sticky: false});
+            });
+            jarnxmpp.PubSub.subscribe(Strophe.getNodeFromJid(jarnxmpp.connection.jid), function (result) {});
+        }
+        else {
+            $('#subscriptions-list').addClass('disabledField');
+            $('#subscriptions-list input').attr('disabled', 'disabled');
             jarnxmpp.PubSub.getSubscriptions(function (following) {
                 $(following).each(function (idx, node) {
                     jarnxmpp.PubSub.unsubscribe(node, null, function (result) {});
@@ -541,20 +559,11 @@ $(document).bind('jarnxmpp.connected', function () {
                                    time: 5000,
                                    sticky: false});
                 });
-            });
-        } else {
-            $('#subscriptions-list').attr('disabled', false);
-            jarnxmpp.PubSub.unsubscribe('people', null, function (result) {
-                $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
-                               text: jarnxmpp.UI._('You now follow noone and can individually select who to follow'),
-                               time: 5000,
-                               sticky: false});
-            });
-            jarnxmpp.PubSub.subscribe(Strophe.getNodeFromJid(jarnxmpp.connection.jid), function (result) {});
+            });            
         }
     });
 
-    $('#xmpp-user-profile #subscriptions-list').change(function () {
+    $('input[name="subscriptions:list"]').live('change', function () {
         var tofollow = $(this).val() || [];
         jarnxmpp.PubSub.getSubscriptions(function (following) {
             var my_node = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
@@ -565,7 +574,7 @@ $(document).bind('jarnxmpp.connected', function () {
                 fullname;
             $(subscribe_to).each(function (idx, node) {
                 jarnxmpp.PubSub.subscribe(node, function (result) {
-                    fullname = $('#subscriptions-list option[value=' + node + ']').text();
+                    fullname = $('#subscriptions-list input[value=' + node + ']').text();
                     $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
                                    text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
                                    time: 5000,
@@ -574,7 +583,7 @@ $(document).bind('jarnxmpp.connected', function () {
             });
             $(unsubscribe_from).each(function (idx, node) {
                 jarnxmpp.PubSub.unsubscribe(node, null, function (result) {
-                    fullname = $('#subscriptions-list option[value=' + node + ']').text();
+                    fullname = $('#subscriptions-list input[value=' + node + ']').text();
                     $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
                                    text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
                                    time: 5000,
