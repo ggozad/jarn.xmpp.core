@@ -146,7 +146,7 @@ def populatePubSubStorage():
                     storage.node_items[node].remove(item_id)
                     for cnode in storage.collections:
                         if node in storage.collections[cnode] and item_id in storage.node_items[cnode]:
-                            storage.node_items[cnode].remove(item)
+                            storage.node_items[cnode].remove(item_id)
                     parent_id = item['parent']
                     if parent_id in storage.comments:
                         storage.comments[parent_id].append(item_id)
