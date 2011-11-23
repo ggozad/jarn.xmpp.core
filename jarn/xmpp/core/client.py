@@ -90,23 +90,6 @@ class PubSubClientMixIn(object):
         d = self.pubsub.getNodes(self.pubsub_jid, identifier)
         return d
 
-    def subscribe(self, identifier, subscriber, options=None, sender=None):
-        return self.pubsub.subscribe(
-            self.pubsub_jid, identifier, subscriber, options, sender)
-
-    def getSubscriptions(self, identifier):
-
-        def cb(result):
-            return (identifier, result)
-
-        d = self.pubsub.getSubscriptions(self.pubsub_jid, identifier)
-        d.addCallback(cb)
-        return d
-
-    def setSubscriptions(self, identifier, delta):
-        d = self.pubsub.setSubscriptions(self.pubsub_jid, identifier, delta)
-        return d
-
     def getNodeType(self, identifier):
 
         def cb(result):
@@ -129,18 +112,6 @@ class PubSubClientMixIn(object):
     def publish(self, identifier, items):
         self.pubsub.publish(self.pubsub_jid, identifier, items=items)
 
-    def getDefaultNodeConfiguration(self):
-        d = self.pubsub.getDefaultNodeConfiguration(self.pubsub_jid)
-        return d
-
-    def getNodeConfiguration(self, node):
-        d = self.pubsub.getNodeConfiguration(self.pubsub_jid, node)
-        return d
-
-    def configureNode(self, node, options):
-        d = self.pubsub.configureNode(self.pubsub_jid, node, options)
-        return d
-
     def getNodeAffiliations(self, identifier):
 
         def cb(result):
@@ -156,7 +127,7 @@ class PubSubClientMixIn(object):
                                            affiliations)
         return d
 
-    def getCollectionNodeItems(self, identifier, maxItems=10):
+    def getCollectionNodeItems(self, identifier, maxItems=20):
         """Currently ejabberd does not support this properly.
         It should work as per
         http://xmpp.org/extensions/xep-0248.html#retrieve-items
