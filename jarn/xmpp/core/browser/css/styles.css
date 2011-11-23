@@ -197,7 +197,8 @@ form.sendXMPPMessage .formControls {
 .user-details-form div.replyForm {
     padding-left: 60px;
 }
-form.sendXMPPMessage {
+form.sendXMPPMessage,
+#content form.pubsub-form fieldset {
     background: #fff;
     border: 1px solid #ccc;
     padding: .5em 4.09em .5em .5em;
@@ -210,7 +211,8 @@ form.sendXMPPMessage {
     -webkit-background-clip: padding-box;
     background-clip: padding-box; 
 }
-form.sendXMPPMessage input[type='text'] {
+form.sendXMPPMessage input[type='text'],
+form.pubsub-form fieldset input[type='text'] {
     border: none;
     background: transparent;
     display: block;
@@ -220,10 +222,12 @@ form.sendXMPPMessage input[type='text'] {
     line-height: 1.9em;
     width: 100%;
 }
-form.sendXMPPMessage input[type='text']:focus {
+form.sendXMPPMessage input[type='text']:focus,
+form.pubsub-form fieldset input[type='text']:focus {
     outline: none;
 }
-form.sendXMPPMessage input[type='submit'] {
+form.sendXMPPMessage button[type='submit'],
+form.pubsub-form button[type='submit'] {
 	line-height: 2.1em;
 	padding: .2em 0.8em;
 	background: #ddd;
@@ -232,7 +236,6 @@ form.sendXMPPMessage input[type='submit'] {
     top: .1em;
     right: .1em;
     cursor: pointer;
-    opacity: .6;
     -webkit-border-radius: 0 0.3em 0.3em 0;
     -moz-border-radius: 0 0.3em 0.3em 0;
     border-radius: 0 0.3em 0.3em 0;
@@ -240,8 +243,13 @@ form.sendXMPPMessage input[type='submit'] {
     -webkit-background-clip: padding-box;
     background-clip: padding-box; 
 }
-form.sendXMPPMessage input[type='text']:focus + input[type='submit'] {
-    opacity: 1;
+form.sendXMPPMessage input[type='text']:focus + button[type='submit'],
+form.pubsub-form input[type='text']:focus + button[type='submit'],
+form.sendXMPPMessage button[type='submit']:focus,
+form.pubsub-form button[type='submit']:focus {
+    background: #205c90;
+    color: #fff;
+	border-color: #143a5c;
 }
 div.replyForm > a {
     display: none;
@@ -265,72 +273,21 @@ div.replyForm > a:hover {
 .postItemWrapper {
     margin: 0 0 1em 95px;
     border: 1px solid #ccc;
-    padding: 12px;
+    padding: 0.7em 1em;
     max-width: 550px;
-    -webkit-border-radius: 0.2em;
-    -moz-border-radius: 0.2em;
-    border-radius: 0.2em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
     background-color: #dddddd;
 }
-form.pubsub-form {
-    position: relative;
+form.pubsub-form fieldset {
+    margin-bottom: 0;
 }
-.pubsubItem form.pubsub-form {
-    font-size: 0.9em;
-    background: #ddd;
-    padding: 0.5em;
-    margin-top: 0.5em;
-    border: 1px solid #ccc;
-}
-form.pubsub-form:before, form.pubsub-form:after {
-    content: ""; display: table;
-}
-form.pubsub-form:after { clear: both; }
-form.pubsub-form { *zoom: 1; }
-
-form.pubsub-form input[type='text'] {
+.postItemWrapper form.pubsub-form button[type="submit"] {
     font-size: 1em;
-    line-height: 1em;
-    width: 100%;
-    -moz-box-sizing:border-box;
-    -webkit-box-sizing:border-box;
-    box-sizing:border-box;
-    border: none;
-    padding: 0.85em;
-    color: #000;
-    outline: none;
-    float: left;
-    border-right: 6em solid #205c90;
-    margin-bottom: 0.5em;
-}
-form.pubsub-form input[type='text']:focus {
-    -webkit-box-shadow: 0 0 10px #bbb;
-    -moz-box-shadow: 0 0 10px #bbb;
-    box-shadow: 0 0 10px #bbb;
-}
-form.pubsub-form .formControls {
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: 0;
-    margin: 0;
-}
-.pubsubItem form.pubsub-form .formControls {
-    top: .5em;
-    right: .5em
-}
-form.pubsub-form button[type='submit'] {
-    border: none;
-    background: transparent;    
-    padding: 0.37em 0;
-    margin: 0;
-    color: #fff;
-    font-size: 1.5em;
-    text-transform: lowercase;
-    width: 4em;
-    line-height: 0.96em;
-    cursor: pointer;
-    vertical-align: middle;
+	line-height: 2.1em;
+	top: 0.2em;
+	right: 0.2em;
 }
 #content-core ul.pubsubNode {
     margin: 0;
@@ -395,6 +352,10 @@ form.pubsub-form button[type='submit'] {
 .pubsubItemComment .pubsubItemMsg {
     display: inline;
 }
+.pubsubItemContent form.pubsub-form {
+	position: relative;
+    top: -0.5em;
+}
 
 /* @end */
 
@@ -450,8 +411,11 @@ ul.pubsubNode {
     display: none;
 }
 
-#share-geolocation {
+.share-geolocation {
 	display: none;
+    padding-left: 0.5em;
+    font-weight: normal;
+    text-transform: lowercase;
 }
 .loadMoreToggle {
     text-align: center;

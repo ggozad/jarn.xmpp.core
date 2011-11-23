@@ -20,32 +20,32 @@
       <span class="portletTopRight"></span>
     </dt>
     <dd class="portletItem">
-      <div class="postItemWrapper"
-          tal:define="postNode view/postNode"
-          tal:condition="postNode">
-          <form action="" method="post" class="pubsub-form">
-              <input type="text" name="message" placeholder="Post to stream"
-                  i18n:attributes="placeholder"
-                  tal:attributes="data-post-node postNode"/>
-              <div id="share-geolocation">
-                <label for="share-location" i18n:translate="">Share location</label>
-                <input type="checkbox" name="share-location" />
-              </div>
-              <input type="hidden" name="parent" value=""/>
-              <div class="formControls">
-                <button type="submit" name="postButton" class="allowMultiSubmit"
-                    i18n:translate="">Post</button></div>
-          </form>
-      </div>
+        <div class="postItemWrapper"
+            tal:define="postNode view/postNode"
+            tal:condition="postNode">
+            <form action="" method="post" class="pubsub-form">
+                <input type="text" name="message" placeholder="Post to stream"
+                    i18n:attributes="placeholder"
+                    tal:attributes="data-post-node postNode"/>
+                    <label class="share-geolocation">
+                        <input type="checkbox" name="share-location" />
+                        <span tal:omit-tag="" i18n:translate="">Share location</span>
+                    </label>
+                <input type="hidden" name="parent" value=""/>
+                <div class="formControls">
+                  <button type="submit" name="postButton" class="allowMultiSubmit"
+                      i18n:translate="">Post</button></div>
+            </form>
+        </div>
 
-      <ul class="pubsubNode" tal:attributes="data-node node; data-leaf isLeaf">
-        <tal:pubsubitems tal:repeat="obj feed_items">
-          <li class="pubsubItem">
-            <div tal:replace="structure python:context.unrestrictedTraverse('@@pubsub-item')(obj, isLeaf=isLeaf)"/>
-          </li>
-        </tal:pubsubitems>
-      </ul>
-      <div class="visualClear"><!-- --></div>
+        <ul class="pubsubNode" tal:attributes="data-node node; data-leaf isLeaf">
+          <tal:pubsubitems tal:repeat="obj feed_items">
+            <li class="pubsubItem">
+              <div tal:replace="structure python:context.unrestrictedTraverse('@@pubsub-item')(obj, isLeaf=isLeaf)"/>
+            </li>
+          </tal:pubsubitems>
+        </ul>
+        <div class="visualClear"><!-- --></div>
     </dd>
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
