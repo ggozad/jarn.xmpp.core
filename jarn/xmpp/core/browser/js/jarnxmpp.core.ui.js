@@ -528,7 +528,9 @@ $(document).bind('jarnxmpp.connected', function () {
                     $('#follow-selected').attr('checked', 'checked');                    
                 }
                 $.each(subscribed_nodes, function (idx, node) {
-                    $('input[value=' + node +']', $sl).attr('checked', 'checked');
+                    $('input[value=' + node +']', $sl)
+                        .attr('checked', 'checked')
+                        .parent().addClass('subscribed');
                 });
             });
         });
@@ -564,12 +566,27 @@ $(document).bind('jarnxmpp.connected', function () {
     });
 
     $('input[name="subscriptions:list"]').live('change', function () {
-        var node = this.value;
+        var node = this.value,
+            $that = $(this);
         if (this.checked) {
-            jarnxmpp.PubSub.subscribe(node);
+            jarnxmpp.PubSub.subscribe(node, function (result) {
+                $that.parent().addClass('subscribed');
+                fullname = $that.parent().text();
+                $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                               text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
+                               time: 5000,
+                               sticky: false});
+            });
         }
         else {
-            jarnxmpp.PubSub.unsubscribe(node, null);
+            jarnxmpp.PubSub.unsubscribe(node, null, function (result) {
+                $that.parent().removeClass('subscribed');                
+                fullname = $that.parent().text();
+                $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                               text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
+                               time: 5000,
+                               sticky: false});
+            });
         }
         // var tofollow = $(this).val() || [];
         // jarnxmpp.PubSub.getSubscriptions(function (following) {
