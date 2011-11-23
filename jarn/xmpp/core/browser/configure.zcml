@@ -33,7 +33,7 @@
     name="xmpp-personal-profile"
     class=".user_profile.XMPPUserProfile"
     template="user_profile.pt"
-    permission="zope2.View"
+    permission="jarn.xmpp.core.XMPPView"
   />
 
   <browser:page
@@ -41,28 +41,28 @@
     name="pubsub-feed"
     class=".pubsub.PubSubFeed"
     template="pubsub_feed.pt"
-    permission="zope2.View"
+    permission="jarn.xmpp.core.XMPPView"
     />
 
   <browser:view
     for="*"
     name="pubsub-items"
     class=".pubsub.PubSubItems"
-    permission="zope2.View"
+    permission="jarn.xmpp.core.XMPPView"
     />
 
   <browser:view
     for="*"
     name="pubsub-item"
     class=".pubsub.PubSubItem"
-    permission="zope2.View"
+    permission="jarn.xmpp.core.XMPPView"
     />
 
   <browser:view
     for="*"
     name="content-transform"
     class=".transforms.ContentTransform"
-    permission="zope2.View"
+    permission="jarn.xmpp.core.XMPPView"
     />
 
   <browser:page
@@ -110,7 +110,7 @@
       name="jarn.xmpp.core.ui"
       manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
       class=".viewlet.XMPPViewlet"
-      permission="zope2.View"
+      permission="jarn.xmpp.core.XMPPView"
       />
 
   <!-- Resources -->

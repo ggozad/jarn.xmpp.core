@@ -21,6 +21,11 @@ def installJSi18n(context):
     context.runAllImportStepsFromProfile('profile-jarn.jsi18n:default')
 
 
+def updateRoles(context):
+    context.runImportStepFromProfile('profile-jarn.xmpp.core:default',
+                                     'rolemap')
+
+
 def upgrade(context):
     installJSi18n(context)
     cleanJSRegistry(context)

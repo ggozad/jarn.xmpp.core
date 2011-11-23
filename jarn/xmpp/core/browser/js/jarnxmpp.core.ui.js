@@ -259,6 +259,8 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
             var $li,
                 $node = $(node),
                 isLeaf = $node.attr('data-leaf') === 'True';
+            $('#site-stream-link').removeClass('newStreamMessage');
+            jarnxmpp.Storage.xmppSet('last_read_stream_on', jarnxmpp.PubSub._ISODateString(new Date()));
             $.get(portal_url + '/@@pubsub-item?',
                   {node: event.node,
                    id: event.id,
