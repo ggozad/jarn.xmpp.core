@@ -4,42 +4,39 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="jarn.xmpp.core">
+<head>
+    <metal:block fill-slot="top_slot"
+                 tal:define="dummy python:request.set('disable_border',1);" />
+</head>
 <body>
 <metal:main fill-slot="main">
 
   <div id="content-core">
-    <div id='xmpp-user-profile'>
-      <!--
-      <div id='profile-vCard'>
-        <h3 i18n:translate="">My vCard</h3>
-        <form action="" method="post" id="vCard-form">
-          <div class="formControls">
-            <button type="submit" name="updateVCard" class="allowMultiSubmit"
-              i18n:translate="">Update vCard from my site profile</button>
-          </div>
-        </form>
-      </div>
-      -->
-      <div id='pubsub-subscriptions'>
-        <h3 i18n:translate="">Stream subscriptions</h3>
-        <form action="" method="post" id="subscriptions-form">
-          <div class="formControls">
-            <label for="followAll">Follow all users</label>
-            <input type="checkbox"
-                   id="follow-all"
-                   name="followAll"
-                   title="Follow all users"
-                   i18n:attributes="title"/>
-            <br/>
-            <label for="subscriptions:list">Select who to follow</label>
-            <select name="subscriptions:list"
-                   id="subscriptions-list"
-                   multiple="multiple">
-            </select>
-          </div>
-        </form>
-      </div>
-    </div>
+    <h1 i18n:translate="" class="documentFirstHeading">Choose whose updates to receive</h1>
+    <form action="" method="post" id="subscriptions-form" class="row">
+        <fieldset>
+            <label>
+                <input type="radio"
+                       id="follow-all"
+                       name="followWho"
+                       title="Follow everybody"
+                       i18n:attributes="title"/>
+                Receive updates from everybody.
+            </label>
+        </fieldset>
+        <span i18n:translate="text_or">or</span>
+        <fieldset>
+            <label>
+                <input type="radio"
+                       id="follow-selected"
+                       name="followWho"
+                       title="Follow the selected peopl"
+                       i18n:attributes="title"/>
+                Receive updates from the following people only:
+            </label>
+            <div id="subscriptions-list"></div>
+        </fieldset>
+    </form>
   </div>
 </metal:main>
 </body>
