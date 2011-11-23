@@ -115,6 +115,19 @@ class PubSubClientMixIn(object):
         return self.pubsub.subscribe(
             self.pubsub_jid, identifier, subscriber, options, sender)
 
+    def getSubscriptions(self, identifier):
+
+        def cb(result):
+            return (identifier, result)
+
+        d = self.pubsub.getSubscriptions(self.pubsub_jid, identifier)
+        d.addCallback(cb)
+        return d
+
+    def setSubscriptions(self, identifier, delta):
+        d = self.pubsub.setSubscriptions(self.pubsub_jid, identifier, delta)
+        return d
+
     def publish(self, identifier, items):
         self.pubsub.publish(self.pubsub_jid, identifier, items=items)
 

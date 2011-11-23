@@ -22,7 +22,10 @@ class XMPPCoreNoReactorFixture(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        import jarn.jsi18n
         import jarn.xmpp.core
+        xmlconfig.file('configure.zcml', jarn.jsi18n,
+                       context=configurationContext)
 
         xmlconfig.file('configure.zcml', jarn.xmpp.core,
                        context=configurationContext)
@@ -57,7 +60,10 @@ class XMPPCoreFixture(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         # Load ZCML
+        import jarn.jsi18n
         import jarn.xmpp.core
+        xmlconfig.file('configure.zcml', jarn.jsi18n,
+                       context=configurationContext)
 
         # Normally on a client disconnect we unregister the AdminClient
         # utility. We can't do that here as we need to disconnect the
