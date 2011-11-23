@@ -42,10 +42,12 @@ class PubSubStorage(object):
     implements(IPubSubStorage)
 
     def __init__(self):
+        self.items = dict()
         self.node_items = dict()
         self.collections = dict()
         self.leaf_nodes = []
         self.publishers = dict()
+        self.comments = dict()
 
     def itemsFromNodes(self, nodes, start=0, count=20):
         if not isinstance(nodes, list):
@@ -53,6 +55,19 @@ class PubSubStorage(object):
         all_items = [self.node_items[node]
                      for node in nodes
                      if node in self.node_items]
-        result = sorted(itertools.chain(*all_items),
-                        key=lambda item: item['updated'], reverse=True)
-        return result[start:count + start]
+        ids = sorted(itertools.chain(*all_items),
+                        key=lambda item_id: self.items[item_id]['updated'], reverse=True)
+        return [self.items[item_id] for item_id in ids[start:count + start]]
+
+    def getItemById(self, item_id):
+        return self.items.get(item_id)
+
+    def getNodeByItemId(self, item_id):
+        for node in self.leaf_nodes:
+            if item_id in self.node_items[node]:
+                return node
+
+    def getCommentsForItemId(self, item_id):
+        if item_id not in self.comments:
+            return []
+        return [self.items[iid] for iid in self.comments[item_id]]

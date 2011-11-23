@@ -239,7 +239,7 @@ $(document).bind('jarnxmpp.message', function (event) {
         });
         // Let the form know the gritter id so that we can easily close it later.
         $('#gritter-item-' + gritter_id + ' form').attr('data-gritter-id', gritter_id);
-        
+
         jarnxmpp.UI.msg_counter += 1;
         jarnxmpp.UI.updateMsgCounter();
     });
@@ -251,6 +251,8 @@ $(document).bind('jarnxmpp.message', function (event) {
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     // If we are showing a feed already, and the item should be in it,
     // inject it.
+    if (event.pnode)
+        return;
     jarnxmpp.Storage.xmppGet('last_read_stream_on', function (date) {
         if (date>event.updated)
             return;
@@ -270,6 +272,7 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                    updated: event.updated,
                    geolocation: event.geolocation,
                    isLeaf: isLeaf}, function (data) {
+                       $('#'+event.id).parent().remove();
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
                        $li.slideDown("slow");
@@ -388,7 +391,7 @@ $(document).ready(function () {
     //
     // PubSub
     //
-    $('#pubsub-form input[name="share-location"]').change(function () {
+    $('.pubsub-form input[name="share-location"]').change(function () {
         if ($(this).attr('checked')) {
             var $checkbox = $(this);
             $('div.discreet', $checkbox.parent()).remove();
@@ -402,29 +405,46 @@ $(document).ready(function () {
         }
     });
 
-    $('#pubsub-form').bind('submit', function (e) {
+    $('.pubsub-form').live('submit', function (e) {
         var $field = $('[name="message"]:input', this),
             text = $field.attr('value'),
             node = $field.attr('data-post-node'),
+            pnode = $('input[name="parent"]', this).val(),
             share_location = $('input[name="share-location"]', this).attr('checked');
 
         if (share_location && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(geolocation) {
-                    jarnxmpp.PubSub.publish(node, text, geolocation);
+                    jarnxmpp.PubSub.publish(node, pnode, text, geolocation);
                     $field.attr('value', '');
                 },
                 function(error) {});
         } else {
-            jarnxmpp.PubSub.publish(node, text, null);
+            jarnxmpp.PubSub.publish(node, pnode,  text, null);
             $field.attr('value', '');
         }
         return false;
     });
 
+    $('.commentOnThread').live('click', function () {
+        // If there is already a comment form in this thread close it
+        var existing_form = $('.pubsub-form', $(this).parent());
+        if (existing_form.length) {
+            existing_form.remove();
+            return false;
+        }
+        $('.pubsubNode .pubsub-form').remove();
+        var form = $('.pubsub-form').first().clone();
+        $('input[name="parent"]', form).val($(this).parent().attr('id'));
+        $(this).parent().append(form);
+        form.hide();
+        form.slideDown('fast');
+        return false;
+    });
+
     $('button[name="loadMore"]').click(function () {
-        var curr_offset = $('li.pubsubItem:last', $(this).parent()).offset().top;
-        var $node = $('.pubsubNode', $(this).parent()).first(),
+        var curr_offset = $('li.pubsubItem:last').offset().top;
+        var $node = $('.pubsubNode').first(),
             nodes = $node.attr('data-node').split(' ');
             start = $('li.pubsubItem', $node).length;
             $.ajax({url: '/@@pubsub-items',
@@ -435,6 +455,9 @@ $(document).ready(function () {
                         $node.append(data);
                         $('.prettyDate', $node).prettyDate();
                         $node.magicLinks();
+                        if ($(data)
+                            .filter(function() { return this.nodeType !== 3;})
+                            .length <20) $('.loadMoreToggle').remove();
                     }
             });
     });
@@ -457,7 +480,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#share-geolocation').each(function () {
+    $('.share-geolocation').each(function () {
         if (navigator.geolocation)
             $(this).show();
     });
@@ -535,7 +558,7 @@ $(document).bind('jarnxmpp.connected', function () {
                     $('input', $sl).attr('disabled', 'disabled');
                 }
                 else {
-                    $('#follow-selected').attr('checked', 'checked');                    
+                    $('#follow-selected').attr('checked', 'checked');
                 }
                 $.each(subscribed_nodes, function (idx, node) {
                     $('input[value=' + node +']', $sl)
@@ -574,7 +597,7 @@ $(document).bind('jarnxmpp.connected', function () {
                                    time: 5000,
                                    sticky: false});
                 });
-            });            
+            });
         }
     });
 
@@ -593,7 +616,7 @@ $(document).bind('jarnxmpp.connected', function () {
         }
         else {
             jarnxmpp.PubSub.unsubscribe(node, null, function (result) {
-                $that.parent().removeClass('subscribed');                
+                $that.parent().removeClass('subscribed');
                 fullname = $that.parent().text();
                 $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
                                text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),

@@ -23,11 +23,11 @@
                     <input type="text" name="message" placeholder="Personal message"
                            tal:attributes="data-recipient view/jid"
                            i18n:attributes="placeholder"/>
-                    <input type="submit" value="Send" name="sendButton" class="submit-widget button-field"
-                        i18n:attributes="value"/>
+                    <button type="submit" name="sendButton" class="submit-widget button-field"
+                          i18n:translate="">Send</button>
                 </form>
             </div>
-            <a href="#" title="" class="followingStatus"
+            <a href="#" title="" class="followingStatus textButton"
                tal:attributes="data-user user_id; data-fullname fullname">
                 Follow/unfollow
             </a>

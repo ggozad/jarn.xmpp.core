@@ -37,17 +37,19 @@
       <div class="postItemWrapper"
             tal:define="postNode view/postNode"
            tal:condition="postNode">
-          <form action="" method="post" id="pubsub-form">
-              <input type="text" name="message" placeholder="Post to stream"
-                  i18n:attributes="placeholder"
-                  tal:attributes="data-post-node postNode"/>
-              <div id="share-geolocation">
-                <label i18n:translate="" for="share-location">Share location</label>
-                <input type="checkbox" name="share-location" />
-              </div>
-              <div class="formControls">
-                <button type="submit" name="postButton" class="allowMultiSubmit"
-                    i18n:translate="">Post</button></div>
+          <form action="" method="post" class="pubsub-form">
+              <fieldset>
+                  <input type="text" name="message" placeholder="Post to stream"
+                      i18n:attributes="placeholder"
+                      tal:attributes="data-post-node postNode"/>
+                  <button type="submit" name="postButton" class="allowMultiSubmit"
+                      i18n:translate="">Post</button>
+              </fieldset>
+              <label class="share-geolocation">
+                  <input type="checkbox" name="share-location" />
+                  <span tal:omit-tag="" i18n:translate="">Share location</span>
+              </label>
+              <input type="hidden" name="parent" value=""/>
           </form>
       </div>
 
@@ -58,7 +60,10 @@
           </li>
         </tal:pubsubitems>
       </ul>
-      <button type="submit" name="loadMore" class="allowMultiSubmit" i18n:translate="">Load more...</button>
+      <div class="loadMoreToggle">
+          <button type="submit" name="loadMore"
+                  class="allowMultiSubmit textButton" i18n:translate="">Load more...</button>
+      </div>
       <div class="visualClear"><!-- --></div>
     </div>
 </metal:main>

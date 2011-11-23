@@ -18,6 +18,7 @@ class PubSubItem(BrowserView):
         super(PubSubItem, self).__init__(context, request)
         self.mt = getToolByName(self.context, 'portal_membership')
         self.host = urlparse(getToolByName(self.context, 'portal_url')()).netloc
+        self.storage = getUtility(IPubSubStorage)
 
     def fullname(self, author):
         member = self.mt.getMemberById(author)
@@ -25,6 +26,9 @@ class PubSubItem(BrowserView):
 
     def isLeaf(self):
         return self._isLeaf
+
+    def comments(self):
+        return self.storage.getCommentsForItemId(self.item['id'])
 
     def __call__(self, item=None, isLeaf=False):
         if item is None:
@@ -35,6 +39,7 @@ class PubSubItem(BrowserView):
                 'author': self.request.get('author'),
                 'published': self.request.get('published'),
                 'updated': self.request.get('updated'),
+                'parent': self.request.get('parent')
             }
             if ('geolocation[latitude]' in self.request and
                 'geolocation[longitude]' in self.request):

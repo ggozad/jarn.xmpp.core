@@ -64,12 +64,6 @@ def adminDisconnected(event):
 
 
 def populatePubSubStorage():
-    """ XXX TODO:
-    1) I retrieve every node and items. Change this to retrieve only those
-    where the admin is subscribed. The rest are not used.
-    2) This would have been simpler if ejabberd supported retrieving
-    collection items as it should. Argue in the mailing list.
-    """
 
     client = getUtility(IAdminClient)
     storage = getUtility(IPubSubStorage)
@@ -78,13 +72,17 @@ def populatePubSubStorage():
 
         def gotNodeItems(result):
             node, items = result
-            storage.node_items[node] = items
-            if parent:
-                storage.node_items[parent] = \
-                    storage.node_items[parent] + (items)
-                storage.node_items[parent].sort(
-                    key=lambda item: item['updated'],
-                    reverse=True)
+            storage.node_items[node] = []
+            for item in items:
+                item_id = item['id']
+                storage.items[item_id] = item
+                storage.node_items[node].append(item_id)
+                if parent:
+                    storage.node_items[parent].append(item_id)
+            #storage.node_items[node] = items
+            # if parent:
+            #     storage.node_items[parent] = \
+            #         storage.node_items[parent] + (items)
 
         def gotNodeAffiliations(result):
             node, affiliations = result
@@ -137,5 +135,34 @@ def populatePubSubStorage():
         d.addCallback(gotNodes)
         return d
 
+    def postProcess(result):
+        # Look for comments and take them out from the node's items while
+        # putting them in the comments list.
+
+        for node in storage.leaf_nodes:
+            for item_id in storage.node_items[node][:]:
+                item = storage.getItemById(item_id)
+                if 'parent' in item:
+                    storage.node_items[node].remove(item_id)
+                    for cnode in storage.collections:
+                        if node in storage.collections[cnode] and item_id in storage.node_items[cnode]:
+                            storage.node_items[cnode].remove(item_id)
+                    parent_id = item['parent']
+                    if parent_id in storage.comments:
+                        storage.comments[parent_id].append(item_id)
+                    else:
+                        storage.comments[parent_id] = [item_id]
+
+        # Then sort them chronologically
+        for node in storage.node_items:
+            storage.node_items[node].sort(
+                key=lambda item_id: storage.getItemById(item_id)['updated'],
+                reverse=True)
+        for thread in storage.comments:
+            storage.comments[thread].sort(
+                key=lambda item_id: storage.getItemById(item_id)['updated'])
+        logger.info('Post-processing PubSub storage done.')
+
     d = getChildNodes(None)
+    d.addCallback(postProcess)
     return d

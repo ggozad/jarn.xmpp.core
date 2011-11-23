@@ -4,14 +4,17 @@
             member_tool context/portal_membership;
             item view/item;
             isLeaf view/isLeaf;
-            id item/id | nothing;
+            item_id item/id | nothing;
             author item/author;
             fullname python: view.fullname(author) or author;
             content item/content;
+            published item/published;
             updated item/updated;
             links item/urls | nothing;
             geolocation item/geolocation | nothing;
+            parent item/parent | nothing;
             portal_url context/portal_url">
+  <div tal:omit-tag="not: parent" class="pubsubItemComment">
   <div class="pubsubAvatar" tal:condition="not: isLeaf">
     <a href="#" title=""
        tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
@@ -22,31 +25,39 @@
         tal:attributes="src portrait/absolute_url"/>
     </a>
   </div>
-  <div class="pubsubItemContent">
-    <div>
+  <div class="pubsubItemContent" tal:attributes="id item_id">
+    <div tal:omit-tag="parent">
         <a href="#" title=""
            tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
                            title string:$fullname"><b
            class="pubsubItemAuthor" tal:condition="not: isLeaf" tal:content="fullname">
            Jon Doe
         </b></a>
-        <span class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
-              tal:attributes="data-time updated">May 5</span>
+        <span tal:condition="not:parent"
+              class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(published)"
+              tal:attributes="data-time published">May 5</span>
         <div class="pubsubGeolocation">
           <span class="location"
               tal:condition="geolocation"
-              tal:attributes="id string:geolocation-${id};
+              tal:attributes="id string:geolocation-${item_id};
                               data-latitude geolocation/latitude;
                               data-longitude geolocation/longitude"></span>
           <div class="map"
               tal:condition="geolocation"
-              tal:attributes="id string:geomap-${id};"/>
+              tal:attributes="id string:geomap-${item_id};"/>
         </div>
     </div>
-    <div class="pubsubItemMsg" tal:content="structure content">
+    <div class="pubsubItemMsg" tal:omit-tag="parent" tal:content="structure content">
         Content goes here.
     </div>
-    <div class="visualClear"><!-- --></div>
+    <div tal:condition="parent"
+          class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
+          tal:attributes="data-time updated">May 5</div>
+
+    <a href="#" class="commentOnThread textButton" tal:condition="not: parent"
+      i18n:translate="">
+        Comment
+    </a>
     <div class="pubsubItemDetails" tal:condition="links">
       <ul class="pubsubItemLinks">
         <li tal:repeat="url links">
@@ -59,4 +70,8 @@
       </ul>
     </div>
   </div>
+  </div>
+  <tal:comments tal:repeat="comment view/comments">
+    <div tal:replace="structure python: view(comment)"></div>
+  </tal:comments>
 </tal:pubsub_item>
