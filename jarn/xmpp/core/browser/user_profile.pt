@@ -18,7 +18,7 @@
             <label>
                 <input type="radio"
                        id="follow-all"
-                       name="followWho"
+                       name="globalFollow"
                        title="Follow everybody"
                        i18n:attributes="title"/>
                 Receive updates from everybody.
@@ -29,7 +29,7 @@
             <label>
                 <input type="radio"
                        id="follow-selected"
-                       name="followWho"
+                       name="globalFollow"
                        title="Follow the selected peopl"
                        i18n:attributes="title"/>
                 Receive updates from the following people only:
