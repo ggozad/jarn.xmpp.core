@@ -477,7 +477,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#share-geolocation').each(function () {
+    $('.share-geolocation').each(function () {
         if (navigator.geolocation)
             $(this).show();
     });
