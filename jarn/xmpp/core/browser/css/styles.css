@@ -272,16 +272,23 @@ div.replyForm > a:hover {
     border-radius: 0.2em;
     background-color: #dddddd;
 }
-.postItemWrapper form {
+form.pubsub-form {
     position: relative;
 }
-.postItemWrapper form:before, .postItemWrapper form:after {
+.pubsubItem form.pubsub-form {
+    font-size: 0.9em;
+    background: #ddd;
+    padding: 0.5em;
+    margin-top: 0.5em;
+    border: 1px solid #ccc;
+}
+form.pubsub-form:before, form.pubsub-form:after {
     content: ""; display: table;
 }
-.postItemWrapper form:after { clear: both; }
-.postItemWrapper form { *zoom: 1; }
+form.pubsub-form:after { clear: both; }
+form.pubsub-form { *zoom: 1; }
 
-.postItemWrapper form input[type='text'] {
+form.pubsub-form input[type='text'] {
     font-size: 1em;
     line-height: 1em;
     width: 100%;
@@ -296,19 +303,23 @@ div.replyForm > a:hover {
     border-right: 6em solid #205c90;
     margin-bottom: 0.5em;
 }
-.postItemWrapper form input[type='text']:focus {
+form.pubsub-form input[type='text']:focus {
     -webkit-box-shadow: 0 0 10px #bbb;
     -moz-box-shadow: 0 0 10px #bbb;
     box-shadow: 0 0 10px #bbb;
 }
-.postItemWrapper .formControls {
+form.pubsub-form .formControls {
     position: absolute;
     right: 0;
     top: 0;
     padding: 0;
     margin: 0;
 }
-.postItemWrapper button[type='submit'] {
+.pubsubItem form.pubsub-form .formControls {
+    top: .5em;
+    right: .5em
+}
+form.pubsub-form button[type='submit'] {
     border: none;
     background: transparent;    
     padding: 0.37em 0;
@@ -354,9 +365,39 @@ div.replyForm > a:hover {
     color: #444;
 }
 
+
+/* @group Threads */
+
 .pubsubItemComment {
-	padding-left:3em;
+	padding-left:95px;
+	font-size: 0.9em;
+	margin-top: 0.5em;
 }
+.pubsubItemComment + .pubsubItemComment {
+    margin-top: 0;
+}
+.pubsubItemComment .pubsubAvatar {
+    width: 50px;
+}
+.pubsubItemComment .pubsubAvatar,
+.pubsubItemComment .pubsubAvatar img {
+    height: 50px;
+}
+.pubsubItemComment .pubsubItemContent {
+    margin-left: 60px;
+    -webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+}
+.pubsubItemComment + .pubsubItemComment .pubsubItemContent {
+    border-top: none;
+}
+.pubsubItemComment .pubsubItemMsg {
+    display: inline;
+}
+
+/* @end */
+
 
 ul.pubsubNode {
     max-width: 671px;
@@ -382,7 +423,7 @@ ul.pubsubNode {
 }
 #content ul.pubsubItemLinks {
     border-top: 1px solid #ddd;
-    margin: 1.5em 0 0;
+    margin: 0.5em 0 0;
     padding: 0.5em 0 0;
 }
 .pubsubItemLinks {

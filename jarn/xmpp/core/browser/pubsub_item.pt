@@ -25,14 +25,15 @@
     </a>
   </div>
   <div class="pubsubItemContent" tal:attributes="id item_id">
-    <div>
+    <div tal:omit-tag="parent">
         <a href="#" title=""
            tal:attributes="href string:${portal_url}/@@pubsub-feed?node=$author;
                            title string:$fullname"><b
            class="pubsubItemAuthor" tal:condition="not: isLeaf" tal:content="fullname">
            Jon Doe
         </b></a>
-        <span class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
+        <span tal:condition="not:parent"
+              class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
               tal:attributes="data-time updated">May 5</span>
         <div class="pubsubGeolocation">
           <span class="location"
@@ -45,9 +46,13 @@
               tal:attributes="id string:geomap-${item_id};"/>
         </div>
     </div>
-    <div class="pubsubItemMsg" tal:content="structure content">
+    <div class="pubsubItemMsg" tal:omit-tag="parent" tal:content="structure content">
         Content goes here.
     </div>
+    <div tal:condition="parent"
+          class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
+          tal:attributes="data-time updated">May 5</div>
+
     <a href="#" class="commentOnThread" tal:condition="not: parent"
       i18n:translate="">
         Comment
@@ -67,6 +72,6 @@
   </div>
   </div>
   <tal:comments tal:repeat="comment view/comments">
-    <div tal:content="structure python: view(comment)"></div>
+    <div tal:replace="structure python: view(comment)"></div>
   </tal:comments>
 </tal:pubsub_item>
