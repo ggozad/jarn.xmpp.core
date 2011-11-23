@@ -164,12 +164,12 @@ div.user-details-form { *zoom: 1; }
 #online-users li > a.expanded + div.user-details-form {
     display: block;
 }
-a.followingStatus {
+.textButton {
 	display: inline-block;
 	margin: 0.5em 0 0;
 	padding: 0.5em 1em;
-	background: #f5f5f5;
-    border: 1px solid #ccc;
+	background: #fff;
+    border: 1px solid #ddd;
     color: #888;
     -webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
@@ -351,6 +351,7 @@ form.pubsub-form button[type='submit'] {
     height: 75px;
 }
 .pubsubItemContent {
+	font-size: 0.9em;
     border: 1px solid #ddd;
     -webkit-border-radius: 0.2em;
     -moz-border-radius: 0.2em;
@@ -370,7 +371,6 @@ form.pubsub-form button[type='submit'] {
 
 .pubsubItemComment {
 	padding-left:95px;
-	font-size: 0.9em;
 	margin-top: 0.5em;
 }
 .pubsubItemComment + .pubsubItemComment {
@@ -452,6 +452,13 @@ ul.pubsubNode {
 
 #share-geolocation {
 	display: none;
+}
+.loadMoreToggle {
+    text-align: center;
+    border-bottom: 1px dashed #ccc;
+}
+.loadMoreToggle button {
+    margin-bottom: -1.3em;
 }
 
 /* @end */

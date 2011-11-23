@@ -27,7 +27,7 @@
                         i18n:attributes="value"/>
                 </form>
             </div>
-            <a href="#" title="" class="followingStatus"
+            <a href="#" title="" class="followingStatus textButton"
                tal:attributes="data-user user_id; data-fullname fullname">
                 Follow/unfollow
             </a>
