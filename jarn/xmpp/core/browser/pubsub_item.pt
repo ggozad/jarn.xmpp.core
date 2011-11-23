@@ -8,6 +8,7 @@
             author item/author;
             fullname python: view.fullname(author) or author;
             content item/content;
+            published item/published;
             updated item/updated;
             links item/urls | nothing;
             geolocation item/geolocation | nothing;
@@ -33,8 +34,8 @@
            Jon Doe
         </b></a>
         <span tal:condition="not:parent"
-              class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
-              tal:attributes="data-time updated">May 5</span>
+              class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(published)"
+              tal:attributes="data-time published">May 5</span>
         <div class="pubsubGeolocation">
           <span class="location"
               tal:condition="geolocation"
