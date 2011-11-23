@@ -200,7 +200,7 @@ form.sendXMPPMessage .formControls {
 form.sendXMPPMessage {
     background: #fff;
     border: 1px solid #ccc;
-    padding: .5em 32px .5em .5em;
+    padding: .5em 4.09em .5em .5em;
     margin-top: 0;
     position: relative;
     -webkit-border-radius: 0.5em;
@@ -224,18 +224,24 @@ form.sendXMPPMessage input[type='text']:focus {
     outline: none;
 }
 form.sendXMPPMessage input[type='submit'] {
-	display: block;
-	height: 32px;
-	width: 32px;
-	text-indent: -999em;
-	overflow: hidden;
-	*line-height: 0;
-	background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAAjCAYAAAAe2bNZAAAAqElEQVR42u2UUQ2AIBRFaUAEIxjBCEbgk08jEIEIRCCCEYxgBCLo449dx6cP3e7Z7hgPtncmiCGEEPInvPdOckiuJnXutEUSSGCSlkiExkWy1xHq8W2RCRoGWA+wPr0pszWNcmdPBlmVI1o7e1a4O5+Ryf86Jv0LrP9rn1Cvczvy0cMcWkKu8zWCpGgJoZSVLHVsavMYIaQvFA0wUmgzg8DnYDaEEEKe3DL+CZxUERswAAAAAElFTkSuQmCC') 50% 50% no-repeat;
-	border: none;
+	line-height: 2.1em;
+	padding: .2em 0.8em;
+	background: #ddd;
+	border: 1px solid #ccc;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: .1em;
+    right: .1em;
     cursor: pointer;
+    opacity: .6;
+    -webkit-border-radius: 0 0.3em 0.3em 0;
+    -moz-border-radius: 0 0.3em 0.3em 0;
+    border-radius: 0 0.3em 0.3em 0;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box; 
+}
+form.sendXMPPMessage input[type='text']:focus + input[type='submit'] {
+    opacity: 1;
 }
 div.replyForm > a {
     display: none;
