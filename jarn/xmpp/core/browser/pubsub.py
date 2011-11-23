@@ -28,9 +28,7 @@ class PubSubItem(BrowserView):
         return self._isLeaf
 
     def comments(self):
-        if self.item['id'] in self.storage.comments:
-            return self.storage.comments[self.item['id']]
-        return []
+        return self.storage.getCommentsForItemId(self.item['id'])
 
     def __call__(self, item=None, isLeaf=False):
         if item is None:

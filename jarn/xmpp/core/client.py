@@ -66,21 +66,24 @@ class PubSubClientMixIn(object):
                   if item.name == 'item']
         storage = getUtility(IPubSubStorage)
         for item in items:
+            item_id = item['id']
+            storage.items[item_id] = item
             if 'parent' not in item:
-                storage.node_items[node].insert(0, item)
+                storage.node_items[node].insert(0, item_id)
                 for collection in collections:
-                    storage.node_items[collection].insert(0, item)
+                    storage.node_items[collection].insert(0, item_id)
             else:
                 parent_id = item['parent']
                 if parent_id in storage.comments:
-                    storage.comments[parent_id].append(item)
+                    storage.comments[parent_id].append(item_id)
                 else:
-                    storage.comments[parent_id] = [item]
+                    storage.comments[parent_id] = [item_id]
                 # Get the parent of the comment and remove it from the storage.
-                parent_node, parent = storage.getNodeAndItemById(parent_id)
-                storage.node_items[parent_node].remove(parent)
+                parent_node = storage.getNodeByItemId(parent_id)
+                parent = storage.getItemById(parent_id)
+                storage.node_items[parent_node].remove(parent_id)
                 for collection in collections:
-                    storage.node_items[collection].remove(parent)
+                    storage.node_items[collection].remove(parent_id)
                 # Update the parent and republish.
                 parent['updated'] = item['published']
                 item = self._dictToPubSubItem(parent)
@@ -108,6 +111,10 @@ class PubSubClientMixIn(object):
     def deleteNode(self, identifier):
         d = self.pubsub.deleteNode(self.pubsub_jid, identifier)
         return d
+
+    def subscribe(self, identifier, subscriber, options=None, sender=None):
+        return self.pubsub.subscribe(
+            self.pubsub_jid, identifier, subscriber, options, sender)
 
     def publish(self, identifier, items):
         self.pubsub.publish(self.pubsub_jid, identifier, items=items)
