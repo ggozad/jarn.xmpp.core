@@ -6,6 +6,11 @@
 
   <i18n:registerTranslations directory="locales"/>
 
+  <permission
+    id="jarn.xmpp.core.XMPPView"
+    title="jarn.xmpp.core: Access XMPP"
+    />
+
   <include package="plone.app.registry" />
   <include package=".subscribers" />
   <include package=".browser" />
