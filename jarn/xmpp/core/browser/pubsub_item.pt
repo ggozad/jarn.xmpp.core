@@ -58,7 +58,6 @@
       i18n:translate="">
         Comment
     </a>
-    <div class="visualClear"><!-- --></div>
     <div class="pubsubItemDetails" tal:condition="links">
       <ul class="pubsubItemLinks">
         <li tal:repeat="url links">
