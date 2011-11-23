@@ -251,6 +251,8 @@ $(document).bind('jarnxmpp.message', function (event) {
 $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
     // If we are showing a feed already, and the item should be in it,
     // inject it.
+    if (event.pnode)
+        return;
     jarnxmpp.Storage.xmppGet('last_read_stream_on', function (date) {
         if (date>event.updated)
             return;
@@ -270,9 +272,7 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                    updated: event.updated,
                    geolocation: event.geolocation,
                    isLeaf: isLeaf}, function (data) {
-                       if (event.pnode) {
-                           $('#'+event.pnode).parent().remove();
-                       }
+                       $('#'+event.id).parent().remove();
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
                        $li.slideDown("slow");
