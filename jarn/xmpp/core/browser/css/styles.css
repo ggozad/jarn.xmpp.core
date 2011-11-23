@@ -371,16 +371,16 @@ ul.pubsubNode {
 	display: block;
     text-align: center;
     font-size: 2.5em;
-    padding: 0.4em 0.5em 0.7em;
+    padding: 0.5em 0.5em 0.7em;
 }
 #subscriptions-list {
-    margin-top: 0.5em;
+    margin-top: 1.5em;
 }
 #subscriptions-list label {
     font-weight: normal;
-    margin-left: -0.6em;
+    margin-left: 1em;
     margin-right: 1em;
-    padding: 0.3em 0.5em;
+    padding: 0.5em;
 	-webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
     border-radius: 0.5em;
