@@ -55,7 +55,6 @@ class PubSubClientMixIn(object):
     def itemsReceived(self, event):
         sender = event.sender
         items = event.items
-
         if sender != self.pubsub_jid or not items:
             return
         headers = event.headers

@@ -139,7 +139,7 @@ def populatePubSubStorage():
         # Look for comments and take them out from the node's items while
         # putting them in the comments list.
 
-        for node in storage.node_items:
+        for node in storage.leaf_nodes:
             for item_id in storage.node_items[node][:]:
                 item = storage.getItemById(item_id)
                 if 'parent' in item:
