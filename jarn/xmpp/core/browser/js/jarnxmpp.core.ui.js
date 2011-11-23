@@ -564,33 +564,40 @@ $(document).bind('jarnxmpp.connected', function () {
     });
 
     $('input[name="subscriptions:list"]').live('change', function () {
-        var tofollow = $(this).val() || [];
-        jarnxmpp.PubSub.getSubscriptions(function (following) {
-            var my_node = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
-                idx = following.indexOf(my_node);
-            if (idx!==-1) following.splice(idx, 1);
-            var subscribe_to = tofollow.filter(function(node) { return following.indexOf(node) < 0; }),
-                unsubscribe_from = following.filter(function(node) { return tofollow.indexOf(node) < 0; }),
-                fullname;
-            $(subscribe_to).each(function (idx, node) {
-                jarnxmpp.PubSub.subscribe(node, function (result) {
-                    fullname = $('#subscriptions-list input[value=' + node + ']').text();
-                    $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
-                                   text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
-                                   time: 5000,
-                                   sticky: false});
-                    });
-            });
-            $(unsubscribe_from).each(function (idx, node) {
-                jarnxmpp.PubSub.unsubscribe(node, null, function (result) {
-                    fullname = $('#subscriptions-list input[value=' + node + ']').text();
-                    $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
-                                   text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
-                                   time: 5000,
-                                   sticky: false});
-                    });
-            });
-
-        });
+        var node = this.value;
+        if (this.checked) {
+            jarnxmpp.PubSub.subscribe(node);
+        }
+        else {
+            jarnxmpp.PubSub.unsubscribe(node, null);
+        }
+        // var tofollow = $(this).val() || [];
+        // jarnxmpp.PubSub.getSubscriptions(function (following) {
+        //     var my_node = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
+        //         idx = following.indexOf(my_node);
+        //     if (idx!==-1) following.splice(idx, 1);
+        //     var subscribe_to = tofollow.filter(function(node) { return following.indexOf(node) < 0; }),
+        //         unsubscribe_from = following.filter(function(node) { return tofollow.indexOf(node) < 0; }),
+        //         fullname;
+        //     $(subscribe_to).each(function (idx, node) {
+        //         jarnxmpp.PubSub.subscribe(node, function (result) {
+        //             fullname = $('#subscriptions-list input[value=' + node + ']').text();
+        //             $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+        //                            text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
+        //                            time: 5000,
+        //                            sticky: false});
+        //             });
+        //     });
+        //     $(unsubscribe_from).each(function (idx, node) {
+        //         jarnxmpp.PubSub.unsubscribe(node, null, function (result) {
+        //             fullname = $('#subscriptions-list input[value=' + node + ']').text();
+        //             $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+        //                            text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
+        //                            time: 5000,
+        //                            sticky: false});
+        //             });
+        //     });
+        // 
+        // });
     });
 });
