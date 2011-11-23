@@ -53,7 +53,7 @@
           class="prettyDate discreet" data-time="" tal:content="python:toLocalizedTime(updated)"
           tal:attributes="data-time updated">May 5</div>
 
-    <a href="#" class="commentOnThread" tal:condition="not: parent"
+    <a href="#" class="commentOnThread textButton" tal:condition="not: parent"
       i18n:translate="">
         Comment
     </a>
