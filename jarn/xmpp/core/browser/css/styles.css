@@ -369,6 +369,7 @@ ul.pubsubNode {
 }
 #subscriptions-form > span {
 	display: block;
+    text-align: center;
     font-size: 2.5em;
     padding: 0.5em 0.5em 0.7em;
 }
