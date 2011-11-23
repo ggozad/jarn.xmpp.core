@@ -239,7 +239,7 @@ $(document).bind('jarnxmpp.message', function (event) {
         });
         // Let the form know the gritter id so that we can easily close it later.
         $('#gritter-item-' + gritter_id + ' form').attr('data-gritter-id', gritter_id);
-        
+
         jarnxmpp.UI.msg_counter += 1;
         jarnxmpp.UI.updateMsgCounter();
     });
@@ -427,11 +427,18 @@ $(document).ready(function () {
     });
 
     $('.commentOnThread').live('click', function () {
+        // If there is already a comment form in this thread close it
+        var existing_form = $('.pubsub-form', $(this).parent());
+        if (existing_form.length) {
+            existing_form.remove();
+            return false;
+        }
+        $('.pubsubNode .pubsub-form').remove();
         var form = $('.pubsub-form').first().clone();
         $('input[name="parent"]', form).val($(this).parent().attr('id'));
         $(this).parent().append(form);
         form.hide();
-        form.slideDown('slow');
+        form.slideDown('fast');
         return false;
     });
 
@@ -548,7 +555,7 @@ $(document).bind('jarnxmpp.connected', function () {
                     $('input', $sl).attr('disabled', 'disabled');
                 }
                 else {
-                    $('#follow-selected').attr('checked', 'checked');                    
+                    $('#follow-selected').attr('checked', 'checked');
                 }
                 $.each(subscribed_nodes, function (idx, node) {
                     $('input[value=' + node +']', $sl)
@@ -587,7 +594,7 @@ $(document).bind('jarnxmpp.connected', function () {
                                    time: 5000,
                                    sticky: false});
                 });
-            });            
+            });
         }
     });
 
@@ -606,7 +613,7 @@ $(document).bind('jarnxmpp.connected', function () {
         }
         else {
             jarnxmpp.PubSub.unsubscribe(node, null, function (result) {
-                $that.parent().removeClass('subscribed');                
+                $that.parent().removeClass('subscribed');
                 fullname = $that.parent().text();
                 $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
                                text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
