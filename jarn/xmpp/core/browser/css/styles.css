@@ -422,7 +422,8 @@ ul.pubsubNode {
     border-bottom: 1px dashed #ccc;
 }
 .loadMoreToggle button {
-    margin-bottom: -1.3em;
+    position: relative;
+    bottom: -1.3em;
 }
 
 /* @end */
