@@ -42,3 +42,24 @@ msgstr ""
 
 msgid "${count} weeks ago"
 msgstr ""
+
+msgid "Follow user"
+msgstr ""
+
+msgid "Unfollow user"
+msgstr ""
+
+msgid "Subscription updated"
+msgstr ""
+
+msgid "You now follow ${person}"
+msgstr ""
+
+msgid "You no longer follow ${person}"
+msgstr ""
+
+msgid "You now follow noone and can individually select who to follow"
+msgstr ""
+
+msgid "You now follow everybody"
+msgstr ""
