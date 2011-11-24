@@ -1,4 +1,5 @@
 <tal:pubsub_item
+    i18n:domain="jarn.xmpp.core"
     define="toLocalizedTime nocall:context/@@plone/toLocalizedTime;
             plone_view context/@@plone;
             member_tool context/portal_membership;

@@ -21,7 +21,7 @@
                        name="globalFollow"
                        title="Follow everybody"
                        i18n:attributes="title"/>
-                Receive updates from everybody.
+                <span tal:omit-tag="" i18n:translate="">Receive updates from everybody.</span>
             </label>
         </fieldset>
         <span i18n:translate="text_or">or</span>
@@ -30,9 +30,9 @@
                 <input type="radio"
                        id="follow-selected"
                        name="globalFollow"
-                       title="Follow the selected peopl"
+                       title="Follow the selected people"
                        i18n:attributes="title"/>
-                Receive updates from the following people only:
+                <span tal:omit-tag="" i18n:translate="">Receive updates from the following people only:</span>
             </label>
             <div id="subscriptions-list"></div>
         </fieldset>

@@ -16,31 +16,52 @@ msgstr ""
 "Domain: jarn.xmpp.core.js\n"
 "X-Is-Fallback-For: it-ch it-it\n"
 
+msgid "${count} days ago"
+msgstr "${count} giorni fa"
+
+msgid "${count} hours ago"
+msgstr "${count} ore fa"
+
+msgid "${count} minutes ago"
+msgstr "${count} minuti fa"
+
+msgid "${count} weeks ago"
+msgstr "${count} settimane fa"
+
+msgid "1 hour ago"
+msgstr "1 ora fa"
+
+msgid "1 minute ago"
+msgstr "1 minuto fa"
 
 # Javascript i18n
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
 msgstr "Impossibile determinare la tua posizione. Permetti a questo sito di tracciare la tua posizione nelle impostazioni del browser."
 
+msgid "Follow user"
+msgstr ""
+
+msgid "Subscription updated"
+msgstr ""
+
+msgid "Unfollow user"
+msgstr ""
+
+msgid "You no longer follow ${person}"
+msgstr ""
+
+msgid "You now follow ${person}"
+msgstr ""
+
+msgid "You now follow everybody"
+msgstr ""
+
+msgid "You now follow noone and can individually select who to follow"
+msgstr ""
+
 msgid "just now"
 msgstr "ora"
-
-msgid "1 minute ago"
-msgstr "1 minuto fa"
-
-msgid "${count} minutes ago"
-msgstr "${count} minuti fa"
-
-msgid "1 hour ago"
-msgstr "1 ora fa"
-
-msgid "${count} hours ago"
-msgstr "${count} ore fa"
 
 msgid "yesterday"
 msgstr "ieri"
 
-msgid "${count} days ago"
-msgstr "${count} giorni fa"
-
-msgid "${count} weeks ago"
-msgstr "${count} settimane fa"

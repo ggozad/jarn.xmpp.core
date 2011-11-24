@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: jarn.xmpp.core\n"
-"POT-Creation-Date: 2011-11-02 09:01+0000\n"
+"POT-Creation-Date: 2011-11-24 10:48+0000\n"
 "PO-Revision-Date: 2011-11-02 13:07+0100\n"
 "Last-Translator: Christoph Boehner <cb@vorwaerts-werbung.de>\n"
 "Language-Team: VW Language Team <hallo@vorwaerts-werbung.de>\n"
@@ -14,50 +14,70 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: jarn.xmpp.core\n"
 
-#: ./browser/pubsub_portlet.py:50
+#: ./browser/pubsub_portlet.py:52
 #: ./profiles/default/portlets.xml
 msgid "A portlet that renders the feed from a PubSub node."
 msgstr "Ein Portlet, das einen Feed aus einer PubSub Verbindung zeigt."
 
-#: ./browser/pubsub_portlet.py:49
+#: ./browser/pubsub_portlet.py:51
 msgid "Add PubSub feed portlet"
 msgstr "PubSub Feed Portlet hinzufügen"
 
-#: ./browser/user_details.pt:8
+#: ./browser/user_profile.pt:15
+msgid "Choose whose updates to receive"
+msgstr ""
+
+#: ./browser/user_details.pt:7
 msgid "Click to toggle user's details"
 msgstr "Details zu diesem Benutzer zeigen"
 
-#: ./browser/pubsub_portlet.py:59
+#: ./browser/pubsub_item.pt:58
+msgid "Comment"
+msgstr ""
+
+#: ./browser/pubsub_portlet.py:61
 msgid "Edit PubSub feed portlet"
 msgstr "PubSub Feed Portlet bearbeiten"
 
-#: ./browser/pubsub.py:27
-msgid "Message"
-msgstr "Mitteilung"
+#: ./browser/user_profile.pt:19
+msgid "Follow everybody"
+msgstr ""
 
-#: ./browser/pubsub.py:24
-msgid "Node"
-msgstr "Verbindung"
+#: ./browser/user_profile.pt:30
+msgid "Follow the selected people"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Following"
+msgstr ""
+
+#: ./browser/pubsub_feed.pt:64
+msgid "Load more..."
+msgstr ""
+
+#: ./browser/viewlet.pt:6
+msgid "My stream"
+msgstr ""
 
 #: ./browser/viewlet.pt:11
 msgid "People online:"
 msgstr "Angemeldete Benutzer:"
 
-#: ./browser/user_details.pt:24
+#: ./browser/user_details.pt:23
 msgid "Personal message"
 msgstr "Persönliche Mitteilung"
 
-#: ./browser/user_details.pt:14
+#: ./browser/user_details.pt:13
 msgid "Personal stream"
 msgstr "Persönlicher Stream"
 
-#: ./browser/pubsub_feed.pt:52
-#: ./browser/pubsub_portlet.pt:40
+#: ./browser/pubsub_feed.pt:45
+#: ./browser/pubsub_portlet.pt:36
 msgid "Post"
 msgstr "Teilen"
 
-#: ./browser/pubsub_feed.pt:44
-#: ./browser/pubsub_portlet.pt:32
+#: ./browser/pubsub_feed.pt:42
+#: ./browser/pubsub_portlet.pt:27
 msgid "Post to stream"
 msgstr "Im Stream teilen"
 
@@ -69,11 +89,19 @@ msgstr "PubSub Feed Portlet"
 msgid "PubSub node"
 msgstr "PubSub Verbindung"
 
-#: ./browser/user_details.pt:22
+#: ./browser/user_profile.pt:24
+msgid "Receive updates from everybody."
+msgstr ""
+
+#: ./browser/user_profile.pt:35
+msgid "Receive updates from the following people only:"
+msgstr ""
+
+#: ./browser/user_details.pt:21
 msgid "Reply"
 msgstr "Antworten"
 
-#: ./browser/user_details.pt:28
+#: ./browser/user_details.pt:26
 msgid "Send"
 msgstr "Senden"
 
@@ -85,26 +113,18 @@ msgstr "Konfigurieren"
 msgid "Setup XMPP"
 msgstr "XMPP konfigurieren"
 
-#: ./browser/pubsub_feed.pt:48
-#: ./browser/pubsub_portlet.pt:36
+#: ./browser/pubsub_feed.pt:50
+#: ./browser/pubsub_portlet.pt:32
 msgid "Share location"
 msgstr "Standort teilen"
 
-#: ./browser/viewlet.pt:6
-msgid "Site stream"
-msgstr "Stream der Seite"
-
-#: ./browser/pubsub.py:157
-msgid "Subscribe"
-msgstr "Abonnieren"
+#: ./browser/pubsub_portlet.py:16
+msgid "The name of the PubSub node displayed (typically a user id or 'people' in order to include all users). Leaving this empty, will populate the portlet with items from the users the user follows."
+msgstr ""
 
 #: ./browser/pubsub_portlet.py:14
 msgid "Title"
 msgstr "Titel"
-
-#: ./browser/pubsub.py:172
-msgid "Unsubscribe"
-msgstr "Abonnement beenden"
 
 #. Default: "\n        Warning: This action should ONLY be run after the initial setup. It\n        will create the necessary users and nodes on your XMPP server\n        according to your plone site users. Unless you know what you are doing\n        you do not need to run it again afterwards.\n        Make sure you have set the correct settings for you XMPP server before\n        submitting.\n        "
 #: ./browser/setup.py:29
@@ -112,4 +132,14 @@ msgid "label_setup_warning"
 msgstr ""
 "Warning: diese Aktion sollte nur EINMALIG nach dem Setup ausgeführt werden. Diese Aktion wird die notwendigen Benutzer und Verbindungen auf Basis der Benutzeraccounts in Ihrer Ploneseite in Ihrem XMPP Server erstellen. Sie sollten einen guten Grund dafür haben, diese Aktion nochmals ausführen zu wollen. Bitte überprüfen Sie die Einstellungen für die Verbingung zu Ihrem XMPP Server auf Korrektheit vor der Ausführung.\n"
 " "
+
+#. Default: "More…"
+#: ./browser/pubsub_portlet.pt:52
+msgid "more"
+msgstr ""
+
+#. Default: "or"
+#: ./browser/user_profile.pt:27
+msgid "text_or"
+msgstr ""
 

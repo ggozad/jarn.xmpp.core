@@ -36,6 +36,27 @@ msgstr "1 minutt siden"
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
 msgstr "Kan ikke fastslå din plassering. Vennligst tillat nettleseren din å angi hvor du er."
 
+msgid "Follow user"
+msgstr ""
+
+msgid "Subscription updated"
+msgstr ""
+
+msgid "Unfollow user"
+msgstr ""
+
+msgid "You no longer follow ${person}"
+msgstr ""
+
+msgid "You now follow ${person}"
+msgstr ""
+
+msgid "You now follow everybody"
+msgstr ""
+
+msgid "You now follow noone and can individually select who to follow"
+msgstr ""
+
 msgid "just now"
 msgstr "nå"
 

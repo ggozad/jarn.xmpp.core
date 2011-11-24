@@ -13,7 +13,7 @@ class IPubSubFeedPortlet(IPortletDataProvider):
 
     name = schema.TextLine(title=_(u'Title'), required=False)
     node = schema.ASCIILine(title=_(u'PubSub node'),
-                            description=_(u'The name of the PubSub node displayed (typically a user id or "people" in order to include all users). Leaving this empty, will populate the portlet with items from the users the user follows.'),
+                            description=_(u"The name of the PubSub node displayed (typically a user id or 'people' in order to include all users). Leaving this empty, will populate the portlet with items from the users the user follows."),
                             required=False)
 
 

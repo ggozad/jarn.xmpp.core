@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: jarn.xmpp.core\n"
-"POT-Creation-Date: 2011-11-02 09:01+0000\n"
+"POT-Creation-Date: 2011-11-24 10:48+0000\n"
 "PO-Revision-Date: 2011-11-02 10:48 +0200\n"
 "Last-Translator: Giacomo Spettoli <giacomo.spettoli@gmail.com>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
@@ -16,50 +16,70 @@ msgstr ""
 "Domain: jarn.xmpp.core\n"
 "X-Is-Fallback-For: it-ch it-it\n"
 
-#: ./browser/pubsub_portlet.py:50
+#: ./browser/pubsub_portlet.py:52
 #: ./profiles/default/portlets.xml
 msgid "A portlet that renders the feed from a PubSub node."
 msgstr "Una portlet che mostra il flusso proveninente da un nodo PubSub"
 
-#: ./browser/pubsub_portlet.py:49
+#: ./browser/pubsub_portlet.py:51
 msgid "Add PubSub feed portlet"
 msgstr "Aggiungi una portlet di flusso PubSub"
 
-#: ./browser/user_details.pt:8
+#: ./browser/user_profile.pt:15
+msgid "Choose whose updates to receive"
+msgstr ""
+
+#: ./browser/user_details.pt:7
 msgid "Click to toggle user's details"
 msgstr "Clicca per mostrare i dettagli dell'utente."
 
-#: ./browser/pubsub_portlet.py:59
+#: ./browser/pubsub_item.pt:58
+msgid "Comment"
+msgstr ""
+
+#: ./browser/pubsub_portlet.py:61
 msgid "Edit PubSub feed portlet"
 msgstr "Modifica la portlet di flusso PubSub"
 
-#: ./browser/pubsub.py:27
-msgid "Message"
-msgstr "Messaggio"
+#: ./browser/user_profile.pt:19
+msgid "Follow everybody"
+msgstr ""
 
-#: ./browser/pubsub.py:24
-msgid "Node"
-msgstr "Nodo"
+#: ./browser/user_profile.pt:30
+msgid "Follow the selected people"
+msgstr ""
+
+#: ./profiles/default/actions.xml
+msgid "Following"
+msgstr ""
+
+#: ./browser/pubsub_feed.pt:64
+msgid "Load more..."
+msgstr ""
+
+#: ./browser/viewlet.pt:6
+msgid "My stream"
+msgstr ""
 
 #: ./browser/viewlet.pt:11
 msgid "People online:"
 msgstr "Utenti in linea:"
 
-#: ./browser/user_details.pt:24
+#: ./browser/user_details.pt:23
 msgid "Personal message"
 msgstr "Messaggio personale"
 
-#: ./browser/user_details.pt:14
+#: ./browser/user_details.pt:13
 msgid "Personal stream"
 msgstr "Flusso personale"
 
-#: ./browser/pubsub_feed.pt:52
-#: ./browser/pubsub_portlet.pt:40
+#: ./browser/pubsub_feed.pt:45
+#: ./browser/pubsub_portlet.pt:36
 msgid "Post"
 msgstr "Invia"
 
-#: ./browser/pubsub_feed.pt:44
-#: ./browser/pubsub_portlet.pt:32
+#: ./browser/pubsub_feed.pt:42
+#: ./browser/pubsub_portlet.pt:27
 msgid "Post to stream"
 msgstr "Inviare nel flusso"
 
@@ -71,11 +91,19 @@ msgstr "Portlet di flusso PubSub"
 msgid "PubSub node"
 msgstr "Nodo PubSub"
 
-#: ./browser/user_details.pt:22
+#: ./browser/user_profile.pt:24
+msgid "Receive updates from everybody."
+msgstr ""
+
+#: ./browser/user_profile.pt:35
+msgid "Receive updates from the following people only:"
+msgstr ""
+
+#: ./browser/user_details.pt:21
 msgid "Reply"
 msgstr "Rispondi"
 
-#: ./browser/user_details.pt:28
+#: ./browser/user_details.pt:26
 msgid "Send"
 msgstr "Invia"
 
@@ -87,30 +115,31 @@ msgstr "Configurazione"
 msgid "Setup XMPP"
 msgstr "Configurazione XMPP"
 
-#: ./browser/pubsub_feed.pt:48
-#: ./browser/pubsub_portlet.pt:36
+#: ./browser/pubsub_feed.pt:50
+#: ./browser/pubsub_portlet.pt:32
 msgid "Share location"
 msgstr "Condividi la posizione"
 
-#: ./browser/viewlet.pt:6
-msgid "Site stream"
-msgstr "Flusso del sito"
-
-#: ./browser/pubsub.py:157
-msgid "Subscribe"
-msgstr "Iscriviti"
+#: ./browser/pubsub_portlet.py:16
+msgid "The name of the PubSub node displayed (typically a user id or 'people' in order to include all users). Leaving this empty, will populate the portlet with items from the users the user follows."
+msgstr ""
 
 #: ./browser/pubsub_portlet.py:14
 msgid "Title"
 msgstr "Titolo"
-
-#: ./browser/pubsub.py:172
-msgid "Unsubscribe"
-msgstr "Rimuovi l'iscrizione"
 
 #. Default: "\n        Warning: This action should ONLY be run after the initial setup. It\n        will create the necessary users and nodes on your XMPP server\n        according to your plone site users. Unless you know what you are doing\n        you do not need to run it again afterwards.\n        Make sure you have set the correct settings for you XMPP server before\n        submitting.\n        "
 #: ./browser/setup.py:29
 msgid "label_setup_warning"
 msgstr "Attenzione: Questa azione dovrebbe essere eseguita solo DOPO la configurazione iniziale. Verranno creati gli utenti e i nodi necessari per il vostro server XMPP basandosi sui vostri utenti del sito Plone. Non è necessario farlo di nuovo a meno di sapere cosa si sta facendo. Accertarsi di eseguire corretamente la configurazione del vostro server XMPP prima di inviare."
 
+#. Default: "More…"
+#: ./browser/pubsub_portlet.pt:52
+msgid "more"
+msgstr ""
+
+#. Default: "or"
+#: ./browser/user_profile.pt:27
+msgid "text_or"
+msgstr ""
 
