@@ -37,25 +37,25 @@ msgid "Cannot determine your location. Please allow this site to track your loca
 msgstr "Impossible de trouver votre position. Merci d'autoriser ce site à utiliser votre position. Ce paramètre est disponible dans les paramètres de votre navigateur."
 
 msgid "Follow user"
-msgstr ""
+msgstr "Suivre l'utilisateur"
 
 msgid "Subscription updated"
-msgstr ""
+msgstr "Souscription à jour"
 
 msgid "Unfollow user"
-msgstr ""
+msgstr "Ne plus suivre"
 
 msgid "You no longer follow ${person}"
-msgstr ""
+msgstr "Vous ne suivez plus ${person}"
 
 msgid "You now follow ${person}"
-msgstr ""
+msgstr "Vous suivez maintenant ${person}"
 
 msgid "You now follow everybody"
-msgstr ""
+msgstr "Vous suivez maintenant tout le monde"
 
 msgid "You now follow noone and can individually select who to follow"
-msgstr ""
+msgstr "Vous ne suivez maintenant plus personne et pouvez sélectionner qui suivre"
 
 msgid "just now"
 msgstr "à l'instant"
