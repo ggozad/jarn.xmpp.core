@@ -205,7 +205,6 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
                 else
                     $following.text(jarnxmpp.UI._('Unfollow user'));
             });
-            // Put users in alphabetical order. This is stupidly done but works.
             $('#online-users').append(user_details);
             $('#online-users li[data-userid]').sortElements(function (a, b) {
                 return $('a.user-details-toggle', a).text().trim() > $('a.user-details-toggle', b).text().trim() ? 1 : -1;
