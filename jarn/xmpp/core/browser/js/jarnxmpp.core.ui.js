@@ -206,20 +206,10 @@ $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
                     $following.text(jarnxmpp.UI._('Unfollow user'));
             });
             // Put users in alphabetical order. This is stupidly done but works.
-            var name = $('a.user-details-toggle', user_details).text().trim(),
-                existing_users = $('#online-users > li'),
-                added = false;
-            $.each(existing_users, function (index, li) {
-                var existing_name = $('a.user-details-toggle', li).text().trim();
-                if (existing_name > name) {
-                    user_details.insertBefore($(li));
-                    added = true;
-                    return false;
-                }
+            $('#online-users').append(user_details);
+            $('#online-users li[data-userid]').sortElements(function (a, b) {
+                return $('a.user-details-toggle', a).text().trim() > $('a.user-details-toggle', b).text().trim() ? 1 : -1;
             });
-            if (!added) {
-                $('#online-users').append(user_details);
-            }
         });
         // Pre-fetch user info if we have a session storage.
         if (jarnxmpp.Storage.storage !== null)
