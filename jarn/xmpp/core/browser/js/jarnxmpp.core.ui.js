@@ -317,6 +317,7 @@ $(document).ready(function () {
     // People online viewlet
     //
     $('a#toggle-online-users').bind('click', function (e) {
+        $(this).toggleClass('active');
         if ($("div#online-users-container").is(':visible')) {
             $("div#online-users-container").hide();
             $('a.user-details-toggle').removeClass('expanded');
