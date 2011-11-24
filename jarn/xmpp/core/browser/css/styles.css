@@ -86,7 +86,7 @@ a#toggle-online-users:after {
 #online-users .offline {
     opacity: 0.5;
 }
-#online-users li > a {
+#online-users li > a, #no-users-online {
     display: block;
     padding: 0.5em 1em;
     margin: 0;
