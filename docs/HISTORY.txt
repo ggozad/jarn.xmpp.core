@@ -6,6 +6,12 @@ Changelog
 0.3 - Unreleased
 -----------------
 
+- Styling!
+  [mishunov]
+
+- Support one-level threading on pubsub nodes.
+  [ggozad]
+
 - Allow users to subscribe to individual nodes.
   [ggozad]
 
