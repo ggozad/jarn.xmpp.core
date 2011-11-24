@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: jarn.xmpp.core\n"
 "POT-Creation-Date: 2011-11-01 16:05+0000\n"
-"PO-Revision-Date: 2011-11-02 13:05+0100\n"
+"PO-Revision-Date: 2011-11-24 16:26+0100\n"
 "Last-Translator: Christoph Boehner <cb@vorwaerts-werbung.de>\n"
 "Language-Team: VW Language Team <hallo@vorwaerts-werbung.de>\n"
 "MIME-Version: 1.0\n"
@@ -34,28 +34,28 @@ msgstr "Vor einer Minute"
 
 # Javascript i18n
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
-msgstr "Ihr Standort kann nciht festgestellt werden. Bitte erlauben Sie dieser Seite Ihren Standort anhand Ihrer Browser Einstellungen verfolgen zu dürfen."
+msgstr "Ihr Standort kann nicht festgestellt werden. Bitte erlauben Sie dieser Seite Ihren Standort anhand Ihrer Browsereinstellungen verfolgen zu dürfen."
 
 msgid "Follow user"
-msgstr ""
+msgstr "Benutzer folgen"
 
 msgid "Subscription updated"
-msgstr ""
+msgstr "Abonnement aktualisiert"
 
 msgid "Unfollow user"
-msgstr ""
+msgstr "Benutzer nicht mehr folgen"
 
 msgid "You no longer follow ${person}"
-msgstr ""
+msgstr "Sie folgen ${person} nicht mehr"
 
 msgid "You now follow ${person}"
-msgstr ""
+msgstr "Sie folgen nun ${person}"
 
 msgid "You now follow everybody"
-msgstr ""
+msgstr "Sie folgen nun allen"
 
 msgid "You now follow noone and can individually select who to follow"
-msgstr ""
+msgstr "Sie folgen nun niemandem und können individuell wählen, wem Sie folgen möchten"
 
 msgid "just now"
 msgstr "In diesem Moment"

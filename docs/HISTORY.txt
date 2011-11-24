@@ -6,6 +6,9 @@ Changelog
 0.3 - Unreleased
 -----------------
 
+- Update German translations
+  [potzenheimer]
+
 - update french translation
   [toutpt]
 
