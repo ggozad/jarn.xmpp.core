@@ -6,6 +6,9 @@ Changelog
 0.3 - Unreleased
 -----------------
 
+- update french translation
+  [toutpt]
+
 - Styling!
   [mishunov]
 

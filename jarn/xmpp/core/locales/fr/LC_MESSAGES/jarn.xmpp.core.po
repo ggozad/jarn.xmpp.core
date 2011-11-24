@@ -28,7 +28,7 @@ msgstr "Ajouter un portlet de flux PubSub"
 
 #: ./browser/user_profile.pt:15
 msgid "Choose whose updates to receive"
-msgstr ""
+msgstr "Choisir qui doit recevoir les mises à jour"
 
 #: ./browser/user_details.pt:7
 msgid "Click to toggle user's details"
@@ -36,7 +36,7 @@ msgstr "Cliquer pour afficher les détails de l'utilisateur"
 
 #: ./browser/pubsub_item.pt:58
 msgid "Comment"
-msgstr ""
+msgstr "Commentaire"
 
 #: ./browser/pubsub_portlet.py:61
 msgid "Edit PubSub feed portlet"
@@ -44,23 +44,23 @@ msgstr "Modifier le portlet de flux PubSub"
 
 #: ./browser/user_profile.pt:19
 msgid "Follow everybody"
-msgstr ""
+msgstr "Suivre tout le monde"
 
 #: ./browser/user_profile.pt:30
 msgid "Follow the selected people"
-msgstr ""
+msgstr "Suivre les personnes sélectionnées"
 
 #: ./profiles/default/actions.xml
 msgid "Following"
-msgstr ""
+msgstr "Suivre"
 
 #: ./browser/pubsub_feed.pt:64
 msgid "Load more..."
-msgstr ""
+msgstr "Charger plus..."
 
 #: ./browser/viewlet.pt:6
 msgid "My stream"
-msgstr ""
+msgstr "Mon fluMon flux"
 
 #: ./browser/viewlet.pt:11
 msgid "People online:"
@@ -94,11 +94,11 @@ msgstr "Noeud PubSub"
 
 #: ./browser/user_profile.pt:24
 msgid "Receive updates from everybody."
-msgstr ""
+msgstr "Recevoir les mises à jour de tout le monde"
 
 #: ./browser/user_profile.pt:35
 msgid "Receive updates from the following people only:"
-msgstr ""
+msgstr "Recevoir les mises à jour des personnes suivient seulement:"
 
 #: ./browser/user_details.pt:21
 msgid "Reply"
@@ -123,7 +123,7 @@ msgstr "Partager la position"
 
 #: ./browser/pubsub_portlet.py:16
 msgid "The name of the PubSub node displayed (typically a user id or 'people' in order to include all users). Leaving this empty, will populate the portlet with items from the users the user follows."
-msgstr ""
+msgstr "Le nom des noeuds PubSub affichés (typiquement un identifiant utilisateur ou 'people' pour inclure tous les utilisateurs). Laisser ce champs vide affichera dans la portlet les éléments venant des utilisateurs que l'utilisateur suit."
 
 #: ./browser/pubsub_portlet.py:14
 msgid "Title"
@@ -137,10 +137,10 @@ msgstr "Attention: Cette action ne devrait être réalisé uniquement après la 
 #. Default: "More…"
 #: ./browser/pubsub_portlet.pt:52
 msgid "more"
-msgstr ""
+msgstr "plus"
 
 #. Default: "or"
 #: ./browser/user_profile.pt:27
 msgid "text_or"
-msgstr ""
+msgstr "ou"
 
