@@ -573,6 +573,9 @@ $(document).bind('jarnxmpp.connected', function () {
                     }
                 });
             });
+            $('#subscriptions-list label').sortElements(function(a, b) {
+                return $(a).text() > $(b).text() ? 1 : -1;
+            });
             jarnxmpp.PubSub.getSubscriptions(function (subscribed_nodes) {
                 if (subscribed_nodes.indexOf('people')!==-1) {
                     $('#follow-all').attr('checked', 'checked');
