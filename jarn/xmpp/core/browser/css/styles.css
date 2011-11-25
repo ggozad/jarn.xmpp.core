@@ -286,10 +286,7 @@ form.pubsub-form fieldset {
     margin-bottom: 0;
 }
 .postItemWrapper form.pubsub-form button[type="submit"] {
-    font-size: 1em;
-	line-height: 2.1em;
-	top: 0.2em;
-	right: 0.2em;
+    background: #bbb;
 }
 #content-core ul.pubsubNode {
     margin: 0;
