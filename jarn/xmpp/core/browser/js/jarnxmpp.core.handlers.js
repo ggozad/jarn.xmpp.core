@@ -301,8 +301,7 @@ jarnxmpp.PubSub = {
     publish: function(node, pnode, text, location, callback) {
         if (text === '' || node === '') return;
         $.getJSON(portal_url+'/content-transform?', {text: text}, function(data) {
-            var pubid = jarnxmpp.connection.getUniqueId("postNode"),
-                publish_elem = Strophe.xmlElement("publish", [["node",node],["jid",jarnxmpp.jid]]),
+            var publish_elem = Strophe.xmlElement("publish", [["node",node],["jid",jarnxmpp.jid]]),
                 item = Strophe.xmlElement("item",[]),
                 entry = Strophe.xmlElement('entry', [['xmlns', 'http://www.w3.org/2005/Atom']]),
                 author = Strophe.xmlElement('author', [], Strophe.getNodeFromJid(jarnxmpp.jid)),
@@ -326,11 +325,12 @@ jarnxmpp.PubSub = {
             }
             item.appendChild(entry);
             publish_elem.appendChild(item);
-            var pub = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set', id:pubid})
+            var stanza = $iq({from:jarnxmpp.jid, to:jarnxmpp.pubsub_jid, type:'set'})
                 .c('pubsub', {xmlns:Strophe.NS.PUBSUB }).cnode(publish_elem);
-            if (typeof(callback) !== 'undefined')
-                jarnxmpp.connection.addHandler(callback, null, 'iq', null, pubid, null);
-            jarnxmpp.connection.send(pub);
+            jarnxmpp.connection.sendIQ(stanza.tree(), function (result) {
+                if (typeof(callback) !== 'undefined')
+                    callback(result);
+            });
         });
 
     },
