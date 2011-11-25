@@ -68,8 +68,12 @@ class PubSubClientMixIn(object):
             item_id = item['id']
             storage.items[item_id] = item
             if 'parent' not in item:
+                if item_id in storage.node_items[node]:
+                    storage.node_items[node].remove(item_id)
                 storage.node_items[node].insert(0, item_id)
                 for collection in collections:
+                    if item_id in storage.node_items[collection]:
+                        storage.node_items[collection].remove(item_id)
                     storage.node_items[collection].insert(0, item_id)
             else:
                 parent_id = item['parent']
