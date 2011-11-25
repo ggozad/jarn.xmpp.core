@@ -459,7 +459,7 @@ $(document).ready(function () {
         var $node = $('.pubsubNode').first(),
             nodes = $node.attr('data-node').split(' ');
             start = $('li.pubsubItem', $node).length;
-            $.ajax({url: '/@@pubsub-items',
+            $.ajax({url: portal_url + '/@@pubsub-items',
                     data: {nodes: nodes, start:start},
                     dataType: 'html',
                     traditional:true,
@@ -526,7 +526,7 @@ $(document).bind('jarnxmpp.connected', function () {
             jarnxmpp.Storage.xmppSet('last_read_stream_on', jarnxmpp.PubSub._ISODateString(new Date()));
             jarnxmpp.PubSub.getSubscriptions(function (following) {
                 $node.attr('data-node', following.join(' '));
-                $.ajax({url: '/@@pubsub-items',
+                $.ajax({url: portal_url + '/@@pubsub-items',
                         data: {nodes: following},
                         dataType: 'html',
                         traditional:true,

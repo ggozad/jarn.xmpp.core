@@ -4,7 +4,7 @@
      tal:condition="not: view/anonymous">
     <div id="xmpp-viewlet-container">
         <a id="site-stream-link"
-           tal:attributes="href string:@@pubsub-feed"
+           tal:attributes="href string:${portal_url}/@@pubsub-feed"
            i18n:translate="">
               My stream
         </a><a href="#" id="toggle-online-users">
