@@ -228,13 +228,15 @@ form.pubsub-form fieldset input[type='text']:focus {
 }
 form.sendXMPPMessage button[type='submit'],
 form.pubsub-form button[type='submit'] {
-	line-height: 2.1em;
-	padding: .2em 0.8em;
+	line-height: 1em;
+	padding: 0 0.8em;
 	background: #ddd;
 	border: 1px solid #ccc;
+	border-style: none none none solid;
     position: absolute;
-    top: .1em;
-    right: .1em;
+    top: 0;
+    right: 0;
+    height: 100%;
     cursor: pointer;
     -webkit-border-radius: 0 0.3em 0.3em 0;
     -moz-border-radius: 0 0.3em 0.3em 0;
