@@ -1,10 +1,10 @@
-# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
-# SOME DESCRIPTIVE TITLE.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Translation of jarn.xmpp.core.pot to French
+# toutpt <toutpt@gmail.com>, 2011
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-11-24 10:48+0000\n"
+"POT-Creation-Date: 2011-11-26 13:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: toutpt <toutpt@gmail.com>\n"
 "Language-Team: French <plone-fr@lists.plone.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Language-Name: French\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: jarn.xmpp.core\n"
+"X-Is-Fallback-For: fr-be fr-ca fr-lu fr-mc fr-ch fr-fr\n"
 
 #: ./browser/pubsub_portlet.py:52
 #: ./profiles/default/portlets.xml
@@ -28,7 +29,7 @@ msgstr "Ajouter un portlet de flux PubSub"
 
 #: ./browser/user_profile.pt:15
 msgid "Choose whose updates to receive"
-msgstr "Choisir qui doit recevoir les mises à jour"
+msgstr "Choisir par qui recevoir les mises à jour"
 
 #: ./browser/user_details.pt:7
 msgid "Click to toggle user's details"
@@ -60,7 +61,7 @@ msgstr "Charger plus..."
 
 #: ./browser/viewlet.pt:6
 msgid "My stream"
-msgstr "Mon fluMon flux"
+msgstr "Mon flux"
 
 #: ./browser/viewlet.pt:11
 msgid "People online:"

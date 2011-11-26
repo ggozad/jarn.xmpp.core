@@ -1,3 +1,6 @@
+# Translation of jarn.xmpp.core.js.pot to French
+# toutpt <toutpt@gmail.com>, 2011
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -13,6 +16,7 @@ msgstr ""
 "Language-Name: French\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: jarn.xmpp.core.js\n"
+"X-Is-Fallback-For: fr-be fr-ca fr-lu fr-mc fr-ch fr-fr\n"
 
 msgid "${count} days ago"
 msgstr "il y a ${count} jours"
