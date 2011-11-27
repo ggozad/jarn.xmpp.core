@@ -1,9 +1,10 @@
+# Translation of jarn.xmpp.core.js.pot to Italian
 # Giacomo Spettoli <giacomo.spettoli@gmail.com>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: jarn.xmpp.core\n"
 "POT-Creation-Date: 2011-11-01 16:05+0000\n"
-"PO-Revision-Date: 2011-11-02 10:48 +0200\n"
+"PO-Revision-Date: 2011-11-26 14:48 +0200\n"
 "Last-Translator: Giacomo Spettoli <giacomo.spettoli@gmail.com>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -39,28 +40,28 @@ msgid "Cannot determine your location. Please allow this site to track your loca
 msgstr "Impossibile determinare la tua posizione. Permetti a questo sito di tracciare la tua posizione nelle impostazioni del browser."
 
 msgid "Follow user"
-msgstr ""
+msgstr "Segui l'utente"
 
 msgid "Subscription updated"
-msgstr ""
+msgstr "Sottoscrizione aggiornate"
 
 msgid "Unfollow user"
-msgstr ""
+msgstr "Smetti di seguire l'utente"
 
 msgid "You no longer follow ${person}"
-msgstr ""
+msgstr "Non stai più seguendo ${person}"
 
 msgid "You now follow ${person}"
-msgstr ""
+msgstr "Ora stai seguend ${person}"
 
 msgid "You now follow everybody"
-msgstr ""
+msgstr "Ora stai seguendo tutti"
 
 msgid "You now follow noone and can individually select who to follow"
-msgstr ""
+msgstr "Ora non stai seguendo nessuno e puoi selezionare chi seguire"
 
 msgid "just now"
-msgstr "ora"
+msgstr "proprio ora"
 
 msgid "yesterday"
 msgstr "ieri"
