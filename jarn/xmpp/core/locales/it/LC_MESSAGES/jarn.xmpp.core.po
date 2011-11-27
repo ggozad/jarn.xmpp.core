@@ -1,9 +1,11 @@
+# Translation of jarn.xmpp.core.pot to Italian
 # Giacomo Spettoli <giacomo.spettoli@gmail.com>, 2011
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: jarn.xmpp.core\n"
-"POT-Creation-Date: 2011-11-24 10:48+0000\n"
-"PO-Revision-Date: 2011-11-02 10:48 +0200\n"
+"POT-Creation-Date: 2011-11-26 13:49+0000\n"
+"PO-Revision-Date: 2011-11-26 14:48 +0200\n"
 "Last-Translator: Giacomo Spettoli <giacomo.spettoli@gmail.com>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +29,7 @@ msgstr "Aggiungi una portlet di flusso PubSub"
 
 #: ./browser/user_profile.pt:15
 msgid "Choose whose updates to receive"
-msgstr ""
+msgstr "Scegliere da chi ricevere gli aggiornamenti"
 
 #: ./browser/user_details.pt:7
 msgid "Click to toggle user's details"
@@ -35,7 +37,7 @@ msgstr "Clicca per mostrare i dettagli dell'utente."
 
 #: ./browser/pubsub_item.pt:58
 msgid "Comment"
-msgstr ""
+msgstr "Commenta"
 
 #: ./browser/pubsub_portlet.py:61
 msgid "Edit PubSub feed portlet"
@@ -43,23 +45,23 @@ msgstr "Modifica la portlet di flusso PubSub"
 
 #: ./browser/user_profile.pt:19
 msgid "Follow everybody"
-msgstr ""
+msgstr "Segui tutti"
 
 #: ./browser/user_profile.pt:30
 msgid "Follow the selected people"
-msgstr ""
+msgstr "Segui le persone selezionate"
 
 #: ./profiles/default/actions.xml
 msgid "Following"
-msgstr ""
+msgstr "Seguire"
 
 #: ./browser/pubsub_feed.pt:64
 msgid "Load more..."
-msgstr ""
+msgstr "Carica altro..."
 
 #: ./browser/viewlet.pt:6
 msgid "My stream"
-msgstr ""
+msgstr "Il mio flusso"
 
 #: ./browser/viewlet.pt:11
 msgid "People online:"
@@ -93,11 +95,11 @@ msgstr "Nodo PubSub"
 
 #: ./browser/user_profile.pt:24
 msgid "Receive updates from everybody."
-msgstr ""
+msgstr "Ricevi gli aggiornamenti da tutti."
 
 #: ./browser/user_profile.pt:35
 msgid "Receive updates from the following people only:"
-msgstr ""
+msgstr "Ricever gli aggiornamenti solo dalle seguenti persone:"
 
 #: ./browser/user_details.pt:21
 msgid "Reply"
@@ -122,7 +124,7 @@ msgstr "Condividi la posizione"
 
 #: ./browser/pubsub_portlet.py:16
 msgid "The name of the PubSub node displayed (typically a user id or 'people' in order to include all users). Leaving this empty, will populate the portlet with items from the users the user follows."
-msgstr ""
+msgstr "Il nome del nodo PubSub mostrato (tipicamente un id utente o 'persona' per includere tutti gli utenti). Se lasciato vuoto, la portlet verrà popolata con gli elementi dagli utenti che sta seguendo l'utente."
 
 #: ./browser/pubsub_portlet.py:14
 msgid "Title"
@@ -136,10 +138,10 @@ msgstr "Attenzione: Questa azione dovrebbe essere eseguita solo DOPO la configur
 #. Default: "More…"
 #: ./browser/pubsub_portlet.pt:52
 msgid "more"
-msgstr ""
+msgstr "altro…"
 
 #. Default: "or"
 #: ./browser/user_profile.pt:27
 msgid "text_or"
-msgstr ""
+msgstr "o"
 
