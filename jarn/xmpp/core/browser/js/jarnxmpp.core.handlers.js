@@ -95,9 +95,10 @@ jarnxmpp.Presence = {
     _user_info: {},
 
     onlineCount: function () {
-        var counter = -1; //exclude self
+        var me = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
+            counter = 0;
         for (var user in jarnxmpp.Presence.online) {
-            if (jarnxmpp.Presence.online.hasOwnProperty(user)) {
+            if ((jarnxmpp.Presence.online.hasOwnProperty(user)) && user!==me){
                 counter += 1;
             }
         }
