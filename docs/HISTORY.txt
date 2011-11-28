@@ -3,8 +3,12 @@ Changelog
 =========
 
 -----------------
-0.3 - Unreleased
+0.31 - Unreleased
 -----------------
+
+----------------
+0.3 - 2011-11-28
+----------------
 
 - Support one-level threading on pubsub nodes.
   [ggozad]
