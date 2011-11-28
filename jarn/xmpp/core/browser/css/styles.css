@@ -463,9 +463,9 @@ ul.pubsubNode {
     margin-top: 1.5em;
 }
 #subscriptions-list label {
+	float: left;
     font-weight: normal;
-    margin-left: 1em;
-    margin-right: 1em;
+    margin: 0 0 .5em 1em;
     padding: 0.5em;
 	-webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
