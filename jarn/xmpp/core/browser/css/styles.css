@@ -315,7 +315,7 @@ form.pubsub-form fieldset {
 .pubsubItemContent { *zoom: 1; }
 .pubsubItemMsg {
     font-size: 1.2em;
-    margin-top: 1em;
+    margin-top: .3em;
     color: #444;
 }
 
