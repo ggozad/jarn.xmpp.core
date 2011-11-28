@@ -13,7 +13,7 @@ from jarn.xmpp.twisted.testing import wait_for_client_state
 
 from jarn.xmpp.core.interfaces import IAdminClient
 from jarn.xmpp.core.subscribers.startup import setupAdminClient
-from jarn.xmpp.core.utils.setup import setupXMPPEnvironment
+from jarn.xmpp.core.utils.setup import _setupXMPPEnvironment
 
 
 class XMPPCoreNoReactorFixture(PloneSandboxLayer):
@@ -93,7 +93,7 @@ class XMPPCoreFixture(PloneSandboxLayer):
             zr.reactor.callFromThread(client.connect)
 
         wait_for_client_state(client, 'authenticated')
-        setupXMPPEnvironment(client,
+        _setupXMPPEnvironment(client,
             member_jids=[JID('test_user_1_@localhost')],
             member_passwords={JID('test_user_1_@localhost'): 'secret'})
         wait_on_client_deferreds(client)

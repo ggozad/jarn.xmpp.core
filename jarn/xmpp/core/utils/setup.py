@@ -3,13 +3,22 @@ import logging
 from twisted.internet import defer
 from twisted.words.protocols.jabber.jid import JID
 
+from zope.component import getUtility
+from Products.CMFCore.utils import getToolByName
+
+from jarn.xmpp.core.interfaces import IAdminClient
+from jarn.xmpp.core.interfaces import IXMPPPasswordStorage
+from jarn.xmpp.core.interfaces import IXMPPUsers
+
 from jarn.xmpp.core.utils.pubsub import getAllChildNodes
 from jarn.xmpp.core.utils.users import setupPrincipal
+from jarn.xmpp.core.subscribers.startup import populatePubSubStorage
+
 
 logger = logging.getLogger('jarn.xmpp.core')
 
 
-def setupXMPPEnvironment(client, member_jids=[],
+def _setupXMPPEnvironment(client, member_jids=[],
                          member_passwords={}):
 
     def deleteAllNodes(result):
@@ -96,4 +105,28 @@ def setupXMPPEnvironment(client, member_jids=[],
     d.addCallback(getExistingUsers)
     d.addCallback(deleteUsers)
     d.addCallback(createUsers)
+    return d
+
+
+def setupXMPPEnvironment(context):
+    xmpp_users = getUtility(IXMPPUsers)
+    pass_storage = getUtility(IXMPPPasswordStorage)
+    mt = getToolByName(context, 'portal_membership')
+    member_ids = mt.listMemberIds()
+    member_jids = []
+    member_passwords = {}
+    pass_storage.clear()
+    for member_id in member_ids:
+        member_jid = xmpp_users.getUserJID(member_id)
+        member_jids.append(member_jid)
+        member_passwords[member_jid] = pass_storage.set(member_id)
+
+    admin = getUtility(IAdminClient)
+
+    def initPubSubStorage(result):
+        d = populatePubSubStorage()
+        return d
+
+    d = _setupXMPPEnvironment(admin, member_jids, member_passwords)
+    d.addCallback(initPubSubStorage)
     return d

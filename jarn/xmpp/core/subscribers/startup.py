@@ -79,10 +79,6 @@ def populatePubSubStorage():
                 storage.node_items[node].append(item_id)
                 if parent:
                     storage.node_items[parent].append(item_id)
-            #storage.node_items[node] = items
-            # if parent:
-            #     storage.node_items[parent] = \
-            #         storage.node_items[parent] + (items)
 
         def gotNodeAffiliations(result):
             node, affiliations = result
