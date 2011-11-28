@@ -341,6 +341,7 @@ form.pubsub-form fieldset {
     -webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
+	padding: 6px;
 }
 .pubsubItemComment + .pubsubItemComment .pubsubItemContent {
     border-top: none;
@@ -351,6 +352,9 @@ form.pubsub-form fieldset {
 .pubsubItemContent form.pubsub-form {
 	position: relative;
     top: -0.5em;
+}
+.pubsubItemComment .prettyDate {
+    margin-top: 1em;
 }
 
 /* @end */
