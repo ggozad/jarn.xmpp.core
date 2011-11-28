@@ -39,9 +39,12 @@
            tal:condition="postNode">
           <form action="" method="post" class="pubsub-form">
               <fieldset>
-                  <input type="text" name="message" placeholder="Post to stream"
+                  <!-- <input type="text" name="message" placeholder="Post to stream"
                       i18n:attributes="placeholder"
-                      tal:attributes="data-post-node postNode"/>
+                      tal:attributes="data-post-node postNode"/> -->
+                  <textarea name="message" placeholder="Post to stream"
+                            i18n:attributes="placeholder"
+                            tal:attributes="data-post-node postNode"></textarea>
                   <button type="submit" name="postButton" class="allowMultiSubmit"
                       i18n:translate="">Post</button>
               </fieldset>

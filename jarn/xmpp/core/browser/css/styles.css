@@ -206,7 +206,7 @@ form.sendXMPPMessage,
     background-clip: padding-box; 
 }
 form.sendXMPPMessage input[type='text'],
-form.pubsub-form fieldset input[type='text'] {
+form.pubsub-form fieldset textarea {
     border: none;
     background: transparent;
     display: block;
@@ -217,7 +217,7 @@ form.pubsub-form fieldset input[type='text'] {
     width: 100%;
 }
 form.sendXMPPMessage input[type='text']:focus,
-form.pubsub-form fieldset input[type='text']:focus {
+form.pubsub-form fieldset textarea:focus {
     outline: none;
 }
 form.sendXMPPMessage button[type='submit'],
@@ -240,7 +240,7 @@ form.pubsub-form button[type='submit'] {
     background-clip: padding-box; 
 }
 form.sendXMPPMessage input[type='text']:focus + button[type='submit'],
-form.pubsub-form input[type='text']:focus + button[type='submit'],
+form.pubsub-form textarea:focus + button[type='submit'],
 form.sendXMPPMessage button[type='submit']:focus,
 form.pubsub-form button[type='submit']:focus {
     background: #205c90;
