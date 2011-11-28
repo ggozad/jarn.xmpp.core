@@ -44,12 +44,15 @@ class XMPPLoader(BrowserView):
 
         self.registry = getUtility(IRegistry)
         try:
-            self.bosh = self.registry['jarn.xmpp.boshURL']
             self.pubsub_jid = self.registry['jarn.xmpp.pubsubJID']
         except KeyError:
             self._available = False
 
         return self._available
+
+    @property
+    def bosh(self):
+        return getToolByName(self.context, 'portal_url')() + '/http-bind'
 
     def prebind(self):
         b_client = BOSHClient(self.jid, self.jpassword, self.bosh)
