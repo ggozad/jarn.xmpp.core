@@ -169,8 +169,9 @@ div.user-details-form { *zoom: 1; }
 }
 .textButton {
 	display: inline-block;
-	margin: 0.5em 0 0;
-	padding: 0.5em 1em;
+	margin: 1em 0 0;
+	border: none !important;
+	/*padding: 0.5em 1em;
 	background: #fff;
     border: 1px solid #ddd;
     color: #888;
@@ -179,18 +180,8 @@ div.user-details-form { *zoom: 1; }
     border-radius: 0.5em;
   	-moz-background-clip: padding;
   	-webkit-background-clip: padding-box;
-  	background-clip: padding-box;
+  	background-clip: padding-box;*/
 }
-/*a.followingStatus:hover,
-a.followingStatus[data-action] {
-	background: #75AD0A;
-    border-color: #75AD0A;
-  	color: #fff;    
-}
-a.followingStatus[data-action]:hover {
-    background: Red;
-	border-color: brown;
-}*/
 form.sendXMPPMessage {
     margin-top: 1em;
 }
