@@ -61,10 +61,10 @@
 ul#online-users li {
     list-style: none;
     display: block;
-    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
 }
-ul#online-users li:first-child {
-    border-top: none;
+ul#online-users li:last-child {
+    border-bottom: none;
 }
 ul.activated {
     display: block !important;
