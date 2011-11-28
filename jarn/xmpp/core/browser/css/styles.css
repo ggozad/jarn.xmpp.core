@@ -22,18 +22,26 @@
          -o-transition: background-color 1.0s ease-in-out;
             transition: background-color 1.0s ease-in-out;
 }
-#xmpp-viewlet-container > a:first-of-type {
+a#site-stream-link {
     margin-left: 0;
     -webkit-border-radius: 0 0 0 0.5em;
     -moz-border-radius: 0 0 0 0.5em;
     border-radius: 0 0 0 0.5em;
     -webkit-background-clip: padding-box;
 }
-#xmpp-viewlet-container > a:last-of-type {
+a#toggle-online-users {
     -webkit-border-radius: 0 0 0.5em 0;
     -moz-border-radius: 0 0 0.5em 0;
     border-radius: 0 0 0.5em 0;
     -webkit-background-clip: padding-box;
+}
+a#toggle-online-users.active {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-background-clip: padding-box;
+    background: #CCC;
+    color: #000;
 }
 #xmpp-viewlet-container > a.newStreamMessage {
     background-color: darkorange;
