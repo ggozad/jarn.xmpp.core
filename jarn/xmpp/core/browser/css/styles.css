@@ -16,11 +16,6 @@
     display: inline-block;
     padding: 0.25em 0.75em;
     margin-left: 1px;
-    -webkit-transition: background-color 1.0s ease-in-out;
-       -moz-transition: background-color 1.0s ease-in-out;
-        -ms-transition: background-color 1.0s ease-in-out;       
-         -o-transition: background-color 1.0s ease-in-out;
-            transition: background-color 1.0s ease-in-out;
 }
 a#site-stream-link {
     margin-left: 0;
