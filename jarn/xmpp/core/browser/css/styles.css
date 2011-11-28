@@ -206,7 +206,7 @@ form.sendXMPPMessage,
     background-clip: padding-box; 
 }
 form.sendXMPPMessage input[type='text'],
-form.pubsub-form fieldset textarea {
+form.pubsub-form textarea {
     border: none;
     background: transparent;
     display: block;
@@ -217,7 +217,7 @@ form.pubsub-form fieldset textarea {
     width: 100%;
 }
 form.sendXMPPMessage input[type='text']:focus,
-form.pubsub-form fieldset textarea:focus {
+form.pubsub-form textarea:focus {
     outline: none;
 }
 form.sendXMPPMessage button[type='submit'],
@@ -278,6 +278,14 @@ div.replyForm > a:hover {
 }
 form.pubsub-form fieldset {
     margin-bottom: 0;
+}
+form.pubsub-form textarea {
+    height: 1.5em;
+    padding: 0.2em 0.45em;
+    resize: vertical;
+}
+form.pubsub-form textarea:focus {
+	height: 5em;
 }
 .postItemWrapper form.pubsub-form button[type="submit"] {
     background: #bbb;
