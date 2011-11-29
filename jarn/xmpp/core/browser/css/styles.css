@@ -430,8 +430,18 @@ ul.pubsubNode {
     border-bottom: 1px dashed #ccc;
 }
 .loadMoreToggle button {
+	padding: 0.5em 1em;
+	background: #fff;
+    border: 1px solid #ddd !important;
+    color: #888;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+  	-moz-background-clip: padding;
+  	-webkit-background-clip: padding-box;
+  	background-clip: padding-box;
     position: relative;
-    bottom: -1.3em;
+    bottom: -1.3em;    
 }
 
 /* @end */
