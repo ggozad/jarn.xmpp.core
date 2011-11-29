@@ -287,6 +287,9 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
                        $li.slideDown("slow");
+                       $('textarea[name="message"]')
+                           .animate({ height: '1.5em' }, 'fast' )
+                           .removeAttr('disabled');
                        $('li:first .prettyDate', $node).prettyDate();
                        $('li:first', $node).magicLinks();
             });
@@ -418,12 +421,21 @@ $(document).ready(function () {
         }
     });
 
+    // Expand the textarea field when focused
+    $('textarea[name="message"]').focus(function () {
+        $(this).animate({
+            height: '5em'
+        }, 'fast' );
+    });
+
     $('.pubsub-form').live('submit', function (e) {
         var $field = $('[name="message"]:input', this),
             text = $field.attr('value'),
             node = $field.attr('data-post-node'),
             pnode = $('input[name="parent"]', this).val(),
             share_location = $('input[name="share-location"]', this).attr('checked');
+
+        $('textarea[name="message"]').attr('disabled', 'disabled');
 
         if (share_location && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(

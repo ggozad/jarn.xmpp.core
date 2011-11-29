@@ -284,9 +284,6 @@ form.pubsub-form textarea {
     padding: 0.2em 0.45em;
     resize: vertical;
 }
-form.pubsub-form textarea:focus {
-	height: 5em;
-}
 .postItemWrapper form.pubsub-form button[type="submit"] {
     background: #bbb;
 }
