@@ -3,8 +3,9 @@ Changelog
 =========
 
 -----------------
-0.32 - Unreleased
+0.32 - 2011-11-30
 -----------------
+
 - UI/UX improvements.
   [mishunov]
 
