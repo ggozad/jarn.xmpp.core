@@ -287,11 +287,6 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
                        $li.slideDown("medium");
-                       $('form.pubsub-form .formControls').slideUp(100, function () {
-                           $('textarea[name="message"]')
-                               .animate({ height: '1.5em' }, 100 )
-                               .removeAttr('disabled');
-                       });
                        $('li:first .prettyDate', $node).prettyDate();
                        $('li:first', $node).magicLinks();
             });
@@ -424,10 +419,9 @@ $(document).ready(function () {
     });
 
     // Expand the textarea field when focused
-    $('textarea[name="message"]').focus(function () {
-        $(this).animate({ height: '5em' }, 'medium', function () {
-            $('form.pubsub-form .formControls').slideDown(100);
-        } );
+    $('textarea[name="message"]').live('focus', function () {
+        $('.formControls', $(this).parents('form.pubsub-form')).show();
+        $(this).animate({ height: '5em' }, 'medium' );
     });
 
     $('.pubsub-form').live('submit', function (e) {
@@ -437,18 +431,20 @@ $(document).ready(function () {
             pnode = $('input[name="parent"]', this).val(),
             share_location = $('input[name="share-location"]', this).attr('checked');
 
-        $('textarea[name="message"]').attr('disabled', 'disabled');
+        $field.attr('disabled', 'disabled');
+        $field.attr('value', '');
+        $('form.pubsub-form .formControls').hide();
+        $('textarea[name="message"]')
+            .animate({ height: '1.5em' }, 100 )
+            .removeAttr('disabled');
 
         if (share_location && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(geolocation) {
                     jarnxmpp.PubSub.publish(node, pnode, text, geolocation);
-                    $field.attr('value', '');
-                },
-                function(error) {});
+                });
         } else {
             jarnxmpp.PubSub.publish(node, pnode,  text, null);
-            $field.attr('value', '');
         }
         return false;
     });
