@@ -56,16 +56,18 @@ def getURLData(url):
     else:
         favicon_url = host_url[0] + u'://' + host_url[1] + u'/favicon.ico'
 
-    return json.dumps({
-        'title': title,
-        'description': description,
-        'favicon_url': favicon_url})
+    return {'title': title,
+            'description': description,
+            'favicon_url': favicon_url}
 
 
 class MagicLinksView(BrowserView):
 
     def __call__(self, url):
-        return getURLData(url)
+        response = self.request.response
+        response.setHeader('content-type', 'application/json')
+        response.setBody(json.dumps(getURLData(url)))
+        return response
 
 
 class FavIconsView(BrowserView):
@@ -90,5 +92,8 @@ class ContentTransform(BrowserView):
                 link = '<a href="%s/pubsub-feed?node=%s">%s</a>' % \
                     (portal_url, user_id, user_ref)
                 text = user_pattern.sub(link, text)
-        result = {'text': text}
-        return json.dumps(result)
+
+        response = self.request.response
+        response.setHeader('content-type', 'application/json')
+        response.setBody(json.dumps({'text': text}))
+        return response
