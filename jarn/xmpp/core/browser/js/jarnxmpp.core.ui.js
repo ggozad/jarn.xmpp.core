@@ -455,17 +455,26 @@ $(document).ready(function () {
 
     $('.commentOnThread').live('click', function () {
         // If there is already a comment form in this thread close it
-        var existing_form = $('.pubsub-form', $(this).parent());
+        var existing_form = $('.pubsubItemComment[id="'+ $(this).parent().attr('id') +'"]'),
+            form;
         if (existing_form.length) {
             existing_form.remove();
             return false;
         }
-        $('.pubsubNode .pubsub-form').remove();
-        var form = $('.pubsub-form').first().clone();
+        $('.pubsubNode .postItemWrapper').remove();
+        form = $('.postItemWrapper')
+                    .first()
+                    .clone()
+                    .removeClass('postItemWrapper').addClass('pubsubItemContent')
+                    .wrap('<div class="pubsubItemComment" ' +
+                          'id="' + $(this).parent().attr('id') + '"' +
+                          '></div>')
+                    .parent()
+                    .hide();
         $('input[name="parent"]', form).val($(this).parent().attr('id'));
-        $(this).parent().append(form);
-        form.hide();
+        $(this).parents('.pubsubItem').append(form);
         form.slideDown('fast');
+        $('textarea', form).focus();
         return false;
     });
 
