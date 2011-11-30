@@ -25,21 +25,19 @@
             tal:condition="postNode">
             <form action="" method="post" class="pubsub-form">
                 <fieldset>
-                    <!-- <input type="text" name="message" placeholder="Post to stream"
-                        i18n:attributes="placeholder"
-                        tal:attributes="data-post-node postNode"/> -->
-                    <textarea name="message" placeholder="Post to stream"
-                              i18n:attributes="placeholder"
-                              tal:attributes="data-post-node postNode"></textarea>
-                    <button type="submit" name="postButton" class="allowMultiSubmit"
-                            i18n:translate="">Post</button>
-                </fieldset>
-
-                <label class="share-geolocation">
-                    <input type="checkbox" name="share-location" />
-                    <span tal:omit-tag="" i18n:translate="">Share location</span>
-                </label>
-                <input type="hidden" name="parent" value=""/>
+                      <textarea name="message" placeholder="Post to stream"
+                                i18n:attributes="placeholder"
+                                tal:attributes="data-post-node postNode"></textarea>
+                  </fieldset>
+                  <div class="formControls">
+                      <label class="share-geolocation">
+                          <input type="checkbox" name="share-location" />
+                          <span tal:omit-tag="" i18n:translate="">Share location</span>
+                      </label>
+                      <input type="hidden" name="parent" value=""/>
+                      <button type="submit" name="postButton" class="allowMultiSubmit"
+                          i18n:translate="">Post</button>
+                  </div>
             </form>
         </div>
 

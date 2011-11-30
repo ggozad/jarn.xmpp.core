@@ -286,10 +286,7 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                        $('#'+event.id).parent().remove();
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
-                       $li.slideDown("slow");
-                       $('textarea[name="message"]')
-                           .animate({ height: '1.5em' }, 'fast' )
-                           .removeAttr('disabled');
+                       $li.slideDown("medium");
                        $('li:first .prettyDate', $node).prettyDate();
                        $('li:first', $node).magicLinks();
             });
@@ -422,10 +419,9 @@ $(document).ready(function () {
     });
 
     // Expand the textarea field when focused
-    $('textarea[name="message"]').focus(function () {
-        $(this).animate({
-            height: '5em'
-        }, 'fast' );
+    $('textarea[name="message"]').live('focus', function () {
+        $('.formControls', $(this).parents('form.pubsub-form')).show();
+        $(this).animate({ height: '5em' }, 'medium' );
     });
 
     $('.pubsub-form').live('submit', function (e) {
@@ -435,35 +431,46 @@ $(document).ready(function () {
             pnode = $('input[name="parent"]', this).val(),
             share_location = $('input[name="share-location"]', this).attr('checked');
 
-        $('textarea[name="message"]').attr('disabled', 'disabled');
+        $field.attr('disabled', 'disabled');
+        $field.attr('value', '');
+        $('form.pubsub-form .formControls').hide();
+        $('textarea[name="message"]')
+            .animate({ height: '1.5em' }, 100 )
+            .removeAttr('disabled');
 
         if (share_location && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function(geolocation) {
                     jarnxmpp.PubSub.publish(node, pnode, text, geolocation);
-                    $field.attr('value', '');
-                },
-                function(error) {});
+                });
         } else {
             jarnxmpp.PubSub.publish(node, pnode,  text, null);
-            $field.attr('value', '');
         }
         return false;
     });
 
     $('.commentOnThread').live('click', function () {
         // If there is already a comment form in this thread close it
-        var existing_form = $('.pubsub-form', $(this).parent());
+        var existing_form = $('.pubsubItemComment[id="'+ $(this).parent().attr('id') +'"]'),
+            form;
         if (existing_form.length) {
             existing_form.remove();
             return false;
         }
-        $('.pubsubNode .pubsub-form').remove();
-        var form = $('.pubsub-form').first().clone();
+        $('.pubsubNode .postItemWrapper').remove();
+        form = $('.postItemWrapper')
+                    .first()
+                    .clone()
+                    .removeClass('postItemWrapper').addClass('pubsubItemContent')
+                    .wrap('<div class="pubsubItemComment" ' +
+                          'id="' + $(this).parent().attr('id') + '"' +
+                          '></div>')
+                    .parent()
+                    .hide();
         $('input[name="parent"]', form).val($(this).parent().attr('id'));
-        $(this).parent().append(form);
-        form.hide();
+        $(this).parents('.pubsubItem').append(form);
         form.slideDown('fast');
+        $('textarea', form).focus();
         return false;
     });
 
