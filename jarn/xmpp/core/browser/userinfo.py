@@ -18,7 +18,12 @@ class XMPPUserInfo(BrowserView):
             return None
         fullname = info.get('fullname') or user_id
         portrait_url = pm.getPersonalPortrait(user_id).absolute_url()
-        return json.dumps({'fullname': fullname, 'portrait_url': portrait_url})
+
+        response = self.request.response
+        response.setHeader('content-type', 'application/json')
+        response.setBody(json.dumps({'fullname': fullname,
+                                     'portrait_url': portrait_url}))
+        return response
 
 
 class XMPPUserDetails(BrowserView):
