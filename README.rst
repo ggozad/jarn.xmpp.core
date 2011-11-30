@@ -32,11 +32,7 @@ Before setting up the package you need to have a working XMPP server and access 
 --------
 Buildout
 --------
-A sample buildout you can use as a starting point can be found at `jarn.xmpp.buildout`_. Wokkel on which ``jarn.xmpp.twisted`` depends upon has not had a release for a while, so you will need to either use a development version or add::
-
-    find-links = http://dist.jarn.com/public
-
-to your buildout to get an updated version.
+A sample buildout you can use as a starting point can be found at `jarn.xmpp.buildout`_.
 
 -----------------------------
 Setting up ejabberd (>=2.1.5)
