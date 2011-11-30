@@ -287,9 +287,11 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
                        $li.slideDown("slow");
-                       $('textarea[name="message"]')
-                           .animate({ height: '1.5em' }, 'fast' )
-                           .removeAttr('disabled');
+                       $('form.pubsub-form .formControls').slideUp('fast', function () {
+                           $('textarea[name="message"]')
+                               .animate({ height: '1.5em' }, 'fast' )
+                               .removeAttr('disabled');
+                       });
                        $('li:first .prettyDate', $node).prettyDate();
                        $('li:first', $node).magicLinks();
             });
@@ -425,7 +427,9 @@ $(document).ready(function () {
     $('textarea[name="message"]').focus(function () {
         $(this).animate({
             height: '5em'
-        }, 'fast' );
+        }, 'fast', function () {
+            $('form.pubsub-form .formControls').slideDown('fast');
+        } );
     });
 
     $('.pubsub-form').live('submit', function (e) {

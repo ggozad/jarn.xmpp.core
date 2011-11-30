@@ -191,8 +191,7 @@ form.sendXMPPMessage .formControls {
 .user-details-form div.replyForm {
     padding-left: 60px;
 }
-form.sendXMPPMessage,
-#content form.pubsub-form fieldset {
+form.sendXMPPMessage {
     background: #fff;
     border: 1px solid #ccc;
     padding: .5em 4.09em .5em .5em;
@@ -205,8 +204,7 @@ form.sendXMPPMessage,
     -webkit-background-clip: padding-box;
     background-clip: padding-box; 
 }
-form.sendXMPPMessage input[type='text'],
-form.pubsub-form textarea {
+form.sendXMPPMessage input[type='text'] {
     border: none;
     background: transparent;
     display: block;
@@ -216,12 +214,10 @@ form.pubsub-form textarea {
     line-height: 1.5em;
     width: 100%;
 }
-form.sendXMPPMessage input[type='text']:focus,
-form.pubsub-form textarea:focus {
+form.sendXMPPMessage input[type='text']:focus {
     outline: none;
 }
-form.sendXMPPMessage button[type='submit'],
-form.pubsub-form button[type='submit'] {
+form.sendXMPPMessage button[type='submit'] {
 	line-height: 1em;
 	padding: 0 0.8em;
 	background: #ddd;
@@ -240,9 +236,7 @@ form.pubsub-form button[type='submit'] {
     background-clip: padding-box; 
 }
 form.sendXMPPMessage input[type='text']:focus + button[type='submit'],
-form.pubsub-form textarea:focus + button[type='submit'],
-form.sendXMPPMessage button[type='submit']:focus,
-form.pubsub-form button[type='submit']:focus {
+form.sendXMPPMessage button[type='submit']:focus {
     background: #205c90;
     color: #fff;
 	border-color: #143a5c;
@@ -266,10 +260,11 @@ div.replyForm > a:hover {
 
 /* @group PubSub feed */
 
+/* Form */
 .postItemWrapper {
     margin: 0 0 1em 95px;
     border: 1px solid #ccc;
-    padding: 0.7em 1em;
+    padding: 0.7em;
     max-width: 550px;
     -webkit-border-radius: 0.5em;
     -moz-border-radius: 0.5em;
@@ -277,16 +272,38 @@ div.replyForm > a:hover {
     background-color: #dddddd;
 }
 form.pubsub-form fieldset {
-    margin-bottom: 0;
+    margin: 0;
+    padding: .2em .45em;
+    background: #fff;
+    -webkit-border-radius: 0.3em;
+    -moz-border-radius: 0.3em;
+    border-radius: 0.3em;
 }
 form.pubsub-form textarea {
-    height: 1.5em;
-    padding: 0.2em 0.45em;
+    width: 100%;
+    padding: .15em 0;
+    height: 1.2em;
+    line-height: 1.2em;
     resize: vertical;
+    border: none;
+    font-size: 1em;
+    background: transparent;
 }
-.postItemWrapper form.pubsub-form button[type="submit"] {
-    background: #bbb;
+form.pubsub-form textarea:focus {
+    outline: none;
 }
+form.pubsub-form .formControls {
+    display: none;
+    margin: 0;
+}
+.share-geolocation {
+    float: left;
+}
+form.pubsub-form button[type="submit"] {
+    float: right;
+}
+
+/* Messages */
 #content-core ul.pubsubNode {
     margin: 0;
     padding: 0;
@@ -315,17 +332,30 @@ form.pubsub-form textarea {
     background-color: #f5f5f5;
     margin-left: 95px;
 }
-.pubsubItemContent:before, .pubsubItemContent:after { content: ""; display: table; }
-.pubsubItemContent:after { clear: both; }
-.pubsubItemContent { *zoom: 1; }
 .pubsubItemMsg {
     font-size: 1.2em;
     margin-top: .3em;
     color: #444;
 }
 
+/* Clearing the floats */
 
-/* @group Threads */
+.pubsubItemContent:before,
+.pubsubItemContent:after,
+form.pubsub-form .formControls:before,
+form.pubsub-form .formControls:after {
+    content: ""; display: table;
+}
+.pubsubItemContent:after,
+form.pubsub-form .formControls:after {
+    clear: both;
+}
+.pubsubItemContent,
+form.pubsub-form .formControls {
+    *zoom: 1;
+}
+
+/* Threads */
 
 .pubsubItemComment {
 	padding-left:95px;
@@ -361,8 +391,6 @@ form.pubsub-form textarea {
 .pubsubItemComment .prettyDate {
     margin-top: 1em;
 }
-
-/* @end */
 
 
 ul.pubsubNode {

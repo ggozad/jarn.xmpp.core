@@ -26,13 +26,13 @@
           tal:content="python: view.fullname(node) or node">
               Jon Doe
       </h1>
-      
+
       <div class="pubsubAvatar" tal:condition="isLeaf">
           <img class="portrait"
                tal:define="portrait python:context.portal_membership.getPersonalPortrait(view.node);"
                tal:condition="portrait"
                tal:attributes="src portrait/absolute_url" />
-      </div>      
+      </div>
 
       <div class="postItemWrapper"
             tal:define="postNode view/postNode"
@@ -45,14 +45,16 @@
                   <textarea name="message" placeholder="Post to stream"
                             i18n:attributes="placeholder"
                             tal:attributes="data-post-node postNode"></textarea>
+              </fieldset>
+              <div class="formControls">
+                  <label class="share-geolocation">
+                      <input type="checkbox" name="share-location" />
+                      <span tal:omit-tag="" i18n:translate="">Share location</span>
+                  </label>
+                  <input type="hidden" name="parent" value=""/>
                   <button type="submit" name="postButton" class="allowMultiSubmit"
                       i18n:translate="">Post</button>
-              </fieldset>
-              <label class="share-geolocation">
-                  <input type="checkbox" name="share-location" />
-                  <span tal:omit-tag="" i18n:translate="">Share location</span>
-              </label>
-              <input type="hidden" name="parent" value=""/>
+              </div>
           </form>
       </div>
 
