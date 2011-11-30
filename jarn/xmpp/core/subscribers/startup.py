@@ -57,10 +57,11 @@ def adminConnected(event):
 
 def adminDisconnected(event):
     client = queryUtility(IAdminClient)
-    logger.error('XMPP admin client disconnected.')
-    if client:
-        gsm = getGlobalSiteManager()
-        gsm.unregisterUtility(client, IAdminClient)
+    zr = getUtility(IZopeReactor)
+    if zr.reactor.running:
+        logger.error('XMPP admin client disconnected.')
+    gsm = getGlobalSiteManager()
+    gsm.unregisterUtility(client, IAdminClient)
 
 
 def populatePubSubStorage():
