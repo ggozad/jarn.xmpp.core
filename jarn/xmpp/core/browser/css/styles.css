@@ -275,9 +275,9 @@ form.pubsub-form fieldset {
     margin: 0;
     padding: .2em .45em;
     background: #fff;
-    -webkit-border-radius: 0.3em;
-    -moz-border-radius: 0.3em;
-    border-radius: 0.3em;
+    -webkit-border-radius: .3em .3em 0 .3em;
+    -moz-border-radius: .3em .3em 0 .3em;
+    border-radius: .3em .3em 0 .3em;
 }
 form.pubsub-form textarea {
     width: 100%;

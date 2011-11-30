@@ -286,10 +286,10 @@ $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
                        $('#'+event.id).parent().remove();
                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
                        $node.prepend($li);
-                       $li.slideDown("slow");
-                       $('form.pubsub-form .formControls').slideUp('fast', function () {
+                       $li.slideDown("medium");
+                       $('form.pubsub-form .formControls').slideUp(100, function () {
                            $('textarea[name="message"]')
-                               .animate({ height: '1.5em' }, 'fast' )
+                               .animate({ height: '1.5em' }, 100 )
                                .removeAttr('disabled');
                        });
                        $('li:first .prettyDate', $node).prettyDate();
@@ -425,10 +425,8 @@ $(document).ready(function () {
 
     // Expand the textarea field when focused
     $('textarea[name="message"]').focus(function () {
-        $(this).animate({
-            height: '5em'
-        }, 'fast', function () {
-            $('form.pubsub-form .formControls').slideDown('fast');
+        $(this).animate({ height: '5em' }, 'medium', function () {
+            $('form.pubsub-form .formControls').slideDown(100);
         } );
     });
 
