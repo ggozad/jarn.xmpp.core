@@ -85,7 +85,7 @@ def populatePubSubStorage():
             node, affiliations = result
             publishers = [jid.user
                           for jid, role in affiliations
-                          if role=='publisher']
+                          if role == 'publisher']
             storage.publishers[node] = publishers
 
         def gotNodeTypes(result):

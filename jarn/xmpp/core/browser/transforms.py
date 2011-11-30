@@ -27,7 +27,7 @@ def getURLData(url):
         return None
     try:
         doc = BeautifulSoup(urllib2.urlopen(url).read())
-    except UnicodeEncodeError: # This is for links to files/images.
+    except UnicodeEncodeError:  # This is for links to files/images.
         doc = BeautifulSoup('')
 
     title = url
