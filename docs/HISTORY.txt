@@ -6,6 +6,10 @@ Changelog
 0.32 - Unreleased
 -----------------
 
+- Fixed a bug that would allow the storage to load only 10 items from each 
+  node.
+  [ggozad]
+
 - Fixed json views to set properly json headers.
   [ggozad]
 
