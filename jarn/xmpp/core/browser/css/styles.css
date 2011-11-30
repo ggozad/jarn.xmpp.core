@@ -301,6 +301,11 @@ form.pubsub-form .formControls {
 }
 form.pubsub-form button[type="submit"] {
     float: right;
+    line-height: 1em;
+    padding: .5em .8em;
+    background: #205c90;
+    border: 1px solid #143a5c;
+    color: #fff;
 }
 
 /* Messages */
