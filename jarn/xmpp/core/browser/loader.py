@@ -61,22 +61,19 @@ class XMPPLoader(BrowserView):
         return ('', '')
 
     def __call__(self):
-        if not self.available:
-            return ""
-        rid, sid = self.prebind()
-        if rid and sid:
-            logger.info('Pre-binded %s' % self.jid.full())
-            return json.dumps({
-                'BOSH_SERVICE': self.bosh,
-                'rid': int(rid),
-                'sid': sid,
-                'jid': self.jid.full(),
-                'pubsub_jid': self.pubsub_jid})
+        bosh_credentials = {}
+        if self.available:
+            rid, sid = self.prebind()
+            if rid and sid:
+                logger.info('Pre-binded %s' % self.jid.full())
+                bosh_credentials = {
+                    'BOSH_SERVICE': self.bosh,
+                    'rid': int(rid),
+                    'sid': sid,
+                    'jid': self.jid.full(),
+                    'pubsub_jid': self.pubsub_jid}
 
-        else:
-            logger.error('Could not pre-bind %s' % self.jid.full())
-            return json.dumps({
-                'BOSH_SERVICE': self.bosh,
-                'jid': self.jid.userhost(),
-                'password': self.jpassword,
-                'pubsub_jid': self.pubsub_jid})
+        response = self.request.response
+        response.setHeader('content-type', 'application/json')
+        response.setBody(json.dumps(bosh_credentials))
+        return response

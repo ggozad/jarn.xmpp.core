@@ -480,13 +480,12 @@ $(document).bind('jarnxmpp.disconnecting', function () {
 $(document).ready(function () {
 
     $.getJSON(portal_url + '/@@xmpp-loader', function (data) {
+        if (!(('rid' in data) && ('sid' in data) && ('BOSH_SERVICE' in data)))
+            return;
         jarnxmpp.BOSH_SERVICE = data.BOSH_SERVICE;
         jarnxmpp.pubsub_jid = data.pubsub_jid;
         jarnxmpp.jid = data.jid;
         jarnxmpp.connection = new Strophe.Connection(jarnxmpp.BOSH_SERVICE);
-        if (('rid' in data) && ('sid' in data))
-            jarnxmpp.connection.attach(jarnxmpp.jid, data.sid, data.rid, jarnxmpp.onConnect);
-        else
-            jarnxmpp.connection.connect(jarnxmpp.jid, data.password, jarnxmpp.onConnect);
+        jarnxmpp.connection.attach(jarnxmpp.jid, data.sid, data.rid, jarnxmpp.onConnect);
     });
 });
