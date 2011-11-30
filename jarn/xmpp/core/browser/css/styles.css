@@ -360,7 +360,7 @@ form.pubsub-form .formControls {
     *zoom: 1;
 }
 
-/* Threads */
+/* Threads/Comments */
 
 .pubsubItemComment {
 	padding-left:95px;
@@ -389,12 +389,14 @@ form.pubsub-form .formControls {
 .pubsubItemComment .pubsubItemMsg {
     display: inline;
 }
-.pubsubItemContent form.pubsub-form {
-	position: relative;
-    top: -0.5em;
-}
 .pubsubItemComment .prettyDate {
     margin-top: 1em;
+}
+.pubsubItemComment form.pubsub-form fieldset {
+     border: 1px solid #ddd;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;    
 }
 
 
