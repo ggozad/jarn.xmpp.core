@@ -150,7 +150,7 @@ class PubSubClientMixIn(object):
                                            affiliations)
         return d
 
-    def getCollectionNodeItems(self, identifier, maxItems=20):
+    def getCollectionNodeItems(self, identifier, maxItems=None):
         """Currently ejabberd does not support this properly.
         It should work as per
         http://xmpp.org/extensions/xep-0248.html#retrieve-items
@@ -177,7 +177,7 @@ class PubSubClientMixIn(object):
         d.addCallback(nodesCb)
         return d
 
-    def getNodeItems(self, identifier, maxItems=10):
+    def getNodeItems(self, identifier, maxItems=None):
 
         def cb(result):
             items = []
@@ -187,7 +187,7 @@ class PubSubClientMixIn(object):
 
         d = self.pubsub.items(self.pubsub_jid,
                                       identifier,
-                                      maxItems=10)
+                                      maxItems=maxItems)
         d.addCallback(cb)
         return d
 
