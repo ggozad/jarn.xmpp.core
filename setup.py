@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.32'
+version = '0.33-dev'
 
 setup(name='jarn.xmpp.core',
       version=version,
