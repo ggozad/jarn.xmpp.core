@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2011-11-01 16:05+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-11-29 23:45+0100\n"
+"Last-Translator: Geir Bækholt <baekholt@plone.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -34,32 +34,32 @@ msgstr "1 minutt siden"
 
 # Javascript i18n
 msgid "Cannot determine your location. Please allow this site to track your location in your browser settings."
-msgstr "Kan ikke fastslå din plassering. Vennligst tillat nettleseren din å angi hvor du er."
+msgstr "Kan ikke fastslå hvor du er. Vennligst aktiver stedssporing i nettleseren din."
 
 msgid "Follow user"
-msgstr ""
+msgstr "Følg bruker"
 
 msgid "Subscription updated"
-msgstr ""
+msgstr "Hvem du følger er nå oppdatert"
 
 msgid "Unfollow user"
-msgstr ""
+msgstr "Slutt å følge bruker"
 
 msgid "You no longer follow ${person}"
-msgstr ""
+msgstr "Du følger ikke lenger ${person}"
 
 msgid "You now follow ${person}"
-msgstr ""
+msgstr "Du følger nå ${person}"
 
 msgid "You now follow everybody"
-msgstr ""
+msgstr "Du følger nå alle"
 
-msgid "You now follow noone and can individually select who to follow"
-msgstr ""
+msgid "You now follow none and can individually select who to follow"
+msgstr "Du følger nå ingen og kan enkeltvis velge hvem du vil følge"
 
 msgid "just now"
-msgstr "nå"
+msgstr "nettopp"
 
 msgid "yesterday"
-msgstr "igår"
+msgstr "i går"
 
