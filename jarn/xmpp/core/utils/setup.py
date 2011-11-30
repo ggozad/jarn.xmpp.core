@@ -38,7 +38,8 @@ def _setupXMPPEnvironment(client, member_jids=[],
         d = client.createNode('people',
             options={'pubsub#node_title': 'All personal nodes',
                      'pubsub#node_type': 'collection',
-                     'pubsub#collection': ''})
+                     'pubsub#collection': '',
+                     'pubsub#max_items': 1000})
         return d
 
     def createDummyItemNodes(result):
