@@ -5,6 +5,11 @@ Changelog
 -----------------
 0.32 - Unreleased
 -----------------
+- UI/UX improvements.
+  [mishunov]
+
+- Fixed a title-less portlet bug.
+  [ggozad]
 
 - Fixed a bug that would allow the storage to load only 10 items from each 
   node.

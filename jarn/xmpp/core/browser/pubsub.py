@@ -88,7 +88,8 @@ class PubSubFeedMixIn(object):
 
     def fullname(self, author):
         member = self.mt.getMemberById(author)
-        return member.getProperty('fullname', None)
+        if member:
+            return member.getProperty('fullname', None)
 
     def postNode(self):
         """
