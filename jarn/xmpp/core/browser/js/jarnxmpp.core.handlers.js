@@ -1,4 +1,4 @@
-jarnxmpp = {};
+(function(jarnxmpp, $) {
 
 jarnxmpp.Storage = {
 
@@ -489,3 +489,5 @@ $(document).ready(function () {
         jarnxmpp.connection.attach(jarnxmpp.jid, data.sid, data.rid, jarnxmpp.onConnect);
     });
 });
+
+})(window.jarnxmpp = window.jarnxmpp || {}, jQuery);
