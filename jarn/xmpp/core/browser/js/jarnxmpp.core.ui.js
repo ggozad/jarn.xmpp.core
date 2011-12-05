@@ -1,5 +1,5 @@
 /*global $:false, document:false, window:false, portal_url:false,
-$msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
+$msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google:false, jarnxmpp:false, jQuery:false */
 
 (function (jarnxmpp, jarn, $) {
 
@@ -147,21 +147,21 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                            center: latlng,
                            navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
                            mapTypeId: google.maps.MapTypeId.ROADMAP};
-            $('#' + id).css({'width':'280px', 'height':'200px'});
+            $('#' + id).css({'width': '280px', 'height': '200px'});
             var map = new google.maps.Map(document.getElementById(id), options);
             $('#' + id).hide();
             $('#' + id).slideDown("slow");
         },
 
-        reverseGeocode: function(lat, lng, callback) {
+        reverseGeocode: function (lat, lng, callback) {
             lat = parseFloat(lat);
             lng = parseFloat(lng);
             var latlng = new google.maps.LatLng(lat, lng);
-            jarnxmpp.UI.geocoder.geocode({'latLng': latlng}, function(results, status) {
+            jarnxmpp.UI.geocoder.geocode({'latLng': latlng}, function (results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     var i, components = {},
                         result = '';
-                    for (i=0; i<results[0].address_components.length; i++) {
+                    for (i = 0; i < results[0].address_components.length; i++) {
                         components[results[0].address_components[i].types[0]] = results[0].address_components[i].long_name;
                     }
                     if (components.administrative_area_level_3) {
@@ -188,7 +188,7 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
             barejid = Strophe.getBareJidFromJid(jid),
             existing_user_element = $('#online-users-' + user_id),
             online_count;
-        if (barejid == Strophe.getBareJidFromJid(jarnxmpp.connection.jid)) {
+        if (barejid === Strophe.getBareJidFromJid(jarnxmpp.connection.jid)) {
             return;
         }
         if (existing_user_element.length) {
@@ -204,15 +204,16 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 user_details = $(user_details);
                 // Set-up following link.
                 jarnxmpp.PubSub.getSubscriptions(function (following) {
-                    $following = $('a.followingStatus', user_details);
-                    if (following.indexOf('people')!==-1) {
+                    var $following = $('a.followingStatus', user_details);
+                    if (following.indexOf('people') !== -1) {
                         $following.remove();
                         return;
                     }
-                    if (following.indexOf(user_id)===-1)
-                         $following.text(jarnxmpp.UI._('Follow user'));
-                    else
+                    if (following.indexOf(user_id) === -1) {
+                        $following.text(jarnxmpp.UI._('Follow user'));
+                    } else {
                         $following.text(jarnxmpp.UI._('Unfollow user'));
+                    }
                 });
                 $('#online-users').append(user_details);
                 $('#online-users li[data-userid]').sortElements(function (a, b) {
@@ -220,14 +221,16 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 });
             });
             // Pre-fetch user info if we have a session storage.
-            if (jarnxmpp.Storage.storage !== null)
+            if (jarnxmpp.Storage.storage !== null) {
                 jarnxmpp.Presence.getUserInfo(user_id, function (data) {});
+            }
         }
         online_count = jarnxmpp.Presence.onlineCount();
-        if (online_count>0)
+        if (online_count > 0) {
             $('#no-users-online').hide();
-        else
+        } else {
             $('#no-users-online').show();
+        }
         $('#online-count').text(online_count);
     });
 
@@ -250,10 +253,11 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 image: data.portrait_url,
                 sticky: true,
                 after_close: function () {
-                    if (jarnxmpp.UI.msg_counter > 1)
+                    if (jarnxmpp.UI.msg_counter > 1) {
                         jarnxmpp.UI.msg_counter -= 1;
-                    else
+                    } else {
                         jarnxmpp.UI.msg_counter = 0;
+                    }
                     jarnxmpp.UI.updateMsgCounter();
                 }
             });
@@ -271,11 +275,13 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
     $(document).bind('jarnxmpp.pubsubEntryPublished', function (event) {
         // If we are showing a feed already, and the item should be in it,
         // inject it.
-        if (event.pnode)
+        if (event.pnode) {
             return;
+        }
         jarnxmpp.Storage.xmppGet('last_read_stream_on', function (date) {
-            if (date>event.updated)
+            if (date > event.updated) {
                 return;
+            }
             $('#site-stream-link').addClass('newStreamMessage');
             $('.pubsubNode[data-node*=' + event.node + '], .pubsubNode[data-node=people]').each(function (idx, node) {
                 var $li,
@@ -284,21 +290,15 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 $('#site-stream-link').removeClass('newStreamMessage');
                 jarnxmpp.Storage.xmppSet('last_read_stream_on', jarnxmpp.PubSub._ISODateString(new Date()));
                 $.get(portal_url + '/@@pubsub-item?',
-                      {node: event.node,
-                       id: event.id,
-                       content: event.content,
-                       author: event.author,
-                       published: event.published,
-                       updated: event.updated,
-                       geolocation: event.geolocation,
-                       isLeaf: isLeaf}, function (data) {
-                           $('#'+event.id).parent().remove();
-                           $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
-                           $node.prepend($li);
-                           $li.slideDown("medium");
-                           $('li:first .prettyDate', $node).prettyDate();
-                           $('li:first', $node).magicLinks();
-                });
+                    {node: event.node, id: event.id, content: event.content, author: event.author, published: event.published, updated: event.updated, geolocation: event.geolocation, isLeaf: isLeaf},
+                    function (data) {
+                        $('#' + event.id).parent().remove();
+                        $li = $('<li>').addClass('pubsubItem').css('display', 'none').html(data);
+                        $node.prepend($li);
+                        $li.slideDown("medium");
+                        $('li:first .prettyDate', $node).prettyDate();
+                        $('li:first', $node).magicLinks();
+                    });
             });
         });
     });
@@ -330,8 +330,7 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
             if ($("div#online-users-container").is(':visible')) {
                 $("div#online-users-container").hide();
                 $('a.user-details-toggle').removeClass('expanded');
-            }
-            else {
+            } else {
                 $("div#online-users-container").show();
             }
             e.preventDefault();
@@ -344,7 +343,7 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
             e.preventDefault();
         });
 
-        if (jarnxmpp.Storage.storage !==null) {
+        if (jarnxmpp.Storage.storage !== null) {
             var count = jarnxmpp.Storage.get('online-count');
             if (count !== null) {
                 $('#online-count').text(count);
@@ -352,31 +351,30 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
         }
         // Follow/unfollow user.
         $('a.followingStatus').live('click', function (e) {
-                var $following_link = $(this),
-                    node_id = $following_link.attr('data-user'),
-                    fullname = $following_link.attr('data-fullname');
-                jarnxmpp.PubSub.getSubscriptions(function (following) {
-                    if (following.indexOf(node_id)>-1) {
-                        jarnxmpp.PubSub.unsubscribe(node_id, null, function (result) {
-                            $following_link.text(jarnxmpp.UI._('Follow user'));
-                            $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
-                                           text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
-                                           time: 5000,
-                                           sticky: false
-                            });
-                        });
-                    } else {
-                        jarnxmpp.PubSub.subscribe(node_id, function (result) {
-                            $following_link.text(jarnxmpp.UI._('Unfollow user'));
-                            $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
-                                           text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
-                                           time: 5000,
-                                           sticky: false});
-                        });
-                    }
-                });
-                e.preventDefault();
+            var $following_link = $(this),
+                node_id = $following_link.attr('data-user'),
+                fullname = $following_link.attr('data-fullname');
+            jarnxmpp.PubSub.getSubscriptions(function (following) {
+                if (following.indexOf(node_id) > -1) {
+                    jarnxmpp.PubSub.unsubscribe(node_id, null, function (result) {
+                        $following_link.text(jarnxmpp.UI._('Follow user'));
+                        $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                                       text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
+                                       time: 5000,
+                                       sticky: false});
+                    });
+                } else {
+                    jarnxmpp.PubSub.subscribe(node_id, function (result) {
+                        $following_link.text(jarnxmpp.UI._('Unfollow user'));
+                        $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
+                                       text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
+                                       time: 5000,
+                                       sticky: false});
+                    });
+                }
             });
+            e.preventDefault();
+        });
 
         //
         // Send message
@@ -386,16 +384,17 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 text = $field.val(),
                 recipient = $field.attr('data-recipient'),
                 message;
-                $(this).parents('.user-details-form')
-                       .parent()
-                       .children('.user-details-toggle')
-                       .removeClass('expanded');
-                var gritter_id = $(this).attr('data-gritter-id');
-                if (typeof(gritter_id) !== 'undefined')
-                    $.gritter.remove(gritter_id);
-                $("div#online-users-container.autohide").hide('slow');
-                $('#toggle-online-users').removeClass('active');
-                $field.val('');
+            $(this).parents('.user-details-form')
+                .parent()
+                .children('.user-details-toggle')
+                .removeClass('expanded');
+            var gritter_id = $(this).attr('data-gritter-id');
+            if (typeof (gritter_id) !== 'undefined') {
+                $.gritter.remove(gritter_id);
+            }
+            $("div#online-users-container.autohide").hide('slow');
+            $('#toggle-online-users').removeClass('active');
+            $field.val('');
             $.getJSON(portal_url + '/content-transform?', {text: text}, function (data) {
                 message = $msg({to: recipient, type: 'chat'}).c('body').t(data.text);
                 jarnxmpp.connection.send(message);
@@ -418,19 +417,22 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 var $checkbox = $(this);
                 $('div.discreet', $checkbox.parent()).remove();
                 navigator.geolocation.getCurrentPosition(
-                    function(success) {},
-                    function(error) {
+                    function (success) {},
+                    function (error) {
                         $checkbox.attr('checked', false);
                         $checkbox.parent().append(
-                            $('<div>').text(jarnxmpp.UI._('Cannot determine your location. Please allow this site to track your location in your browser settings.')).addClass('discreet'));
-                    }, {maximumAge:600000});
+                            $('<div>').text(jarnxmpp.UI._('Cannot determine your location. Please allow this site to track your location in your browser settings.')).addClass('discreet')
+                        );
+                    },
+                    {maximumAge: 600000}
+                );
             }
         });
 
         // Expand the textarea field when focused
         $('textarea[name="message"]').live('focus', function () {
             $('.formControls', $(this).parents('form.pubsub-form')).show();
-            $(this).animate({ height: '5em' }, 'medium' );
+            $(this).animate({ height: '5em' }, 'medium');
         });
 
         $('.pubsub-form').live('submit', function (e) {
@@ -444,14 +446,15 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
             $field.attr('value', '');
             $('form.pubsub-form .formControls').hide();
             $('textarea[name="message"]')
-                .animate({ height: '1.5em' }, 100 )
+                .animate({ height: '1.5em' }, 100)
                 .removeAttr('disabled');
 
             if (share_location && navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    function(geolocation) {
+                    function (geolocation) {
                         jarnxmpp.PubSub.publish(node, pnode, text, geolocation);
-                    });
+                    }
+                );
             } else {
                 jarnxmpp.PubSub.publish(node, pnode,  text, null);
             }
@@ -460,7 +463,7 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
 
         $('.commentOnThread').live('click', function () {
             // If there is already a comment form in this thread close it
-            var existing_form = $('.pubsubItemComment[id="'+ $(this).parent().attr('id') +'"]'),
+            var existing_form = $('.pubsubItemComment[id="' + $(this).parent().attr('id') + '"]'),
                 form;
             if (existing_form.length) {
                 existing_form.remove();
@@ -468,14 +471,14 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
             }
             $('.pubsubNode .postItemWrapper').remove();
             form = $('.postItemWrapper')
-                        .first()
-                        .clone()
-                        .removeClass('postItemWrapper').addClass('pubsubItemContent')
-                        .wrap('<div class="pubsubItemComment" ' +
-                              'id="' + $(this).parent().attr('id') + '"' +
-                              '></div>')
-                        .parent()
-                        .hide();
+                .first()
+                .clone()
+                .removeClass('postItemWrapper').addClass('pubsubItemContent')
+                .wrap('<div class="pubsubItemComment" ' +
+                      'id="' + $(this).parent().attr('id') + '"' +
+                      '></div>')
+                .parent()
+                .hide();
             $('input[name="parent"]', form).val($(this).parent().attr('id'));
             $(this).parents('.pubsubItem').append(form);
             form.slideDown('fast');
@@ -486,31 +489,25 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
         $('button[name="loadMore"]').click(function () {
             var curr_offset = $('li.pubsubItem:last').offset().top;
             var $node = $('.pubsubNode').first(),
-                nodes = $node.attr('data-node').split(' ');
+                nodes = $node.attr('data-node').split(' '),
                 start = $('li.pubsubItem', $node).length;
-                $.ajax({url: portal_url + '/@@pubsub-items',
-                        data: {nodes: nodes, start:start},
-                        dataType: 'html',
-                        traditional:true,
-                        success: function (data) {
-                            $node.append(data);
-                            $('.prettyDate', $node).prettyDate();
-                            $node.magicLinks();
-                            if ($(data)
-                                .filter(function() { return this.nodeType !== 3;})
-                                .length <20) $('.loadMoreToggle').remove();
-                        }
-                });
+            $.ajax({url: portal_url + '/@@pubsub-items', data: {nodes: nodes, start: start}, dataType: 'html', traditional: true,
+                success: function (data) {
+                    $node.append(data);
+                    $('.prettyDate', $node).prettyDate();
+                    $node.magicLinks();
+                    if ($(data).filter(function () { return this.nodeType !== 3; }).length < 20) { $('.loadMoreToggle').remove(); }
+                }});
         });
 
         $('.location').live('click', function (e) {
-            $locelem = $(this);
+            var $locelem = $(this);
             var map_id = $locelem.parent().find('.map').attr('id');
             if ($('#' + map_id).is(':hidden')) {
                 jarnxmpp.UI._loadGoogleMapsAPI(function () {
                     var latitude = $locelem.attr('data-latitude'),
                         longitude = $locelem.attr('data-longitude');
-                    jarnxmpp.UI.reverseGeocode(latitude, longitude, function(city) {
+                    jarnxmpp.UI.reverseGeocode(latitude, longitude, function (city) {
                         $locelem.text(city);
                     });
                     jarnxmpp.UI.showGoogleMap(map_id, latitude, longitude);
@@ -522,8 +519,9 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
         });
 
         $('.share-geolocation').each(function () {
-            if (navigator.geolocation)
+            if (navigator.geolocation) {
                 $(this).show();
+            }
         });
 
         $('.pubsubNode').magicLinks();
@@ -534,7 +532,7 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
         //
         $('#vCard-form button[name="updateVCard"]').click(function () {
             var user_id = Strophe.getNodeFromJid(jarnxmpp.connection.jid);
-            $.getJSON(portal_url+"/xmpp-userinfo?user_id="+user_id, function(data) {
+            $.getJSON(portal_url + "/xmpp-userinfo?user_id=" + user_id, function (data) {
                 jarnxmpp.vCard.setVCard({FN: data.fullname}, data.portrait_url);
             });
             return false;
@@ -556,17 +554,16 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 jarnxmpp.PubSub.getSubscriptions(function (following) {
                     $node.attr('data-node', following.join(' '));
                     $.ajax({url: portal_url + '/@@pubsub-items',
-                            data: {nodes: following},
-                            dataType: 'html',
-                            traditional:true,
-                            success: function (data) {
-                                $node.hide();
-                                $node.html(data);
-                                $node.magicLinks();
-                                $('.prettyDate', $node).prettyDate();
-                                $node.slideDown("slow");
-                            }
-                    });
+                        data: {nodes: following},
+                        dataType: 'html',
+                        traditional: true,
+                        success: function (data) {
+                            $node.hide();
+                            $node.html(data);
+                            $node.magicLinks();
+                            $('.prettyDate', $node).prettyDate();
+                            $node.slideDown("slow");
+                        }});
                 });
             }
         });
@@ -579,7 +576,9 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 var my_node = Strophe.getNodeFromJid(jarnxmpp.connection.jid),
                     idx = available_nodes.indexOf(my_node),
                     $sl = $('#subscriptions-list');
-                if (idx!==-1) available_nodes.splice(idx, 1);
+                if (idx !== -1) {
+                    available_nodes.splice(idx, 1);
+                }
                 $.each(available_nodes, function (idx, node) {
                     $sl.append($('<label />')
                                 .append($('<input type="checkbox" name="subscriptions:list" />')
@@ -592,20 +591,19 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                         }
                     });
                 });
-                $('#subscriptions-list label').sortElements(function(a, b) {
+                $('#subscriptions-list label').sortElements(function (a, b) {
                     return $(a).text() > $(b).text() ? 1 : -1;
                 });
                 jarnxmpp.PubSub.getSubscriptions(function (subscribed_nodes) {
-                    if (subscribed_nodes.indexOf('people')!==-1) {
+                    if (subscribed_nodes.indexOf('people') !== -1) {
                         $('#follow-all').attr('checked', 'checked');
                         $sl.addClass('disabledField');
                         $('input', $sl).attr('disabled', 'disabled');
-                    }
-                    else {
+                    } else {
                         $('#follow-selected').attr('checked', 'checked');
                     }
                     $.each(subscribed_nodes, function (idx, node) {
-                        $('input[value=' + node +']', $sl)
+                        $('input[value=' + node + ']', $sl)
                             .attr('checked', 'checked')
                             .parent().addClass('subscribed');
                     });
@@ -624,8 +622,7 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                                    sticky: false});
                 });
                 jarnxmpp.PubSub.subscribe(Strophe.getNodeFromJid(jarnxmpp.connection.jid), function (result) {});
-            }
-            else {
+            } else {
                 $('#subscriptions-list').addClass('disabledField');
                 $('#subscriptions-list input')
                     .attr('disabled', 'disabled')
@@ -650,18 +647,17 @@ $msg:false, Strophe:false, setTimeout:false, navigaror:false, google:false, */
                 $that = $(this);
             if (this.checked) {
                 jarnxmpp.PubSub.subscribe(node, function (result) {
+                    var fullname = $that.parent().text();
                     $that.parent().addClass('subscribed');
-                    fullname = $that.parent().text();
                     $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
                                    text: jarnxmpp.UI._('You now follow ${person}', {person: fullname}),
                                    time: 5000,
                                    sticky: false});
                 });
-            }
-            else {
+            } else {
                 jarnxmpp.PubSub.unsubscribe(node, null, function (result) {
                     $that.parent().removeClass('subscribed');
-                    fullname = $that.parent().text();
+                    var fullname = $that.parent().text();
                     $.gritter.add({title: jarnxmpp.UI._('Subscription updated'),
                                    text: jarnxmpp.UI._('You no longer follow ${person}', {person: fullname}),
                                    time: 5000,
