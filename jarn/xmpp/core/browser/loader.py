@@ -72,8 +72,10 @@ class XMPPLoader(BrowserView):
                     'sid': sid,
                     'jid': self.jid.full(),
                     'pubsub_jid': self.pubsub_jid}
-
+            else:
+                logger.warning('Unable to pre-bind %s' % self.jid)
         response = self.request.response
         response.setHeader('content-type', 'application/json')
+        response.setHeader('Cache-Control', 'max-age=0, must-revalidate, private')
         response.setBody(json.dumps(bosh_credentials))
         return response
