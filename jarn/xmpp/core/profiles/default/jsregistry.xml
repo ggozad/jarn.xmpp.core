@@ -1,8 +1,8 @@
 <object name="portal_javascripts" meta_type="JavaScripts Registry">
  <javascript id="++resource++gritter/jquery.gritter.min.js"
-    compression="none" authenticated="True" />
+    compression="none" authenticated="True" insert-after="++resource++jsi18n.js"/>
  <javascript id="++resource++jarn.xmpp.core.js/strophe.js"
-     authenticated="True" />
+     authenticated="True" insert-after="++resource++gritter/jquery.gritter.min.js"/>
  <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.handlers.js"
      authenticated="True" insert-after="++resource++jarn.xmpp.core.js/strophe.js" />
  <javascript id="++resource++jarn.xmpp.core.js/jarnxmpp.core.ui.js"
