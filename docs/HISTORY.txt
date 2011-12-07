@@ -3,8 +3,14 @@ Changelog
 =========
 
 -----------------
-0.33 - Unreleased
+0.33 - 2011-12-07
 -----------------
+
+- IE9 compatibility.
+  [ggozad]
+
+- No-cache for BOSH authentication.
+  [ggozad]
 
 -----------------
 0.32 - 2011-11-30
