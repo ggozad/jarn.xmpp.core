@@ -239,7 +239,6 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
     //
     $(document).bind('jarnxmpp.message', function (event) {
         var user_id = Strophe.getNodeFromJid(event.from),
-            jid = Strophe.getBareJidFromJid(event.from),
             $text_p = $('<p>').html(event.body),
             $form = $('#online-users li#online-users-' + user_id + ' .replyForm').clone(),
             $reply_p = $('<p>').append($form),
@@ -491,7 +490,10 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
             var $node = $('.pubsubNode').first(),
                 nodes = $node.attr('data-node').split(' '),
                 start = $('li.pubsubItem', $node).length;
-            $.ajax({url: portal_url + '/@@pubsub-items', data: {nodes: nodes, start: start}, dataType: 'html', traditional: true,
+            $.ajax({url: portal_url + '/@@pubsub-items',
+                data: {nodes: nodes, start: start},
+                cache: false,
+                traditional: true,
                 success: function (data) {
                     $node.append(data);
                     $('.prettyDate', $node).prettyDate();
@@ -557,6 +559,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
                         data: {nodes: following},
                         dataType: 'html',
                         traditional: true,
+                        cache: false,
                         success: function (data) {
                             $node.hide();
                             $node.html(data);

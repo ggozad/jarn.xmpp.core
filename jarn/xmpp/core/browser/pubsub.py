@@ -39,8 +39,8 @@ class PubSubItem(BrowserView):
                 'author': self.request.get('author'),
                 'published': self.request.get('published'),
                 'updated': self.request.get('updated'),
-                'parent': self.request.get('parent')
-            }
+                'parent': self.request.get('parent')}
+
             if ('geolocation[latitude]' in self.request and
                 'geolocation[longitude]' in self.request):
                 item['geolocation'] = {
@@ -72,7 +72,7 @@ class PubSubItems(BrowserView):
         items = self.storage.itemsFromNodes(nodes, start=start, count=count)
         item_view = PubSubItem(self.context, self.request)
         html = '\n'.join(['<li class="pubsubItem">' + item_view(item) + "</li>"
-                         for item in items])
+                         for item in items]).encode('utf-8')
         return html
 
 
