@@ -118,7 +118,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
         // Geocoding and maps
         //
         _loadGoogleMapsAPI: function (callback) {
-            var _initGoogleMaps = function () {
+            jarnxmpp.UI._initGoogleMaps = function () {
                 jarnxmpp.UI.geocoder = new google.maps.Geocoder();
                 callback();
             };
@@ -132,7 +132,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
                     .attr('id', 'google-maps-js')
                     .attr('type', 'text/javascript')
                     .attr('src', '//maps.googleapis.com/maps/api/js?' +
-                                 'sensor=' + hasSensor + '&callback=_initGoogleMaps');
+                                 'sensor=' + hasSensor + '&callback=jarnxmpp.UI._initGoogleMaps');
                 $('body').append($script);
             } else {
                 callback();
