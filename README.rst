@@ -155,7 +155,7 @@ Setting up a new Plone site
 * Go to the Plone control panel, into the registry settings. Edit the jarn.xmpp.* settings to reflect your installation, passwords etc.
 * Restart your Plone instance.
 * Upon the first request the administrator will log to his account. You should see things happening in the logs and if there are any errors something might be wrong with your installation.
-* Setup the the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://localhost:8080/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
+* Setup the users and pubsub nodes. You do this by calling ``@@setup-xmpp`` like ``http://localhost:8080/@@setup-xmpp``. The form will not report any errors as everything will happen asynchronously but you will get the results/failures on the console.
 
 If you are going to use this on an existing site, you only need to perform the last step after making sure that your XMPP admin is connected.
 
