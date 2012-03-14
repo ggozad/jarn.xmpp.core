@@ -55,3 +55,17 @@ class AdminClientDisconnected(object):
 class IXMPPLoaderVM(IViewletManager):
     """Viewlet manager for the loader viewlet.
     """
+
+class INodeEscaper(Interface):
+    """ Utility that provides basic escape mechanism for node (XEP-0106).""" 
+
+    def escape(self, node):
+        """Replaces all disallowed characters according to the algorithm 
+        described in XEP-0106.
+        """
+
+    def unescape(self, node):
+        """Replaces all disallowed characters that were escaped  
+        with unescaped ones.
+        """
+

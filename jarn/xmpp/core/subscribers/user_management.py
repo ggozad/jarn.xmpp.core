@@ -37,7 +37,7 @@ def onUserCreation(event):
     principal_pass = pass_storage.set(principal_id)
 
     storage.leaf_nodes.append(principal_id)
-    storage.node_items[principal_id] = []
+    storage.node_items[principal_jid.user] = []
     storage.collections['people'].append(principal_id)
     storage.publishers[principal_id] = [principal_id]
 

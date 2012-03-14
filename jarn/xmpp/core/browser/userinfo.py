@@ -1,15 +1,20 @@
 import json
 
+from zope.component import getUtility
+
 from twisted.words.protocols.jabber.jid import JID
 
 from AccessControl import Unauthorized
 from Products.Five.browser import BrowserView
 from Products.CMFCore.utils import getToolByName
 
+from jarn.xmpp.core.interfaces import INodeEscaper
+
 
 class XMPPUserInfo(BrowserView):
 
     def __call__(self, user_id):
+        user_id = getUtility(INodeEscaper).unescape(user_id)
         pm = getToolByName(self.context, 'portal_membership')
         if pm.isAnonymousUser():
             raise Unauthorized
@@ -31,7 +36,7 @@ class XMPPUserDetails(BrowserView):
     def __init__(self, context, request):
         super(BrowserView, self).__init__(context, request)
         self.jid = request.get('jid')
-        self.user_id = JID(self.jid).user
+        self.user_id = getUtility(INodeEscaper).unescape(JID(self.jid).user)
         self.bare_jid = JID(self.jid).userhost()
         self.pm = getToolByName(context, 'portal_membership')
         info = self.pm.getMemberInfo(self.user_id)
