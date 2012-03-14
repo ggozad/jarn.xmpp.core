@@ -191,7 +191,8 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
     $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         var user_id = Strophe.getNodeFromJid(jid),
             barejid = Strophe.getBareJidFromJid(jid),
-            existing_user_element = $('#online-users-' + escapeSelector(Strophe.unescapeNode(user_id))),
+            user_selector = escapeSelector(Strophe.unescapeNode(user_id)),
+            existing_user_element = $('#online-users-' + user_selector),
             online_count;
         if (barejid === Strophe.getBareJidFromJid(jarnxmpp.connection.jid)) {
             return;
@@ -203,7 +204,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
             existing_user_element.attr('class', status);
         } else {
             $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function (user_details) {
-                if ($('#online-users-' + user_id).length > 0) {
+                if ($('#online-users-' + user_selector).length > 0) {
                     return;
                 }
                 user_details = $(user_details);
