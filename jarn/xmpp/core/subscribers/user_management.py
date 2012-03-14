@@ -36,10 +36,10 @@ def onUserCreation(event):
     pass_storage = getUtility(IXMPPPasswordStorage)
     principal_pass = pass_storage.set(principal_id)
 
-    storage.leaf_nodes.append(principal_id)
+    storage.leaf_nodes.append(principal_jid.user)
     storage.node_items[principal_jid.user] = []
     storage.collections['people'].append(principal_id)
-    storage.publishers[principal_id] = [principal_id]
+    storage.publishers[principal_jid.user] = [principal_jid.user]
 
     d = setupPrincipal(client, principal_jid, principal_pass, members_jids)
     return d

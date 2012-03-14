@@ -288,7 +288,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
                 return;
             }
             $('#site-stream-link').addClass('newStreamMessage');
-            $('.pubsubNode[data-node*=' + event.node + '], .pubsubNode[data-node=people]').each(function (idx, node) {
+            $('.pubsubNode[data-node*=' + escapeSelector(event.node) + '], .pubsubNode[data-node=people]').each(function (idx, node) {
                 var $li,
                     $node = $(node),
                     isLeaf = $node.attr('data-leaf') === 'True';
