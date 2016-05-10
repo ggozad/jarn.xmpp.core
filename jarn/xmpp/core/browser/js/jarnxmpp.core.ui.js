@@ -82,6 +82,11 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
         };
     })();
 
+    escapeSelector = function(selector) {
+        return selector.replace(/\\/g, "\\\\")
+            .replace(/[@#;&,.+*~':"!^$[\]()=>|\/]/g, "\\$&");
+    };
+
     jarnxmpp.UI = {
 
         _: null,
@@ -186,7 +191,8 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
     $(document).bind('jarnxmpp.presence', function (event, jid, status, presence) {
         var user_id = Strophe.getNodeFromJid(jid),
             barejid = Strophe.getBareJidFromJid(jid),
-            existing_user_element = $('#online-users-' + user_id),
+            user_selector = escapeSelector(Strophe.unescapeNode(user_id)),
+            existing_user_element = $('#online-users-' + user_selector),
             online_count;
         if (barejid === Strophe.getBareJidFromJid(jarnxmpp.connection.jid)) {
             return;
@@ -198,7 +204,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
             existing_user_element.attr('class', status);
         } else {
             $.get(portal_url + '/xmpp-userDetails?jid=' + barejid, function (user_details) {
-                if ($('#online-users-' + user_id).length > 0) {
+                if ($('#online-users-' + user_selector).length > 0) {
                     return;
                 }
                 user_details = $(user_details);
@@ -240,7 +246,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
     $(document).bind('jarnxmpp.message', function (event) {
         var user_id = Strophe.getNodeFromJid(event.from),
             $text_p = $('<p>').html(event.body),
-            $form = $('#online-users li#online-users-' + user_id + ' .replyForm').clone(),
+            $form = $('#online-users li#online-users-' + escapeSelector(Strophe.unescapeNode(user_id)) + ' .replyForm').clone(),
             $reply_p = $('<p>').append($form),
             text = $('<div>').append($text_p).append($reply_p).remove().html();
         $('input[type="submit"]', $form).attr('value', 'Reply');
@@ -282,7 +288,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
                 return;
             }
             $('#site-stream-link').addClass('newStreamMessage');
-            $('.pubsubNode[data-node*=' + event.node + '], .pubsubNode[data-node=people]').each(function (idx, node) {
+            $('.pubsubNode[data-node*=' + escapeSelector(event.node) + '], .pubsubNode[data-node=people]').each(function (idx, node) {
                 var $li,
                     $node = $(node),
                     isLeaf = $node.attr('data-leaf') === 'True';
@@ -351,7 +357,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
         // Follow/unfollow user.
         $('a.followingStatus').live('click', function (e) {
             var $following_link = $(this),
-                node_id = $following_link.attr('data-user'),
+                node_id = Strophe.escapeNode($following_link.attr('data-user')),
                 fullname = $following_link.attr('data-fullname');
             jarnxmpp.PubSub.getSubscriptions(function (following) {
                 if (following.indexOf(node_id) > -1) {
@@ -588,7 +594,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
                                             .attr('value', node)));
                     jarnxmpp.Presence.getUserInfo(node, function (info) {
                         if (info) {
-                            $('input[value=' + node + ']', $sl).after(info.fullname);
+                            $('input[value=' + escapeSelector(node) + ']').after(info.fullname);
                         } else {
                             $('input[value=' + node + ']', $sl).parent().remove();
                         }
@@ -606,7 +612,7 @@ $msg:false, Strophe:false, setTimeout:false, navigator:false, jarn:false, google
                         $('#follow-selected').attr('checked', 'checked');
                     }
                     $.each(subscribed_nodes, function (idx, node) {
-                        $('input[value=' + node + ']', $sl)
+                        $('input[value=' + escapeSelector(node) + ']', $sl)
                             .attr('checked', 'checked')
                             .parent().addClass('subscribed');
                     });

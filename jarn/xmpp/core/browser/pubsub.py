@@ -8,6 +8,7 @@ from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from jarn.xmpp.core.interfaces import IPubSubStorage
+from jarn.xmpp.core.interfaces import INodeEscaper
 
 
 class PubSubItem(BrowserView):
@@ -19,8 +20,10 @@ class PubSubItem(BrowserView):
         self.mt = getToolByName(self.context, 'portal_membership')
         self.host = urlparse(getToolByName(self.context, 'portal_url')()).netloc
         self.storage = getUtility(IPubSubStorage)
+        self.escaper = getUtility(INodeEscaper)
 
     def fullname(self, author):
+        author = self.escaper.unescape(author)
         member = self.mt.getMemberById(author)
         return member.getProperty('fullname', None)
 
@@ -48,6 +51,8 @@ class PubSubItem(BrowserView):
                     'longitude': self.request.get('geolocation[longitude]')}
             if self.request.get('isLeaf') == 'false':
                 isLeaf = False
+        if item['author']:
+            item['author'] = self.escaper.unescape(item['author'])
         self.item = item
         self.isLeaf = isLeaf
 
@@ -80,13 +85,18 @@ class PubSubFeedMixIn(object):
 
     def __init__(self, context):
         self.storage = getUtility(IPubSubStorage)
-        if self.node in self.storage.leaf_nodes:
+        self.escaper = getUtility(INodeEscaper)
+        self.escape = self.escaper.escape
+        self.unescape = self.escaper.unescape
+
+        if self.escape(self.node) in self.storage.leaf_nodes:
             self.nodeType = 'leaf'
         else:
             self.nodeType = 'collection'
         self.mt = getToolByName(self.context, 'portal_membership')
 
     def fullname(self, author):
+        author = self.unescape(author)
         member = self.mt.getMemberById(author)
         if member:
             return member.getProperty('fullname', None)
@@ -102,22 +112,25 @@ class PubSubFeedMixIn(object):
         if self.mt.isAnonymousUser():
             return
         if self.node is None:
-            return self.mt.getAuthenticatedMember().id
+            return self.escape(self.mt.getAuthenticatedMember().id)
         user_id = self.mt.getAuthenticatedMember().id
         if self.nodeType == 'leaf':
-            if user_id in self.storage.publishers[self.node]:
+            if self.escape(user_id) in \
+                    self.storage.publishers[self.escape(self.node)]:
                 return self.node
         else:
             publisher_nodes = [node
-                               for node in self.storage.collections[self.node]
-                               if user_id in self.storage.publishers[node]]
+                    for node in self.storage.collections[self.escape(self.node)]
+                    if user_id in self.storage.publishers[node]]
             if len(publisher_nodes) == 1:
                 return publisher_nodes[0]
 
     def items(self, node=None, start=0, count=20):
         if node is None:
             node = self.node
-        return self.storage.itemsFromNodes([node], start=start, count=count)
+        return self.storage.itemsFromNodes([self.escape(node)],
+                                           start=start,
+                                           count=count)
 
 
 class PubSubFeed(BrowserView, PubSubFeedMixIn):
